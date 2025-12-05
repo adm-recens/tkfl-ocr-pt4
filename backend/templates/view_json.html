@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Voucher #{{ voucher_id }} JSON Data{% endblock %}
+
+{% block content %}
+<h1 class="text-3xl font-bold text-gray-800 mb-6">JSON Data for Voucher #{{ voucher_id }}</h1>
+
+<div class="bg-white p-6 rounded-xl shadow-lg">
+    <h2 class="text-xl font-semibold mb-3">Parsed Data</h2>
+    <!-- Use pre-wrap and word-wrap for better readability of large JSON blocks -->
+    <pre class="bg-gray-100 p-4 rounded-lg overflow-x-auto text-sm text-gray-700 mono"
+        style="white-space: pre-wrap; word-wrap: break-word;">{{ json_data }}</pre>
+
+    <div class="mt-6 flex space-x-4">
+        <a href="{{ url_for('main.view_receipts') }}"
+            class="inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 transition duration-150">
+            &larr; Back to Receipts
+        </a>
+    </div>
+</div>
+{% endblock %}

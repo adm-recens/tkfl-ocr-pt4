@@ -1,0 +1,193 @@
+from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, send_from_directory
+from backend.services.voucher_service import VoucherService
+import json
+import os
+
+main_bp = Blueprint('main', __name__)
+
+@main_bp.route("/")
+def index():
+    return render_template("index.html")
+
+@main_bp.route("/upload", methods=["GET"])
+def upload_page():
+    return render_template("upload_receipt.html")
+
+@main_bp.route("/upload_beta", methods=["GET"])
+def upload_beta_page():
+    return render_template("upload_beta.html")
+
+@main_bp.route("/uploads/<filename>")
+def uploaded_file(filename):
+    return send_from_directory(current_app.config["UPLOAD_FOLDER"], filename)
+
+@main_bp.route("/uploads/beta/<filename>")
+def uploaded_file_beta(filename):
+    beta_folder = os.path.join(current_app.config["UPLOAD_FOLDER"], "beta")
+    return send_from_directory(beta_folder, filename)
+
+@main_bp.route("/uploads/beta_v2/<filename>")
+def uploaded_file_beta_v2(filename):
+    beta_v2_folder = os.path.join(current_app.config["UPLOAD_FOLDER"], "beta_v2")
+    return send_from_directory(beta_v2_folder, filename)
+
+@main_bp.route("/receipts", methods=["GET"])
+def view_receipts():
+    try:
+        page = request.args.get('page', 1, type=int)
+        result = VoucherService.get_all_vouchers(page=page)
+        
+        # Format data for display
+        for voucher in result['vouchers']:
+            voucher['created_at_display'] = voucher['created_at'].strftime('%Y-%m-%d %H:%M:%S') if voucher['created_at'] else 'N/A'
+            voucher['grand_total_display'] = f"${voucher['net_total']:.2f}" if voucher['net_total'] is not None else 'N/A'
+            voucher['voucher_date_display'] = voucher['voucher_date'] if voucher['voucher_date'] else 'N/A'
+
+        return render_template(
+            "view_receipts.html",
+            vouchers=result['vouchers'],
+            page=result['current_page'],
+            total_pages=result['total_pages'],
+            total_vouchers=result['total_vouchers']
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error fetching receipts: {e}")
+        flash(f"Error loading receipts: {e}", "error")
+        return render_template("view_receipts.html", vouchers=[], page=1, total_pages=1, total_vouchers=0)
+
+@main_bp.route("/review/<int:voucher_id>", methods=["GET"])
+def review_voucher(voucher_id):
+    try:
+        voucher = VoucherService.get_voucher_by_id(voucher_id)
+        if not voucher:
+            flash(f"Voucher #{voucher_id} not found.", "error")
+            return redirect(url_for('main.view_receipts'))
+            
+        # Redirect Beta vouchers to Beta Review
+        if voucher.get('ocr_mode') == 'roi_beta':
+            return redirect(url_for('main.review_voucher_beta', voucher_id=voucher_id))
+
+        filename = voucher['file_name']
+        image_url = url_for('main.uploaded_file', filename=filename)
+        
+        # Get parsed data
+        parsed_data = voucher.get('parsed_json', {})
+        if isinstance(parsed_data, str):
+            parsed_data = json.loads(parsed_data)
+        elif parsed_data is None:
+            parsed_data = {}
+            
+        # Get raw OCR text
+        raw_text = voucher.get('raw_ocr_text', '')
+        
+        # Get current OCR mode
+        selected_mode = voucher.get('ocr_mode', 'default')
+        
+        # Return the review template with all required data
+        return render_template(
+            'review.html', 
+            voucher=voucher, 
+            image_url=image_url,
+            initial_parsed_data=parsed_data,
+            raw_ocr_text=raw_text,
+            selected_mode=selected_mode
+        )
+        
+    except Exception as e:
+        current_app.logger.error(f"Error loading voucher {voucher_id}: {e}")
+        flash(f"Error loading voucher: {e}", "error")
+        return redirect(url_for('main.view_receipts'))
+
+@main_bp.route("/validate/<int:voucher_id>", methods=["GET"])
+def validate_voucher_page(voucher_id):
+    try:
+        voucher = VoucherService.get_voucher_by_id(voucher_id)
+        if not voucher:
+            flash(f"Voucher #{voucher_id} not found.", "error")
+            return redirect(url_for('main.view_receipts'))
+            
+        db_items = VoucherService.get_voucher_items(voucher_id)
+        db_deductions = VoucherService.get_voucher_deductions(voucher_id)
+        
+        parsed_json_data = voucher['parsed_json']
+        if isinstance(parsed_json_data, str):
+            parsed_json_data = json.loads(parsed_json_data)
+            
+        items_data = [dict(item) for item in db_items] if db_items else parsed_json_data.get('items', [])
+        deductions_data = [dict(ded) for ded in db_deductions] if db_deductions else parsed_json_data.get('deductions', [])
+
+        # Determine image URL based on OCR mode
+        if voucher.get('ocr_mode') == 'roi_beta':
+            image_url = url_for('main.uploaded_file_beta', filename=voucher['file_name'])
+        else:
+            image_url = url_for('main.uploaded_file', filename=voucher['file_name'])
+
+        return render_template(
+            "validate.html",
+            voucher=voucher,
+            image_url=image_url,
+            save_url=url_for('api.save_validated_data', voucher_id=voucher_id),
+            parsed_data=parsed_json_data,
+            items_data_json=json.dumps(items_data, ensure_ascii=False, default=str),
+            deductions_data_json=json.dumps(deductions_data, ensure_ascii=False, default=str)
+        )
+    except Exception as e:
+        current_app.logger.error(f"Error loading validation page for {voucher_id}: {e}")
+        flash(f"Error loading validation page: {e}", "error")
+        return redirect(url_for('main.view_receipts'))
+
+@main_bp.route("/view_raw_json/<int:voucher_id>")
+def view_voucher_json(voucher_id):
+    try:
+        voucher = VoucherService.get_voucher_by_id(voucher_id)
+        if voucher and voucher.get('parsed_json'):
+            json_data = voucher['parsed_json']
+            if isinstance(json_data, str):
+                json_data = json.loads(json_data)
+            return render_template("view_json.html", voucher_id=voucher_id, json_data=json.dumps(json_data, indent=4))
+    except Exception as e:
+        current_app.logger.error(f"Error viewing JSON for {voucher_id}: {e}")
+        
+    flash(f"Voucher #{voucher_id} JSON not found.", "error")
+    return redirect(url_for('main.view_receipts'))
+
+@main_bp.route("/training", methods=["GET"])
+def training_page():
+    return render_template("training.html")
+
+@main_bp.route("/confirm_delete", methods=["GET"])
+def confirm_delete_all():
+    return render_template("confirm_delete_all.html")
+
+@main_bp.route("/review_beta/<int:voucher_id>")
+def review_voucher_beta(voucher_id):
+    """
+    Beta Review Page: Displays extracted data for verification/editing.
+    Uses 'review_beta.html' template.
+    """
+    voucher = VoucherService.get_voucher_by_id(voucher_id)
+    if not voucher:
+        return "Voucher not found", 404
+    
+    # Ensure we are reviewing a beta voucher
+    if voucher.get('ocr_mode') != 'roi_beta':
+        return redirect(url_for('main.review_voucher', voucher_id=voucher_id))
+
+    # Handle parsed_json (stored as string or dict)
+    parsed_data = voucher.get('parsed_json', {})
+    if isinstance(parsed_data, str):
+        parsed_data = json.loads(parsed_data)
+    elif parsed_data is None:
+        parsed_data = {}
+    
+    # Prepare data for template
+    context = {
+        "voucher": voucher,
+        "parsed_data": parsed_data,
+        "items": parsed_data.get('items', []),
+        "deductions": parsed_data.get('deductions', []),
+        "master": parsed_data.get('master', {}),
+        "raw_text": voucher.get('raw_ocr_text', '')
+    }
+    
+    return render_template("review_beta.html", **context)

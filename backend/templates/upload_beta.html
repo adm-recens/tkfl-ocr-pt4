@@ -1,0 +1,463 @@
+{% extends "base.html" %}
+
+{% block title %}Beta Upload - Advanced ROI OCR{% endblock %}
+
+{% block content %}
+<div
+    class="min-h-[80vh] flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-slate-50 to-indigo-50/50">
+
+    <!-- Main Container -->
+    <div class="w-full max-w-5xl space-y-8">
+
+        <!-- Header Section -->
+        <div class="text-center space-y-4">
+            <div
+                class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-100/80 text-indigo-700 text-xs font-bold uppercase tracking-wider shadow-sm backdrop-blur-sm">
+                <span class="w-2 h-2 rounded-full bg-indigo-500 animate-pulse"></span>
+                Beta Feature
+            </div>
+            <h1
+                class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 tracking-tight">
+                Advanced ROI OCR
+            </h1>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                Experience our next-generation document processing engine with manual cropping, auto-deskew, and
+                precision region detection.
+            </p>
+        </div>
+
+        <!-- Feature Highlights -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div
+                class="bg-white/60 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="w-12 h-12 bg-indigo-100 rounded-xl flex items-center justify-center mb-4 text-indigo-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 4l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-slate-800 mb-2">Precision Cropping</h3>
+                <p class="text-sm text-slate-600">Manually select the exact area to process for maximum accuracy.</p>
+            </div>
+            <div
+                class="bg-white/60 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mb-4 text-purple-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-slate-800 mb-2">Auto-Deskew</h3>
+                <p class="text-sm text-slate-600">Automatically straightens rotated or skewed receipt images.</p>
+            </div>
+            <div
+                class="bg-white/60 backdrop-blur-md p-6 rounded-2xl border border-white/20 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                <div class="w-12 h-12 bg-pink-100 rounded-xl flex items-center justify-center mb-4 text-pink-600">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="font-bold text-slate-800 mb-2">Region Analysis</h3>
+                <p class="text-sm text-slate-600">Intelligent segmentation of headers, items, and totals.</p>
+            </div>
+        </div>
+
+        <!-- Upload Card -->
+        <div class="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100 relative group">
+            <div
+                class="absolute inset-0 bg-gradient-to-br from-indigo-50/50 to-purple-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+            </div>
+
+            <form action="{{ url_for('api_beta.upload_file_beta') }}" method="POST" enctype="multipart/form-data"
+                id="upload-form" class="p-8 md:p-12 relative z-10">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+                <!-- Drop Zone -->
+                <div id="drop-zone"
+                    class="relative border-3 border-dashed border-indigo-200 rounded-2xl p-12 text-center transition-all duration-300 hover:border-indigo-500 hover:bg-indigo-50/50 hover:scale-[1.01] cursor-pointer group/drop">
+
+                    <!-- Animated Icon -->
+                    <div class="mb-6 relative">
+                        <div
+                            class="absolute inset-0 bg-indigo-400 blur-xl opacity-20 rounded-full group-hover/drop:opacity-40 transition-opacity duration-300">
+                        </div>
+                        <svg class="mx-auto h-20 w-20 text-indigo-500 transform group-hover/drop:scale-110 group-hover/drop:-translate-y-2 transition-all duration-300"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                        </svg>
+                    </div>
+
+                    <div class="space-y-2">
+                        <h3 class="text-xl font-bold text-slate-800">Drop your receipt here</h3>
+                        <p class="text-slate-500">or <span
+                                class="text-indigo-600 font-semibold underline decoration-2 decoration-indigo-200 hover:decoration-indigo-500 transition-all">browse
+                                files</span> to upload</p>
+                    </div>
+
+                    <p class="mt-4 text-xs text-slate-400 font-medium uppercase tracking-wide">Supports PNG, JPG, JPEG •
+                        Max 10MB</p>
+
+                    <!-- Hidden Input -->
+                    <input type="file" id="file-input" name="file_upload" accept=".jpg,.jpeg,.png" class="hidden"
+                        required>
+
+                    <!-- Selected File Preview -->
+                    <div id="file-preview"
+                        class="hidden mt-6 inline-flex items-center gap-3 px-4 py-2 bg-indigo-100 text-indigo-700 rounded-lg text-sm font-medium animate-fade-in-up">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <span id="file-name">filename.jpg</span>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                    <button type="button" id="trigger-upload-btn"
+                        class="group relative inline-flex items-center justify-center px-8 py-4 text-base font-bold text-white transition-all duration-200 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 shadow-lg hover:shadow-indigo-500/30 hover:-translate-y-0.5">
+                        <span
+                            class="absolute inset-0 w-full h-full -mt-1 rounded-lg opacity-30 bg-gradient-to-b from-transparent via-transparent to-black"></span>
+                        <span class="relative flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                </path>
+                            </svg>
+                            Select & Crop Image
+                        </span>
+                    </button>
+
+                    <a href="{{ url_for('main.upload_page') }}"
+                        class="inline-flex items-center justify-center px-8 py-4 text-base font-bold text-slate-600 transition-all duration-200 bg-white border-2 border-slate-200 rounded-xl hover:bg-slate-50 hover:text-slate-900 hover:border-slate-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500">
+                        Use Standard OCR
+                    </a>
+                </div>
+            </form>
+        </div>
+
+        <div class="text-center">
+            <a href="{{ url_for('main.index') }}"
+                class="inline-flex items-center gap-2 text-sm font-medium text-slate-500 hover:text-indigo-600 transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+                </svg>
+                Back to Dashboard
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Premium Cropper Modal -->
+<div id="cropper-modal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+    <!-- Backdrop -->
+    <div class="fixed inset-0 bg-slate-900/90 backdrop-blur-sm transition-opacity opacity-0" id="modal-backdrop"></div>
+
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <!-- Modal Panel -->
+            <div class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-2xl transition-all sm:my-8 sm:w-full sm:max-w-5xl opacity-0 scale-95"
+                id="modal-panel">
+
+                <!-- Toolbar -->
+                <div
+                    class="bg-white border-b border-slate-100 px-6 py-4 flex items-center justify-between sticky top-0 z-20">
+                    <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z">
+                            </path>
+                        </svg>
+                        Crop Receipt
+                    </h3>
+                    <div class="flex items-center gap-2">
+                        <button type="button" id="rotate-left"
+                            class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                            title="Rotate Left">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"></path>
+                            </svg>
+                        </button>
+                        <button type="button" id="rotate-right"
+                            class="p-2 text-slate-500 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors"
+                            title="Rotate Right">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M21 10h-10a8 8 0 00-8 8v2M21 10l-6 6m6-6l-6-6"></path>
+                            </svg>
+                        </button>
+                        <div class="w-px h-6 bg-slate-200 mx-2"></div>
+                        <button type="button" id="close-cropper"
+                            class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M6 18L18 6M6 6l12 12"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Image Area -->
+                <div class="bg-slate-900 h-[60vh] relative flex items-center justify-center overflow-hidden">
+                    <img id="image-to-crop" src="" alt="Image to crop"
+                        class="max-w-full max-h-full block opacity-0 transition-opacity duration-300">
+                </div>
+
+                <!-- Footer -->
+                <div class="bg-slate-50 px-6 py-4 flex items-center justify-between border-t border-slate-200">
+                    <button type="button" id="cancel-crop"
+                        class="px-5 py-2.5 text-sm font-semibold text-slate-600 hover:text-slate-800 hover:bg-white border border-transparent hover:border-slate-200 rounded-xl transition-all">
+                        Cancel
+                    </button>
+                    <button type="button" id="process-crop"
+                        class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-bold text-white bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl hover:from-indigo-700 hover:to-purple-700 shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        Crop & Process
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cropper.js CSS & JS -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+<style>
+    /* Custom Animations */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .animate-fade-in-up {
+        animation: fadeInUp 0.3s ease-out forwards;
+    }
+
+    /* Cropper Customization */
+    .cropper-view-box,
+    .cropper-face {
+        border-radius: 0;
+    }
+
+    .cropper-line {
+        background-color: rgba(99, 102, 241, 0.5);
+    }
+
+    .cropper-point {
+        background-color: #4f46e5;
+        width: 8px;
+        height: 8px;
+    }
+</style>
+
+<script>
+    // DOM Elements
+    const dropZone = document.getElementById('drop-zone');
+    const fileInput = document.getElementById('file-input');
+    const fileName = document.getElementById('file-name');
+    const filePreview = document.getElementById('file-preview');
+    const triggerUploadBtn = document.getElementById('trigger-upload-btn');
+
+    // Modal Elements
+    const cropperModal = document.getElementById('cropper-modal');
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const modalPanel = document.getElementById('modal-panel');
+    const imageToCrop = document.getElementById('image-to-crop');
+
+    // Actions
+    const closeCropperBtn = document.getElementById('close-cropper');
+    const cancelCropBtn = document.getElementById('cancel-crop');
+    const processCropBtn = document.getElementById('process-crop');
+    const rotateLeftBtn = document.getElementById('rotate-left');
+    const rotateRightBtn = document.getElementById('rotate-right');
+
+    let cropper = null;
+    let originalFile = null;
+
+    // --- Event Listeners ---
+
+    // 1. File Selection Logic (Fixed Double-Click Issue)
+    // We trigger the file input ONLY when the button is clicked or drop zone is clicked
+    // The key is ensuring we don't have nested clickable elements triggering twice
+
+    triggerUploadBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        fileInput.click();
+    });
+
+    dropZone.addEventListener('click', (e) => {
+        // Only trigger if clicking the drop zone background, not if clicking internal interactive elements
+        if (e.target !== fileInput) {
+            fileInput.click();
+        }
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        if (e.target.files.length > 0) {
+            handleFileSelect(e.target.files[0]);
+        }
+        // Reset value to allow selecting same file again if cancelled
+        fileInput.value = '';
+    });
+
+    // 2. Drag & Drop Logic
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-indigo-500', 'bg-indigo-50/80', 'scale-[1.02]');
+    });
+
+    dropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-indigo-500', 'bg-indigo-50/80', 'scale-[1.02]');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-indigo-500', 'bg-indigo-50/80', 'scale-[1.02]');
+
+        if (e.dataTransfer.files.length > 0) {
+            handleFileSelect(e.dataTransfer.files[0]);
+        }
+    });
+
+    // 3. Modal Actions
+    closeCropperBtn.addEventListener('click', closeCropper);
+    cancelCropBtn.addEventListener('click', closeCropper);
+
+    rotateLeftBtn.addEventListener('click', () => cropper && cropper.rotate(-90));
+    rotateRightBtn.addEventListener('click', () => cropper && cropper.rotate(90));
+
+    processCropBtn.addEventListener('click', processAndUpload);
+
+    // --- Functions ---
+
+    function handleFileSelect(file) {
+        if (!file.type.startsWith('image/')) {
+            // Use a nice toast or alert here (using standard alert for now for simplicity)
+            alert('Please select a valid image file (PNG, JPG).');
+            return;
+        }
+
+        originalFile = file;
+        fileName.textContent = file.name;
+        filePreview.classList.remove('hidden');
+
+        // Read file
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            imageToCrop.src = e.target.result;
+            openCropper();
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function openCropper() {
+        cropperModal.classList.remove('hidden');
+
+        // Animate In
+        requestAnimationFrame(() => {
+            modalBackdrop.classList.remove('opacity-0');
+            modalPanel.classList.remove('opacity-0', 'scale-95');
+            modalPanel.classList.add('opacity-100', 'scale-100');
+        });
+
+        // Initialize Cropper
+        if (cropper) cropper.destroy();
+
+        // Wait for image to load/render
+        imageToCrop.onload = () => {
+            imageToCrop.classList.remove('opacity-0');
+        };
+
+        cropper = new Cropper(imageToCrop, {
+            viewMode: 1,
+            dragMode: 'move',
+            autoCropArea: 0.8,
+            restore: false,
+            guides: true,
+            center: true,
+            highlight: false,
+            cropBoxMovable: true,
+            cropBoxResizable: true,
+            toggleDragModeOnDblclick: false,
+            background: false, // Cleaner look
+        });
+    }
+
+    function closeCropper() {
+        // Animate Out
+        modalBackdrop.classList.add('opacity-0');
+        modalPanel.classList.add('opacity-0', 'scale-95');
+        modalPanel.classList.remove('opacity-100', 'scale-100');
+
+        setTimeout(() => {
+            cropperModal.classList.add('hidden');
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+            imageToCrop.src = "";
+            imageToCrop.classList.add('opacity-0');
+            originalFile = null; // Reset file selection
+            filePreview.classList.add('hidden');
+        }, 300); // Match transition duration
+    }
+
+    function processAndUpload() {
+        if (!cropper) return;
+
+        processCropBtn.disabled = true;
+        const originalText = processCropBtn.innerHTML;
+        processCropBtn.innerHTML = `
+            <svg class="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Processing...
+        `;
+
+        cropper.getCroppedCanvas().toBlob((blob) => {
+            const formData = new FormData();
+            formData.append('file_upload', blob, originalFile.name);
+            formData.append('csrf_token', document.querySelector('input[name="csrf_token"]').value);
+
+            fetch("{{ url_for('api_beta.upload_file_beta') }}", {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.redirected) {
+                        window.location.href = response.url;
+                    } else {
+                        window.location.reload();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Upload failed. Please try again.');
+                    processCropBtn.disabled = false;
+                    processCropBtn.innerHTML = originalText;
+                });
+        }, 'image/jpeg', 0.95);
+    }
+</script>
+{% endblock %}

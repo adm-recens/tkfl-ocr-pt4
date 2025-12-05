@@ -1,0 +1,76 @@
+======================================================================
+Voucher #70: IMG-20241207-WA0019.jpg
+Image Path: C:\Users\ramst\Documents\apps\tkfl_ocr\pt4\uploads\beta\IMG-20241207-WA0019.jpg
+File Exists: True
+======================================================================
+
+--- STORED RAW TEXT (first 500 chars) ---
+Length: 3 chars
+
+
+
+
+
+--- STORED PARSED JSON ---
+{
+  "items": [],
+  "master": {
+    "net_total": 0,
+    "gross_total": 0,
+    "voucher_date": "",
+    "supplier_name": "",
+    "voucher_number": "",
+    "total_deductions": 0
+  },
+  "deductions": []
+}
+
+
+======================================================================
+RE-RUNNING OCR EXTRACTION NOW...
+======================================================================
+
+--- EXTRACTED REGIONS ---
+
+[HEADER] (0 chars):
+EMPTY!
+------------------------------------------------------------
+
+[ITEMS] (168 chars):
+AHNED SHARLT & DRUS
+LENON PURCHASER & COMM AGENT
+DARUSHAFA X.;ROAD,)). HYDERABAD..500024
+Phone. : o40-24dizig9 19949909786
+i Aw
+
+Voucher: Noabed! (202
+Voucher Date |. |
+------------------------------------------------------------
+
+[DEDUCTIONS] (27 chars):
+| "T) i’PF ana Cash 1715 ou
+------------------------------------------------------------
+
+[TOTALS] (0 chars):
+EMPTY!
+------------------------------------------------------------
+
+
+======================================================================
+RE-RUNNING PARSING...
+======================================================================
+
+--- PARSED RESULT ---
+{
+  "master": {
+    "voucher_number": null,
+    "voucher_date": null,
+    "supplier_name": null,
+    "vendor_details": null,
+    "gross_total": null,
+    "total_deductions": null,
+    "net_total": null
+  },
+  "items": [],
+  "deductions": []
+}

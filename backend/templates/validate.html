@@ -1,0 +1,317 @@
+{% extends "base.html" %}
+
+{% block title %}Validate Voucher #{{ voucher.id }}{% endblock %}
+
+{% block content %}
+<div class="max-w-screen-2xl mx-auto px-4">
+    <form id="validation-form" method="POST" action="{{ save_url }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- Left Column: Image -->
+            <div class="space-y-4">
+                <div class="bg-white p-5 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold text-gray-800">Receipt Image</h2>
+                        <a href="{{ url_for('main.review_voucher', voucher_id=voucher.id) }}"
+                            class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">
+                            &larr; Back to Review
+                        </a>
+                    </div>
+                    <div class="border border-gray-200 rounded-lg overflow-auto" style="max-height: 75vh;">
+                        <img src="{{ image_url }}" alt="Voucher Image" class="w-full object-contain" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: All Form Fields -->
+            <div class="space-y-5">
+
+                <!-- Core Fields Card -->
+                <div class="bg-white p-5 rounded-xl shadow-lg">
+                    <h2 class="text-lg font-semibold text-gray-800 mb-4">Core Details</h2>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="voucher_no" class="block text-xs font-medium text-gray-600 mb-1">Voucher
+                                Number</label>
+                            <input type="text" id="voucher_no" name="voucher_no"
+                                value="{{ parsed_data.master.voucher_number or '' }}"
+                                class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500" />
+                        </div>
+                        <div>
+                            <label for="date" class="block text-xs font-medium text-gray-600 mb-1">Date</label>
+                            <input type="text" id="date" name="date" value="{{ parsed_data.master.voucher_date or '' }}"
+                                placeholder="DD-MM-YYYY"
+                                class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500" />
+                        </div>
+                        <div class="col-span-2">
+                            <label for="vendor_name" class="block text-xs font-medium text-gray-600 mb-1">Supplier
+                                Name</label>
+                            <input type="text" id="vendor_name" name="vendor_name"
+                                value="{{ parsed_data.master.supplier_name or '' }}"
+                                class="block w-full px-3 py-2 text-sm border border-gray-300 rounded-md focus:ring-2 focus:ring-indigo-500" />
+                        </div>
+                        <div class="col-span-2">
+                            <label for="vendor_details" class="block text-xs font-medium text-gray-600 mb-1">Vendor
+                                Details (Top of Receipt)</label>
+                            <input type="text" id="vendor_details" name="vendor_details" readonly
+                                value="{{ parsed_data.master.vendor_details or '' }}"
+                                class="block w-full px-3 py-2 text-sm bg-gray-50 border border-gray-300 rounded-md text-gray-500" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Line Items Table -->
+                <div class="bg-white p-5 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold text-gray-800">Line Items (<span id="item-count">0</span>)</h2>
+                        <button type="button" id="add-item-btn"
+                            class="px-3 py-1.5 text-xs font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 transition">
+                            + Add Item
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm">
+                            <thead class="bg-gray-50 border-b">
+                                <tr class="text-xs text-gray-600">
+                                    <th class="px-2 py-2 text-left font-medium">Item</th>
+                                    <th class="px-2 py-2 text-right font-medium w-20">Qty</th>
+                                    <th class="px-2 py-2 text-right font-medium w-24">Unit $</th>
+                                    <th class="px-2 py-2 text-right font-medium w-24">Total</th>
+                                    <th class="px-2 py-2 w-10"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="items-table-body" class="divide-y"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Deductions Table -->
+                <div class="bg-white p-5 rounded-xl shadow-lg">
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-lg font-semibold text-gray-800">Deductions/Tax</h2>
+                        <button type="button" id="add-deduction-btn"
+                            class="px-3 py-1.5 text-xs font-medium rounded-md text-white bg-green-600 hover:bg-green-700 transition">
+                            + Add Deduction
+                        </button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full text-sm">
+                            <thead class="bg-gray-50 border-b">
+                                <tr class="text-xs text-gray-600">
+                                    <th class="px-2 py-2 text-left font-medium">Type</th>
+                                    <th class="px-2 py-2 text-right font-medium w-32">Amount</th>
+                                    <th class="px-2 py-2 w-10"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="deductions-table-body" class="divide-y"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Totals Summary -->
+                <div
+                    class="bg-gradient-to-br from-indigo-50 to-blue-50 p-5 rounded-xl shadow-lg border-2 border-indigo-200">
+                    <h2 class="text-lg font-semibold text-gray-900 mb-3">Summary</h2>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between py-1 border-b border-indigo-200">
+                            <span class="text-gray-700">Subtotal:</span>
+                            <span id="subtotal-amount" class="font-semibold text-gray-900">$0.00</span>
+                        </div>
+                        <div class="flex justify-between py-1 border-b border-indigo-200">
+                            <span class="text-gray-700">Deductions:</span>
+                            <span id="deductions-amount" class="font-semibold text-red-600">-$0.00</span>
+                        </div>
+                        <div class="flex justify-between pt-2 border-t-2 border-indigo-300">
+                            <span class="text-base font-bold text-gray-900">Net Total:</span>
+                            <span id="net-total-amount" class="text-lg font-extrabold text-indigo-700">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="flex justify-end gap-3">
+                    <button type="submit"
+                        class="flex items-center px-6 py-2.5 text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 shadow transition">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20"
+                            fill="currentColor">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                clip-rule="evenodd" />
+                        </svg>
+                        Save & Validate
+                    </button>
+                </div>
+
+                <!-- Hidden Fields -->
+                <input type="hidden" id="validated_items_json" name="validated_items_json" />
+                <input type="hidden" id="validated_deductions_json" name="validated_deductions_json" />
+                <input type="hidden" id="net_total" name="net_total" />
+
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    let nextRowId = 1;
+    // Ensure parsedData is valid JSON object
+    const parsedData = {{ parsed_data | tojson | safe }} || { items: [], deductions: [], master: {} };
+
+    // Fallback if items/deductions are missing in parsedData
+    const itemsData = parsedData.items || [];
+    const deductionsData = parsedData.deductions || [];
+
+    const itemsTableBody = document.getElementById('items-table-body');
+    const deductionsTableBody = document.getElementById('deductions-table-body');
+    const itemCountSpan = document.getElementById('item-count');
+
+    function updateItemCount() {
+        itemCountSpan.textContent = itemsTableBody.children.length;
+    }
+
+    function formatCurrency(amount) {
+        return '$' + (amount || 0).toFixed(2);
+    }
+
+    function calculateTotals() {
+        let subtotal = 0;
+        itemsTableBody.querySelectorAll('tr').forEach(row => {
+            const qty = parseFloat(row.querySelector('input[name="quantity"]').value) || 0;
+            const price = parseFloat(row.querySelector('input[name="unit_price"]').value) || 0;
+            const lineTotal = qty * price;
+            // Update line total display if it's not manually overridden (optional logic, here we just update it)
+            row.querySelector('input[name="line_amount"]').value = lineTotal.toFixed(2);
+            subtotal += lineTotal;
+        });
+
+        let deductionsTotal = 0;
+        deductionsTableBody.querySelectorAll('tr').forEach(row => {
+            deductionsTotal += parseFloat(row.querySelector('input[name="amount"]').value) || 0;
+        });
+
+        const netTotal = subtotal - deductionsTotal;
+        document.getElementById('subtotal-amount').textContent = formatCurrency(subtotal);
+        document.getElementById('deductions-amount').textContent = formatCurrency(deductionsTotal);
+        document.getElementById('net-total-amount').textContent = formatCurrency(netTotal);
+        document.getElementById('net_total').value = netTotal.toFixed(2);
+    }
+
+    function attachListeners(row) {
+        row.querySelectorAll('input').forEach(input => {
+            if (input.name === 'quantity' || input.name === 'unit_price' || input.name === 'amount') {
+                input.addEventListener('input', calculateTotals);
+            }
+        });
+    }
+
+    function removeRow(row) {
+        row.remove();
+        updateItemCount();
+        calculateTotals();
+    }
+
+    function createItemRow(data = {}) {
+        const newRow = itemsTableBody.insertRow();
+        newRow.classList.add('hover:bg-gray-50');
+        newRow.innerHTML = `
+            <td class="px-2 py-2">
+                <input type="text" name="item_name" value="${data.item_name || ''}" placeholder="Item description" 
+                       class="w-full px-2 py-1 text-sm border-b border-gray-200 focus:border-indigo-500 focus:outline-none" required/>
+            </td>
+            <td class="px-2 py-2">
+                <input type="number" name="quantity" value="${data.quantity || ''}" placeholder="0" step="0.01" min="0"
+                       class="w-full px-2 py-1 text-sm text-right border-b border-gray-200 focus:border-indigo-500 focus:outline-none" />
+            </td>
+            <td class="px-2 py-2">
+                <input type="number" name="unit_price" value="${data.unit_price || ''}" placeholder="0.00" step="0.01" min="0"
+                       class="w-full px-2 py-1 text-sm text-right border-b border-gray-200 focus:border-indigo-500 focus:outline-none" />
+            </td>
+            <td class="px-2 py-2">
+                <input type="text" name="line_amount" value="${data.line_amount ? data.line_amount.toFixed(2) : ''}" placeholder="0.00" disabled 
+                       class="w-full px-2 py-1 text-sm text-right font-semibold bg-gray-50" />
+            </td>
+            <td class="px-2 py-2 text-center">
+                <button type="button" class="remove-item-btn text-red-500 hover:text-red-700 p-1">
+                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </td>
+        `;
+        newRow.querySelector('.remove-item-btn').addEventListener('click', () => removeRow(newRow));
+        attachListeners(newRow);
+        updateItemCount();
+    }
+
+    function createDeductionRow(data = {}) {
+        const newRow = deductionsTableBody.insertRow();
+        newRow.classList.add('hover:bg-gray-50');
+        newRow.innerHTML = `
+            <td class="px-2 py-2">
+                <input type="text" name="deduction_type" value="${data.deduction_type || 'Other'}" placeholder="e.g., VAT, Discount"
+                       class="w-full px-2 py-1 text-sm border-b border-gray-200 focus:border-green-500 focus:outline-none" required/>
+            </td>
+            <td class="px-2 py-2">
+                <input type="number" name="amount" value="${data.amount || ''}" placeholder="0.00" step="0.01" min="0"
+                       class="w-full px-2 py-1 text-sm text-right border-b border-gray-200 focus:border-green-500 focus:outline-none" />
+            </td>
+            <td class="px-2 py-2 text-center">
+                <button type="button" class="remove-deduction-btn text-red-500 hover:text-red-700 p-1">
+                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </td>
+        `;
+        newRow.querySelector('.remove-deduction-btn').addEventListener('click', () => removeRow(newRow));
+        attachListeners(newRow);
+    }
+
+    document.getElementById('add-item-btn').addEventListener('click', () => {
+        createItemRow();
+        calculateTotals();
+        itemsTableBody.lastElementChild?.querySelector('input[name="item_name"]')?.focus();
+    });
+
+    document.getElementById('add-deduction-btn').addEventListener('click', () => {
+        createDeductionRow();
+        calculateTotals();
+        deductionsTableBody.lastElementChild?.querySelector('input[name="deduction_type"]')?.focus();
+    });
+
+    document.getElementById('validation-form').addEventListener('submit', function () {
+        const finalItems = [];
+        itemsTableBody.querySelectorAll('tr').forEach(row => {
+            finalItems.push({
+                item_name: row.querySelector('input[name="item_name"]').value,
+                quantity: parseFloat(row.querySelector('input[name="quantity"]').value) || 0,
+                unit_price: parseFloat(row.querySelector('input[name="unit_price"]').value) || 0,
+                line_amount: parseFloat(row.querySelector('input[name="line_amount"]').value) || 0,
+            });
+        });
+
+        const finalDeductions = [];
+        deductionsTableBody.querySelectorAll('tr').forEach(row => {
+            finalDeductions.push({
+                deduction_type: row.querySelector('input[name="deduction_type"]').value,
+                amount: parseFloat(row.querySelector('input[name="amount"]').value) || 0,
+            });
+        });
+
+        document.getElementById('validated_items_json').value = JSON.stringify(finalItems);
+        document.getElementById('validated_deductions_json').value = JSON.stringify(finalDeductions);
+        calculateTotals();
+        return true;
+    });
+
+    function init() {
+        itemsData.forEach(createItemRow);
+        deductionsData.forEach(createDeductionRow);
+        updateItemCount();
+        calculateTotals();
+    }
+
+    init();
+</script>
+{% endblock %}

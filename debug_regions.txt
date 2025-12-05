@@ -1,0 +1,15 @@
+Image: C:\Users\ramst\Documents\apps\tkfl_ocr\pt4\uploads\beta\IMG-20241207-WA0019.jpg
+======================================================================
+Original image shape: (824, 730, 3)
+After auto-crop: (824, 35, 3)
+After deskew: (824, 35, 3)
+
+Detected 4 regions:
+  header: y=0 to 591 (height=591px)
+    Region shape: (591, 35, 3) - VALID
+  items: y=591 to 674 (height=83px)
+    Region shape: (83, 35, 3) - VALID
+  deductions: y=674 to 757 (height=83px)
+    Region shape: (83, 35, 3) - VALID
+  totals: y=757 to 824 (height=67px)
+    Region shape: (67, 35, 3) - VALID

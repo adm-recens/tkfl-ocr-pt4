@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+
+{% block title %}Review Voucher #{{ voucher.id }}{% endblock %}
+
+{% block content %}
+<div class="max-w-screen-2xl mx-auto px-4">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Left Column: Image -->
+        <div class="space-y-6">
+            <div class="bg-white p-5 rounded-xl shadow-lg">
+                <h2 class="text-lg font-semibold text-gray-800 mb-3">Receipt Image</h2>
+                <div class="border border-gray-200 rounded-lg overflow-auto" style="max-height: 75vh;">
+                    <img id="voucher-image" src="{{ image_url }}" alt="Voucher Image" class="w-full object-contain" />
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column: Extracted Data + Controls -->
+        <div class="space-y-6">
+
+            <!-- OCR Controls -->
+            <div class="bg-white p-5 rounded-xl shadow-lg border border-indigo-200">
+                <h2 class="text-lg font-semibold text-indigo-800 mb-3">OCR Settings</h2>
+                <div class="space-y-3">
+                    <div>
+                        <label for="ocr_mode_select" class="block text-sm font-medium text-gray-700 mb-2">Preprocessing
+                            Method</label>
+                        <select id="ocr_mode_select"
+                            class="block w-full px-3 py-2 text-sm border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
+                            <option value="enhanced">Enhanced (Production + Tesseract Optimization)</option>
+                            <option value="simple">Simple (Exact Production)</option>
+                            <option value="experimental">Experimental (Advanced Preprocessing)</option>
+                        </select>
+                    </div>
+
+                    <button id="re-extract-btn" disabled
+                        class="w-full flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-gray-400 cursor-not-allowed transition">
+                        <svg id="loading-spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden"
+                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                            </circle>
+                            <path class="opacity-75" fill="currentColor"
+                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                            </path>
+                        </svg>
+                        Re-Extract & Parse
+                    </button>
+
+                    <a href="{{ url_for('main_beta_v2.list_vouchers_beta') }}"
+                        class="block text-center text-sm text-indigo-600 hover:text-indigo-900 font-medium">
+                        ← Back to Beta Receipts
+                    </a>
+                </div>
+            </div>
+
+            <!-- Extracted Data -->
+            <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800 mb-4">Extracted Data</h2>
+
+                <!-- Master Fields -->
+                <div class="space-y-3 mb-4">
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Voucher Number</label>
+                        <input id="voucher_number_field" type="text" readonly
+                            class="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm text-sm p-2 text-gray-700">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Voucher Date</label>
+                        <input id="voucher_date_field" type="text" readonly
+                            class="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm text-sm p-2 text-gray-700">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Supplier Name</label>
+                        <input id="supplier_name_field" type="text" readonly
+                            class="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm text-sm p-2 text-gray-700">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-gray-600 mb-1">Vendor Details</label>
+                        <input id="vendor_details_field" type="text" readonly
+                            class="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm text-sm p-2 text-gray-700">
+                    </div>
+                </div>
+
+                <!-- Items Table -->
+                <div class="mt-4">
+                    <h3 class="text-sm font-medium text-gray-700 mb-2">Line Items (<span id="items-count">0</span>)</h3>
+                    <div class="overflow-x-auto border border-gray-200 rounded-md">
+                        <table class="min-w-full divide-y divide-gray-200 text-xs">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-3 py-2 text-left font-medium text-gray-500 uppercase">Item</th>
+                                    <th class="px-3 py-2 text-right font-medium text-gray-500 uppercase">Qty</th>
+                                    <th class="px-3 py-2 text-right font-medium text-gray-500 uppercase">Price</th>
+                                    <th class="px-3 py-2 text-right font-medium text-gray-500 uppercase">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="items-preview-body">
+                                <tr>
+                                    <td colspan="4" class="px-3 py-2 text-center text-gray-400">No items extracted</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Deductions Table -->
+                <div class="mt-4">
+                    <h3 class="text-sm font-medium text-gray-700 mb-2">Deductions (<span id="deductions-count">0</span>)
+                    </h3>
+                    <div class="overflow-x-auto border border-gray-200 rounded-md">
+                        <table class="min-w-full divide-y divide-gray-200 text-xs">
+                            <thead class="bg-gray-50">
+                                <tr>
+                                    <th class="px-3 py-2 text-left font-medium text-gray-500 uppercase">Type</th>
+                                    <th class="px-3 py-2 text-right font-medium text-gray-500 uppercase">Amount</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200" id="deductions-preview-body">
+                                <tr>
+                                    <td colspan="2" class="px-3 py-2 text-center text-gray-400">No deductions extracted
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Totals (Only if present in parsed data) -->
+                <div class="mt-4 p-3 bg-gray-50 rounded-md">
+                    <div id="totals-section" class="space-y-2 text-sm">
+                        <!-- Populated by JS if values exist -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Raw OCR Text -->
+            <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800 mb-3">Raw OCR Text</h2>
+                <textarea id="raw_ocr_text" rows="10" readonly
+                    class="block w-full rounded-md border-gray-300 bg-gray-50 shadow-sm text-xs p-3 font-mono text-gray-700"></textarea>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+    const voucherId = {{ voucher.id }};
+    const reExtractBtn = document.getElementById('re-extract-btn');
+    const modeSelect = document.getElementById('ocr_mode_select');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const rawOcrTextArea = document.getElementById('raw_ocr_text');
+
+    const initialParsedData = {{ initial_parsed_data | tojson }};
+    rawOcrTextArea.value = {{ raw_ocr_text | tojson }};
+
+    function updateParsedFields(parsedData) {
+        const master = parsedData.master || {};
+
+        // Master fields
+        document.getElementById('voucher_number_field').value = master.voucher_number || '';
+        document.getElementById('voucher_date_field').value = master.voucher_date || '';
+        document.getElementById('supplier_name_field').value = master.supplier_name || '';
+        document.getElementById('vendor_details_field').value = master.vendor_details || '';
+
+        // Items Table
+        const itemsBody = document.getElementById('items-preview-body');
+        const itemsCount = document.getElementById('items-count');
+        itemsBody.innerHTML = '';
+
+        const items = parsedData.items || [];
+        itemsCount.textContent = items.length;
+
+        if (items.length === 0) {
+            itemsBody.innerHTML = '<tr><td colspan="4" class="px-3 py-2 text-center text-gray-400">No items extracted</td></tr>';
+        } else {
+            items.forEach(item => {
+                const row = `<tr>
+                    <td class="px-3 py-2 text-gray-900">${item.item_name || 'Item'}</td>
+                    <td class="px-3 py-2 text-gray-900 text-right">${item.quantity !== null && item.quantity !== undefined ? item.quantity : '-'}</td>
+                    <td class="px-3 py-2 text-gray-900 text-right">${item.unit_price !== null && item.unit_price !== undefined ? item.unit_price.toFixed(2) : '-'}</td>
+                    <td class="px-3 py-2 text-gray-900 text-right font-semibold">${item.line_amount !== null && item.line_amount !== undefined ? item.line_amount.toFixed(2) : '-'}</td>
+                </tr>`;
+                itemsBody.innerHTML += row;
+            });
+        }
+
+        // Deductions Table
+        const deductionsBody = document.getElementById('deductions-preview-body');
+        const deductionsCount = document.getElementById('deductions-count');
+        deductionsBody.innerHTML = '';
+
+        const deductions = parsedData.deductions || [];
+        deductionsCount.textContent = deductions.length;
+
+        if (deductions.length === 0) {
+            deductionsBody.innerHTML = '<tr><td colspan="2" class="px-3 py-2 text-center text-gray-400">No deductions extracted</td></tr>';
+        } else {
+            deductions.forEach(ded => {
+                const row = `<tr>
+                    <td class="px-3 py-2 text-gray-900">${ded.deduction_type || 'Other'}</td>
+                    <td class="px-3 py-2 text-gray-900 text-right font-semibold">${ded.amount !== null && ded.amount !== undefined ? ded.amount.toFixed(2) : '-'}</td>
+                </tr>`;
+                deductionsBody.innerHTML += row;
+            });
+        }
+
+        // Totals Section - Only show if values exist
+        const totalsSection = document.getElementById('totals-section');
+        totalsSection.innerHTML = '';
+
+        if (master.gross_total !== null && master.gross_total !== undefined) {
+            totalsSection.innerHTML += `<div class="flex justify-between"><span class="text-gray-700">Total:</span><span class="font-semibold">${master.gross_total.toFixed(2)}</span></div>`;
+        }
+
+        if (master.total_deductions !== null && master.total_deductions !== undefined) {
+            totalsSection.innerHTML += `<div class="flex justify-between"><span class="text-gray-700">Total Deductions:</span><span class="font-semibold text-red-600">-${master.total_deductions.toFixed(2)}</span></div>`;
+        }
+
+        if (master.net_total !== null && master.net_total !== undefined) {
+            totalsSection.innerHTML += `<div class="flex justify-between pt-2 border-t border-gray-300"><span class="font-bold text-gray-900">Grand Total:</span><span class="font-bold text-indigo-700">${master.net_total.toFixed(2)}</span></div>`;
+        }
+    }
+
+    modeSelect.addEventListener('change', function () {
+        const initialMode = '{{ selected_mode }}';
+        if (this.value === initialMode) {
+            reExtractBtn.disabled = true;
+            reExtractBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            reExtractBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+        } else {
+            reExtractBtn.disabled = false;
+            reExtractBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            reExtractBtn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+        }
+    });
+
+    reExtractBtn.addEventListener('click', async function () {
+        const mode = modeSelect.value;
+        reExtractBtn.disabled = true;
+        reExtractBtn.innerHTML = '';
+        loadingSpinner.classList.remove('hidden');
+        reExtractBtn.classList.add('bg-gray-400', 'cursor-not-allowed');
+        reExtractBtn.appendChild(loadingSpinner);
+        reExtractBtn.appendChild(document.createTextNode('Re-Extracting...'));
+
+        try {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const response = await fetch(`/api/beta_v2/re_extract/${voucherId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({ method: mode })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                updateParsedFields(result.parsed_data);
+                rawOcrTextArea.value = result.raw_text;
+                showToast('Re-extraction successful!', 'success');
+            } else {
+                showToast('Re-extraction Failed: ' + (result.message || 'Unknown error'), 'error');
+            }
+        } catch (error) {
+            console.error('Fetch error:', error);
+            showToast('Network error during re-extraction.', 'error');
+        } finally {
+            loadingSpinner.classList.add('hidden');
+            reExtractBtn.innerHTML = 'Re-Extract & Parse';
+            modeSelect.dispatchEvent(new Event('change'));
+        }
+    });
+
+    function init() {
+        updateParsedFields(initialParsedData);
+        modeSelect.dispatchEvent(new Event('change'));
+    }
+
+    init();
+</script>
+{% endblock %}

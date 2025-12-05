@@ -1,0 +1,53 @@
+{
+    "master": {
+        "voucher_number": "202",
+        "voucher_date": "07-12-2024",
+        "supplier_name": "TK",
+        "vendor_details": null,
+        "gross_total": 15640.0,
+        "total_deductions": null,
+        "net_total": 12193.5
+    },
+    "items": [
+        {
+            "item_name": "Item",
+            "quantity": 13.0,
+            "unit_price": 920.0,
+            "line_amount": 11960.0
+        },
+        {
+            "item_name": "Item",
+            "quantity": 4.0,
+            "unit_price": 500.0,
+            "line_amount": 2000.0
+        },
+        {
+            "item_name": "Item",
+            "quantity": 6.0,
+            "unit_price": 280.0,
+            "line_amount": 1680.0
+        }
+    ],
+    "deductions": [
+        {
+            "deduction_type": "Comm @ ? 4.00 %",
+            "amount": 625.6
+        },
+        {
+            "deduction_type": "Less For Damages",
+            "amount": 782.0
+        },
+        {
+            "deduction_type": "UnLoading",
+            "amount": 167.9
+        },
+        {
+            "deduction_type": "Other",
+            "amount": 156.0
+        },
+        {
+            "deduction_type": "L/F And Cash",
+            "amount": 1715.0
+        }
+    ]
+}
