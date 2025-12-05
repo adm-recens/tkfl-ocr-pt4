@@ -39,23 +39,61 @@ def upload_file_beta():
         os.makedirs(beta_folder, exist_ok=True)
         filepath = os.path.join(beta_folder, filename)
         
+        # Check for duplicate file
+        if os.path.exists(filepath):
+            flash(f'File "{filename}" already exists in beta. Please rename the file or delete the existing one first.', 'error')
+            return redirect(url_for('main_beta_v2.upload_page_beta'))
+        
         file.save(filepath)
         
         try:
-            # Beta OCR Processing with enhanced service
-            image_obj = Image.open(filepath)
+            # AUTO-SELECTION: Run both Enhanced and Experimental modes
+            current_app.logger.info(f"[AUTO-SELECT] Testing both modes for {filename}")
             
-            # Use beta OCR service - returns dict with text, confidence, etc.
-            ocr_result = extract_text_beta(filepath, method='enhanced')
+            # Test Enhanced mode
+            current_app.logger.info(f"[AUTO-SELECT] Running Enhanced mode...")
+            enhanced_result = extract_text_beta(filepath, method='enhanced')
+            enhanced_confidence = enhanced_result['confidence']
+            current_app.logger.info(f"[AUTO-SELECT] Enhanced: {enhanced_confidence}%")
+            
+            # Test Experimental mode
+            current_app.logger.info(f"[AUTO-SELECT] Running Experimental mode...")
+            experimental_result = extract_text_beta(filepath, method='experimental')
+            experimental_confidence = experimental_result['confidence']
+            current_app.logger.info(f"[AUTO-SELECT] Experimental: {experimental_confidence}%")
+            
+            # Auto-select the better mode
+            if experimental_confidence > enhanced_confidence:
+                selected_mode = 'experimental'
+                ocr_result = experimental_result
+                winner_margin = experimental_confidence - enhanced_confidence
+                current_app.logger.info(f"[AUTO-SELECT] Winner: Experimental (+{winner_margin:.1f}%)")
+            else:
+                selected_mode = 'enhanced'
+                ocr_result = enhanced_result
+                winner_margin = enhanced_confidence - experimental_confidence
+                current_app.logger.info(f"[AUTO-SELECT] Winner: Enhanced (+{winner_margin:.1f}%)")
+            
+            # Extract results from winning mode
             raw_text = ocr_result['text']
             ocr_confidence = ocr_result['confidence']
             preprocessing_method = ocr_result['preprocessing_method']
             processing_time_ms = ocr_result['processing_time_ms']
             
+            # Beta OCR Processing with enhanced service
+            image_obj = Image.open(filepath)
             image_obj.close()
             
-            # Parsing (using beta parser - copy of production)
+            # Parsing (using beta parser)
             parsed_data = parse_receipt_text(raw_text)
+            
+            # Add auto-selection metadata to parsed_data
+            if 'metadata' not in parsed_data:
+                parsed_data['metadata'] = {}
+            parsed_data['metadata']['auto_selected_mode'] = selected_mode
+            parsed_data['metadata']['enhanced_confidence'] = enhanced_confidence
+            parsed_data['metadata']['experimental_confidence'] = experimental_confidence
+            parsed_data['metadata']['winner_margin'] = round(winner_margin, 1)
             
             # Database Insertion via Beta Service
             master_id = VoucherServiceBeta.create_voucher(
@@ -63,13 +101,13 @@ def upload_file_beta():
                 file_storage_path=filepath,
                 raw_text=raw_text,
                 parsed_data=parsed_data,
-                ocr_mode='beta_enhanced',
+                ocr_mode=f'beta_{selected_mode}',
                 preprocessing_method=preprocessing_method,
                 ocr_confidence=ocr_confidence,
                 processing_time_ms=processing_time_ms
             )
 
-            flash(f'Beta OCR: File "{filename}" processed! Confidence: {ocr_confidence}%', 'success')
+            flash(f'Auto-selected: {selected_mode.title()} ({ocr_confidence:.1f}%) | Enhanced: {enhanced_confidence:.1f}% vs Experimental: {experimental_confidence:.1f}%', 'success')
             return redirect(url_for('main_beta_v2.review_voucher_beta', voucher_id=master_id))
             
         except Exception as e:

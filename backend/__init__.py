@@ -43,11 +43,13 @@ def create_app(config_name='default'):
     from backend.routes.api_beta import api_beta_bp
     from backend.routes.api_beta_v2 import api_beta_v2_bp
     from backend.routes.main_beta_v2 import main_beta_v2_bp
+    from backend.routes.comparison import comparison_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(api_bp, url_prefix='/api')
     app.register_blueprint(api_beta_bp, url_prefix='/api')
     app.register_blueprint(api_beta_v2_bp)  # Already has /api/beta_v2 prefix
     app.register_blueprint(main_beta_v2_bp)  # Already has /beta_v2 prefix
+    app.register_blueprint(comparison_bp)  # Has /api/comparison prefix
 
     return app

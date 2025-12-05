@@ -183,10 +183,18 @@ class VoucherService:
     def delete_all_vouchers():
         conn = get_connection()
         cur = conn.cursor()
+        
+        # Delete production tables
         cur.execute("DELETE FROM voucher_items")
         cur.execute("DELETE FROM voucher_deductions")
         cur.execute("DELETE FROM ml_bounding_boxes")
         cur.execute("DELETE FROM vouchers_master")
+        
+        # Delete beta tables
+        cur.execute("DELETE FROM voucher_items_beta")
+        cur.execute("DELETE FROM voucher_deductions_beta")
+        cur.execute("DELETE FROM vouchers_master_beta")
+        
         conn.commit()
 
     @staticmethod

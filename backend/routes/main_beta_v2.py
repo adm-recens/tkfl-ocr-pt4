@@ -12,6 +12,11 @@ def upload_page_beta():
     """Beta upload page"""
     return render_template("upload_beta_v2.html")
 
+@main_beta_v2_bp.route("/comparison", methods=["GET"])
+def comparison_page():
+    """OCR mode comparison page"""
+    return render_template("comparison.html")
+
 @main_beta_v2_bp.route("/review/<int:voucher_id>", methods=["GET"])
 def review_voucher_beta(voucher_id):
     """Beta review page with confidence scores and preprocessing info"""

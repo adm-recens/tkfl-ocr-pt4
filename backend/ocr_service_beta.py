@@ -110,19 +110,32 @@ def preprocess_image_beta(path, method='enhanced'):
         return img
     
     elif method == 'experimental':
-        # Advanced preprocessing (currently disabled - was too aggressive)
-        # TODO: Fine-tune these parameters with real data
+        # Advanced preprocessing - Incremental improvement over baseline
+        # Step 1: Grayscale
         img = ImageOps.grayscale(img)
+        
+        # Step 2: Median filter to remove salt-and-pepper noise (proven in production)
+        # This cleans the image before contrast enhancement
+        img = img.filter(ImageFilter.MedianFilter(size=3))
+        
+        # Step 3: Convert to array for OpenCV processing
         img_array = np.array(img)
         
-        # Very gentle CLAHE
-        clahe = cv2.createCLAHE(clipLimit=1.2, tileGridSize=(8,8))
+        # Step 4: CLAHE for contrast enhancement (increased to 1.5 for better faded text handling)
+        # Still conservative - aggressive would be 2.0+
+        clahe = cv2.createCLAHE(clipLimit=1.5, tileGridSize=(8,8))
         enhanced = clahe.apply(img_array)
         
-        # Otsu's binarization
+        # Step 5: Otsu's binarization (automatic optimal threshold)
         _, binary = cv2.threshold(enhanced, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
         
+        # Convert back to PIL
         img = Image.fromarray(binary)
+        
+        # Step 6: Subtle sharpening to enhance character edges for better OCR
+        # Using UnsharpMask for more control than simple SHARPEN
+        img = img.filter(ImageFilter.UnsharpMask(radius=1, percent=100, threshold=3))
+        
         return img
     
     else:  # 'enhanced' (default)
