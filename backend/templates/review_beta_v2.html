@@ -19,40 +19,62 @@
         <!-- Right Column: Extracted Data + Controls -->
         <div class="space-y-6">
 
-            <!-- OCR Controls -->
-            <div class="bg-white p-5 rounded-xl shadow-lg border border-indigo-200">
-                <h2 class="text-lg font-semibold text-indigo-800 mb-3">OCR Settings</h2>
-                <div class="space-y-3">
-                    <div>
-                        <label for="ocr_mode_select" class="block text-sm font-medium text-gray-700 mb-2">Preprocessing
-                            Method</label>
-                        <select id="ocr_mode_select"
-                            class="block w-full px-3 py-2 text-sm border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
-                            <option value="enhanced">Enhanced (Production + Tesseract Optimization)</option>
-                            <option value="simple">Simple (Exact Production)</option>
-                            <option value="experimental">Experimental (CLAHE + Otsu's Binarization)</option>
-                        </select>
-                    </div>
-
-                    <button id="re-extract-btn" disabled
-                        class="w-full flex justify-center items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-gray-400 cursor-not-allowed transition">
-                        <svg id="loading-spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden"
-                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
-                            </circle>
-                            <path class="opacity-75" fill="currentColor"
-                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+            <!-- OCR Controls (Advanced) -->
+            <details
+                class="group bg-white rounded-xl shadow-lg border border-indigo-100 overflow-hidden transition-all duration-300 open:ring-2 open:ring-indigo-100">
+                <summary class="flex items-center justify-between p-5 cursor-pointer list-none hover:bg-slate-50">
+                    <div class="flex items-center gap-2">
+                        <svg class="w-5 h-5 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4">
                             </path>
                         </svg>
-                        Re-Extract & Parse
-                    </button>
+                        <h2 class="text-sm font-semibold text-slate-700">Advanced OCR Options</h2>
+                    </div>
+                    <svg class="w-5 h-5 text-slate-400 transform group-open:rotate-180 transition-transform" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </summary>
 
-                    <a href="{{ url_for('main_beta_v2.list_vouchers_beta') }}"
-                        class="block text-center text-sm text-indigo-600 hover:text-indigo-900 font-medium">
-                        ← Back to Beta Receipts
-                    </a>
+                <div class="p-5 pt-0 border-t border-indigo-50 bg-slate-50/50">
+                    <div class="space-y-3 mt-4">
+                        <div>
+                            <label for="ocr_mode_select"
+                                class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2">Processing
+                                Mode</label>
+                            <select id="ocr_mode_select"
+                                class="block w-full px-3 py-2 text-sm border-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 rounded-lg">
+                                <option value="optimal" selected>Optimal (Recommended)</option>
+                                <option value="enhanced">Enhanced (Legacy)</option>
+                                <option value="experimental">Experimental (Legacy)</option>
+                                <option value="adaptive">Adaptive (Legacy)</option>
+                                <option value="aggressive">Aggressive (Legacy)</option>
+                                <option value="simple">Simple (Legacy)</option>
+                            </select>
+                        </div>
+
+                        <button id="re-extract-btn" disabled
+                            class="w-full flex justify-center items-center px-4 py-2.5 text-sm font-bold rounded-lg text-white bg-slate-300 cursor-not-allowed transition-all shadow-sm">
+                            <svg id="loading-spinner" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white hidden"
+                                xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                    stroke-width="4">
+                                </circle>
+                                <path class="opacity-75" fill="currentColor"
+                                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                </path>
+                            </svg>
+                            Run Re-Extraction
+                        </button>
+
+                        <a href="{{ url_for('main_beta_v2.list_vouchers_beta') }}"
+                            class="block text-center text-xs text-slate-500 hover:text-indigo-600 font-medium py-2">
+                            ← Return to List
+                        </a>
+                    </div>
                 </div>
-            </div>
+            </details>
 
             <!-- Extracted Data -->
             <div class="bg-white p-5 rounded-xl shadow-lg border border-gray-200">

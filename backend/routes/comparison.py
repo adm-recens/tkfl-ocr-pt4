@@ -10,114 +10,120 @@ comparison_bp = Blueprint('comparison', __name__, url_prefix='/api/comparison')
 
 @comparison_bp.route("/run_all", methods=["POST"])
 def run_comparison_all():
-    """Run both Enhanced and Experimental modes on all beta vouchers"""
+    """Run comparison on all beta receipts"""
     try:
-        from backend.services.voucher_service_beta import VoucherServiceBeta
+        from backend.db import get_connection
+        from backend.ocr_service_beta import extract_text_beta
         
-        # Get all beta vouchers using the service (returns pagination dict)
-        voucher_data = VoucherServiceBeta.get_all_vouchers(page=1, per_page=1000)  # Get up to 1000
-        vouchers = voucher_data['vouchers']
+        conn = get_connection()
+        cur = conn.cursor()
+        
+        # Get all beta receipts
+        current_app.logger.info("Querying vouchers_master_beta for files...")
+        cur.execute("SELECT id, file_name, file_storage_path FROM vouchers_master_beta WHERE file_storage_path IS NOT NULL ORDER BY id DESC")
+        receipts = cur.fetchall()
+        
+        current_app.logger.info(f"Found {len(receipts)} receipts in DB.")
         
         results = []
-        current_app.logger.info(f"Found {len(vouchers)} vouchers to compare")
         
-        for voucher in vouchers:
-            voucher_id = voucher['id']
-            file_name = voucher['file_name']
-            file_path = voucher['file_storage_path']
+        summary = {
+            'optimal_wins': 0,
+            'adaptive_wins': 0,
+            'aggressive_wins': 0,
+            'enhanced_wins': 0, 
+            'simple_wins': 0,
+            'ties': 0,
+            'avg_optimal': 0,
+            'avg_adaptive': 0,
+            'avg_aggressive': 0,
+            'avg_enhanced': 0,
+            'avg_simple': 0
+        }
+        
+        totals = {
+            'optimal': 0, 'adaptive': 0, 'aggressive': 0, 'enhanced': 0, 'simple': 0
+        }
+        valid_count = 0
+        
+        for row in receipts:
+            r_id = row['id']
+            r_name = row['file_name']
+            r_path = row['file_storage_path']
             
-            current_app.logger.info(f"Testing voucher {voucher_id}: {file_name} at {file_path}")
-            
-            if not os.path.exists(file_path):
-                current_app.logger.warning(f"File not found: {file_path}")
-                results.append({
-                    'id': voucher_id,
-                    'file_name': file_name,
-                    'enhanced': {'success': False, 'error': 'File not found'},
-                    'experimental': {'success': False, 'error': 'File not found'},
-                    'winner': None,
-                    'diff': 0
-                })
+            current_app.logger.info(f"Checking ID {r_id}: {r_path}")
+            if not os.path.exists(r_path):
+                current_app.logger.warning(f"File not found: {r_path} - Skipping")
                 continue
+                
+            # Test all 5 modes
+            modes = ['optimal', 'adaptive', 'aggressive', 'enhanced', 'simple']
+            mode_results = {}
             
-            # Test Enhanced mode
-            try:
-                current_app.logger.info(f"Testing Enhanced mode for {file_name}")
-                enhanced_result = extract_text_beta(file_path, method='enhanced')
-                enhanced = {
-                    'success': True,
-                    'confidence': enhanced_result.get('confidence', 0),
-                    'processing_time': enhanced_result.get('processing_time_ms', 0),
-                    'text_length': len(enhanced_result.get('text', ''))
-                }
-                current_app.logger.info(f"Enhanced: {enhanced['confidence']}%")
-            except Exception as e:
-                current_app.logger.error(f"Enhanced mode error for {file_name}: {e}")
-                enhanced = {'success': False, 'error': str(e), 'confidence': 0}
-            
-            # Test Experimental mode
-            try:
-                current_app.logger.info(f"Testing Experimental mode for {file_name}")
-                experimental_result = extract_text_beta(file_path, method='experimental')
-                experimental = {
-                    'success': True,
-                    'confidence': experimental_result.get('confidence', 0),
-                    'processing_time': experimental_result.get('processing_time_ms', 0),
-                    'text_length': len(experimental_result.get('text', ''))
-                }
-                current_app.logger.info(f"Experimental: {experimental['confidence']}%")
-            except Exception as e:
-                current_app.logger.error(f"Experimental mode error for {file_name}: {e}")
-                experimental = {'success': False, 'error': str(e), 'confidence': 0}
+            for mode in modes:
+                try:
+                    ocr_res = extract_text_beta(r_path, method=mode)
+                    mode_results[mode] = {
+                        'confidence': ocr_res['confidence'],
+                        'processing_time': ocr_res['processing_time_ms'],
+                        'success': True
+                    }
+                except Exception as e:
+                    mode_results[mode] = {'confidence': 0, 'success': False, 'error': str(e)}
             
             # Determine winner
-            winner = None
-            diff = 0
-            if enhanced['success'] and experimental['success']:
-                diff = experimental['confidence'] - enhanced['confidence']
-                if diff > 0:
-                    winner = 'experimental'
-                elif diff < 0:
-                    winner = 'enhanced'
-                else:
-                    winner = 'tie'
+            successful_modes = {k: v for k, v in mode_results.items() if v['success']}
             
-            results.append({
-                'id': voucher_id,
-                'file_name': file_name,
-                'enhanced': enhanced,
-                'experimental': experimental,
-                'winner': winner,
-                'diff': abs(diff)
-            })
-        
-        # Calculate summary
-        enhanced_wins = sum(1 for r in results if r.get('winner') == 'enhanced')
-        experimental_wins = sum(1 for r in results if r.get('winner') == 'experimental')
-        ties = sum(1 for r in results if r.get('winner') == 'tie')
-        
-        successful_tests = [r for r in results if r['enhanced']['success'] and r['experimental']['success']]
-        
-        avg_enhanced = sum(r['enhanced']['confidence'] for r in successful_tests) / len(successful_tests) if successful_tests else 0
-        avg_experimental = sum(r['experimental']['confidence'] for r in successful_tests) / len(successful_tests) if successful_tests else 0
-        
-        return jsonify({
-            'success': True,
-            'results': results,
-            'summary': {
-                'total': len(results),
-                'tested': len(successful_tests),
-                'enhanced_wins': enhanced_wins,
-                'experimental_wins': experimental_wins,
-                'ties': ties,
-                'avg_enhanced': round(avg_enhanced, 1),
-                'avg_experimental': round(avg_experimental, 1),
-                'avg_diff': round(avg_experimental - avg_enhanced, 1)
+            winner_mode = 'none'
+            winner_score = 0
+            
+            if successful_modes:
+                valid_count += 1
+                winner = max(successful_modes.items(), key=lambda x: x[1]['confidence'])
+                winner_mode = winner[0]
+                winner_score = winner[1]['confidence']
+                
+                # Check for ties (within 0.1%)
+                ties = [m for m, res in successful_modes.items() if abs(res['confidence'] - winner_score) < 0.1]
+                if len(ties) > 1:
+                    winner_mode = 'tie'
+                    summary['ties'] += 1
+                else:
+                    summary[f'{winner_mode}_wins'] += 1
+                
+                for mode in modes:
+                    if mode_results[mode]['success']:
+                        totals[mode] += mode_results[mode]['confidence']
+            
+            # Create result entry regardless of success
+            result_entry = {
+                'id': r_id,
+                'file_name': r_name,
+                'optimal': mode_results.get('optimal', {'confidence': 0, 'success': False}),
+                'adaptive': mode_results.get('adaptive', {'confidence': 0, 'success': False}),
+                'aggressive': mode_results.get('aggressive', {'confidence': 0, 'success': False}),
+                'enhanced': mode_results.get('enhanced', {'confidence': 0, 'success': False}),
+                'simple': mode_results.get('simple', {'confidence': 0, 'success': False}),
+                'winner': winner_mode
             }
-        })
+            
+            results.append(result_entry)
+        
+        # Calculate averages
+        if valid_count > 0:
+            summary['avg_optimal'] = round(totals['optimal'] / valid_count, 1)
+            summary['avg_adaptive'] = round(totals['adaptive'] / valid_count, 1)
+            summary['avg_aggressive'] = round(totals['aggressive'] / valid_count, 1)
+            summary['avg_enhanced'] = round(totals['enhanced'] / valid_count, 1)
+            summary['avg_simple'] = round(totals['simple'] / valid_count, 1)
+            
+        cur.close()
+        conn.close()
+        
+        return jsonify({'success': True, 'results': results, 'summary': summary})
         
     except Exception as e:
         current_app.logger.error(f"Comparison error: {e}")
         import traceback
-        current_app.logger.error(traceback.format_exc())
-        return jsonify({'success': False, 'message': str(e)}), 500
+        traceback.print_exc()
+        return jsonify({'success': False, 'message': str(e)})
