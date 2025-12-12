@@ -33,12 +33,11 @@ def upload_file():
         file.save(filepath)
         
         try:
-            # OCR Processing
-            image_obj = Image.open(filepath)
-            raw_text = extract_text_default(filepath)
-            image_obj.close()
+            # OCR Processing with Optimal Mode
+            ocr_result = extract_text_default(filepath, method='optimal')
+            raw_text = ocr_result.get('text', '') if isinstance(ocr_result, dict) else str(ocr_result)
             
-            # Parsing
+            # Parsing with Enhanced Validation
             parsed_data = parse_receipt_text(raw_text)
             
             # Database Insertion via Service
@@ -47,7 +46,7 @@ def upload_file():
                 file_storage_path=filepath,
                 raw_text=raw_text,
                 parsed_data=parsed_data,
-                ocr_mode='tesseract_default'
+                ocr_mode='optimal'
             )
 
             flash(f'File "{filename}" uploaded and processed successfully!', 'success')
@@ -81,15 +80,19 @@ def re_extract_voucher(voucher_id):
             
         filepath = voucher['file_storage_path']
         
-        # OCR Extraction based on mode
-        if new_ocr_mode in ['contrast', 'threshold', 'resize']:
-            raw_text = extract_text_adv(filepath, mode=new_ocr_mode)
-        elif new_ocr_mode == 'easyocr':
-            raw_text = extract_text_easyocr(filepath)
+        # OCR Extraction based on mode - Now using enhanced modes
+        # Supported modes: optimal, adaptive, aggressive, enhanced, simple
+        if new_ocr_mode in ['optimal', 'adaptive', 'aggressive', 'enhanced', 'simple']:
+            ocr_result = extract_text_default(filepath, method=new_ocr_mode)
+            raw_text = ocr_result.get('text', '') if isinstance(ocr_result, dict) else str(ocr_result)
+            confidence = ocr_result.get('confidence', 0) if isinstance(ocr_result, dict) else 0
         elif new_ocr_mode in ['default', 'tesseract_default']:
-            raw_text = extract_text_default(filepath)
+            # Backward compatibility: treat as 'enhanced'
+            ocr_result = extract_text_default(filepath, method='enhanced')
+            raw_text = ocr_result.get('text', '') if isinstance(ocr_result, dict) else str(ocr_result)
+            confidence = ocr_result.get('confidence', 0) if isinstance(ocr_result, dict) else 0
         else:
-            return jsonify({"success": False, "message": f"Invalid OCR mode: {new_ocr_mode}"}), 400
+            return jsonify({"success": False, "message": f"Invalid OCR mode: {new_ocr_mode}. Use: optimal, adaptive, aggressive, enhanced, or simple"}), 400
 
         if raw_text.startswith('[OCR ERROR]'):
             return jsonify({"success": False, "message": f"OCR Failed: {raw_text}"}), 500
@@ -105,7 +108,8 @@ def re_extract_voucher(voucher_id):
             "message": f"Re-extraction complete with mode: {new_ocr_mode}.",
             "parsed_data": parsed_data,
             "raw_text": raw_text,
-            "new_ocr_mode": new_ocr_mode
+            "new_ocr_mode": new_ocr_mode,
+            "confidence": confidence
         })
         
     except Exception as e:

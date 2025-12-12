@@ -28,11 +28,11 @@
                             Mode</label>
                         <select id="ocr_mode_select"
                             class="block w-full px-3 py-2 text-sm border-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 rounded-md">
-                            <option value="default">Tesseract Default</option>
-                            <option value="contrast">Tesseract Contrast</option>
-                            <option value="threshold">Tesseract Threshold</option>
-                            <option value="resize">Tesseract Resize</option>
-                            <option value="easyocr">EasyOCR (ML)</option>
+                            <option value="optimal" selected>Optimal (Recommended)</option>
+                            <option value="adaptive">Adaptive</option>
+                            <option value="aggressive">Aggressive</option>
+                            <option value="enhanced">Enhanced</option>
+                            <option value="simple">Simple</option>
                         </select>
                     </div>
 
@@ -59,6 +59,13 @@
                         ← Back to Dashboard
                     </a>
                 </div>
+            </div>
+
+            <!-- Validation Warnings & Corrections (Phase 4) -->
+            <div id="validation-section" class="bg-white p-5 rounded-xl shadow-lg border border-yellow-200 hidden">
+                <h2 class="text-lg font-semibold text-yellow-800 mb-3">⚠️ Validation Alerts</h2>
+                <div id="validation-warnings" class="space-y-2 mb-3"></div>
+                <div id="validation-corrections" class="space-y-2"></div>
             </div>
 
             <!-- Extracted Data -->
