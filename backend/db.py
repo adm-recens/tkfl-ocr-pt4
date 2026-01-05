@@ -125,7 +125,8 @@ def init_db():
             vendor_details TEXT,
             gross_total NUMERIC(12, 2),
             total_deductions NUMERIC(12, 2),
-            net_total NUMERIC(12, 2)
+            net_total NUMERIC(12, 2),
+            ocr_confidence NUMERIC(5, 2)
         );
         """)
 

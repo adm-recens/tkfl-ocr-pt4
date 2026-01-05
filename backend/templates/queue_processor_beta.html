@@ -1,0 +1,1268 @@
+{% extends "base.html" %}
+
+{% block title %}Queue Processor - Beta v2{% endblock %}
+
+{% block head %}
+<!-- Cropper.js will be loaded in content block -->
+{% endblock %}
+
+{% block content %}
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-indigo-50/50 py-8">
+    <div class="max-w-6xl mx-auto px-4">
+
+        <!-- Progress Bar -->
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div class="flex justify-between items-center mb-3">
+                <h2 class="text-xl font-bold text-slate-800">Processing Queue</h2>
+                <span class="text-sm text-slate-600">Receipt <span id="current-num">1</span> of <span
+                        id="total-num">0</span></span>
+            </div>
+            <div class="w-full bg-slate-200 rounded-full h-3 overflow-hidden">
+                <div id="progress-bar"
+                    class="bg-gradient-to-r from-indigo-600 to-purple-600 h-full transition-all duration-300"
+                    style="width: 0%"></div>
+            </div>
+            <div class="flex justify-between text-xs text-slate-500 mt-2">
+                <span><span id="progress-percent">0</span>% Complete</span>
+                <span id="stage-indicator" class="font-semibold text-indigo-600">Stage: Crop</span>
+            </div>
+        </div>
+
+        <!-- Wizard Container -->
+        <div class="bg-white rounded-xl shadow-2xl overflow-hidden">
+
+            <!-- Stage 1: Crop -->
+            <div id="stage-crop" class="p-8">
+                <div class="mb-6">
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Step 1: Crop Receipt Area</h3>
+                    <p class="text-slate-600">Drag to adjust the crop area, or skip to use the full image for better OCR
+                        accuracy</p>
+                </div>
+
+                <!-- Cropper Container with better height -->
+                <div class="relative bg-gradient-to-br from-slate-100 to-slate-50 rounded-xl overflow-hidden border-2 border-slate-200"
+                    style="max-height: 500px;">
+                    <img id="crop-image" src="" alt="Receipt" class="max-w-full"
+                        style="display: block; max-height: 500px;">
+                </div>
+
+                <!-- Crop Controls -->
+                <div class="mt-6 flex gap-3">
+                    <button id="crop-apply-btn"
+                        class="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all transform hover:scale-105">
+                        <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                        Apply Crop & Continue
+                    </button>
+                    <button id="crop-skip-btn"
+                        class="flex-1 bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl font-semibold text-lg hover:shadow-xl transition-all transform hover:scale-105">
+                        <svg class="inline-block w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Skip Crop (Use Full Image)
+                    </button>
+                </div>
+
+                <!-- Helper Text -->
+                <div class="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                    <div class="flex items-start gap-3">
+                        <svg class="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <div class="text-sm text-blue-800">
+                            <p class="font-semibold mb-1">Tips for better OCR:</p>
+                            <ul class="space-y-1 text-blue-700">
+                                <li>• Drag the corners to resize the crop area</li>
+                                <li>• Include all text but remove unnecessary borders</li>
+                                <li>• Make sure the text is straight and clearly visible</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 2: OCR Processing -->
+            <div id="stage-ocr" class="p-8 hidden">
+                <div class="text-center py-12">
+                    <div
+                        class="inline-block animate-spin rounded-full h-16 w-16 border-4 border-indigo-200 border-t-indigo-600 mb-6">
+                    </div>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Processing Receipt...</h3>
+                    <p class="text-slate-600 mb-4" id="ocr-status">Preparing image...</p>
+
+                    <!-- Step Progress -->
+                    <div class="max-w-md mx-auto mt-6 text-left">
+                        <div class="space-y-3">
+                            <div class="flex items-center gap-3" id="step-upload">
+                                <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
+                                    <svg class="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd"
+                                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                            clip-rule="evenodd"></path>
+                                    </svg>
+                                </div>
+                                <span class="text-sm text-gray-500">Uploading cropped image</span>
+                            </div>
+                            <div class="flex items-center gap-3" id="step-preprocess">
+                                <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
+                                    <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                                </div>
+                                <span class="text-sm text-gray-500">Preprocessing image</span>
+                            </div>
+                            <div class="flex items-center gap-3" id="step-ocr">
+                                <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
+                                    <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                                </div>
+                                <span class="text-sm text-gray-500">Running OCR (Optimal mode)</span>
+                            </div>
+                            <div class="flex items-center gap-3" id="step-parse">
+                                <div class="w-6 h-6 rounded-full bg-gray-200 flex items-center justify-center">
+                                    <div class="w-2 h-2 rounded-full bg-gray-400"></div>
+                                </div>
+                                <span class="text-sm text-gray-500">Parsing extracted text</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeout Message -->
+                    <div id="timeout-message" class="hidden mt-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+                        <p class="text-yellow-800 text-sm">
+                            Taking longer than expected... OCR is still processing. Please wait or
+                            <button onclick="location.reload()" class="underline font-semibold">refresh the
+                                page</button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 3: Review (Read-Only) -->
+            <div id="stage-review" class="hidden">
+                <!-- calc height for consistency -->
+                <div class="h-[calc(100vh-180px)] p-0 grid grid-cols-2 gap-0 border-t border-slate-200">
+                    <!-- Cropped Image Preview (Left - Fixed) -->
+                    <div
+                        class="h-full bg-slate-100 border-r border-slate-200 overflow-hidden relative flex items-center justify-center">
+                        <div class="absolute top-4 left-4 z-10">
+                            <h4
+                                class="font-semibold text-slate-700 bg-white/90 backdrop-blur px-3 py-1 rounded shadow-sm border border-slate-200 text-sm">
+                                Cropped Image</h4>
+                        </div>
+                        <div class="absolute bottom-4 left-4 z-10 flex gap-2">
+                            <div class="mt-0">
+                                <span id="review-confidence-badge"
+                                    class="px-3 py-1 rounded-full text-sm font-semibold shadow-sm backdrop-blur bg-white/50"></span>
+                            </div>
+                        </div>
+                        <img id="review-image" src="" class="max-w-full max-h-full object-contain p-4">
+                    </div>
+
+                    <!-- Extracted Data (Right - Scrollable) -->
+                    <div class="h-full overflow-y-auto custom-scrollbar bg-white relative">
+                        <div class="p-8 pb-32"> <!-- padding for footer -->
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+                                    <span class="w-1 h-6 bg-indigo-600 rounded-full"></span>
+                                    Master Data
+                                </h4>
+                                <div class="space-y-3 text-sm">
+                                    <div
+                                        class="flex justify-between p-3 bg-slate-50 rounded-lg border border-slate-100">
+                                        <span class="text-slate-600 font-medium">Voucher Number</span>
+                                        <span class="font-mono font-bold text-slate-800"
+                                            id="review-voucher-number">-</span>
+                                    </div>
+                                    <div
+                                        class="flex justify-between p-3 bg-slate-50 rounded-lg border border-slate-100">
+                                        <span class="text-slate-600 font-medium">Voucher Date</span>
+                                        <span class="font-bold text-slate-800" id="review-voucher-date">-</span>
+                                    </div>
+                                    <div
+                                        class="flex justify-between p-3 bg-slate-50 rounded-lg border border-slate-100">
+                                        <span class="text-slate-600 font-medium">Supplier</span>
+                                        <span class="font-bold text-slate-800" id="review-supplier-name">-</span>
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-3 mt-4">
+                                        <div class="p-3 bg-indigo-50 rounded-lg border border-indigo-100 text-center">
+                                            <div
+                                                class="text-xs font-bold text-indigo-400 uppercase tracking-wider mb-1">
+                                                Gross</div>
+                                            <div class="font-bold text-indigo-700 text-lg" id="review-gross-total">₹0
+                                            </div>
+                                        </div>
+                                        <div class="p-3 bg-red-50 rounded-lg border border-red-100 text-center">
+                                            <div class="text-xs font-bold text-red-400 uppercase tracking-wider mb-1">
+                                                Deductions</div>
+                                            <div class="font-bold text-red-700 text-lg" id="review-deductions">₹0</div>
+                                        </div>
+                                        <div class="p-3 bg-green-50 rounded-lg border border-green-100 text-center">
+                                            <div class="text-xs font-bold text-green-400 uppercase tracking-wider mb-1">
+                                                Net</div>
+                                            <div class="font-bold text-green-700 text-lg" id="review-net-total">₹0</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Line Items -->
+                            <div id="review-items-section" class="hidden mt-8">
+                                <h4 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+                                    <span class="w-1 h-6 bg-slate-400 rounded-full"></span>
+                                    Line Items
+                                </h4>
+                                <div id="review-items-list"
+                                    class="space-y-2 text-sm bg-slate-50 p-3 rounded-lg max-h-60 overflow-y-auto custom-scrollbar border border-slate-200">
+                                </div>
+                            </div>
+
+                            <!-- Deductions -->
+                            <div id="review-deductions-section" class="hidden mt-8">
+                                <h4 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+                                    <span class="w-1 h-6 bg-red-400 rounded-full"></span>
+                                    Deductions breakdown
+                                </h4>
+                                <div id="review-deductions-list"
+                                    class="space-y-2 text-sm bg-slate-50 p-3 rounded-lg border border-slate-200">
+                                </div>
+                            </div>
+
+                            <!-- Warnings -->
+                            <div id="review-warnings-section"
+                                class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 hidden mt-6">
+                                <h5 class="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                        </path>
+                                    </svg>
+                                    Validation Warnings
+                                </h5>
+                                <ul id="review-warnings-list" class="text-sm text-yellow-700 space-y-1 ml-7 list-disc">
+                                </ul>
+                            </div>
+
+                            <!-- Action Buttons (Sticky Footer) -->
+                            <div
+                                class="sticky bottom-0 bg-white/95 backdrop-blur border-t border-slate-200 p-4 -mx-8 -mb-8 mt-8 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-20 flex gap-3">
+                                <button id="review-looks-good-btn"
+                                    class="flex-1 bg-gradient-to-r from-green-600 to-green-700 text-white py-3 rounded-xl font-semibold hover:shadow-xl transition transform hover:scale-[1.02]">
+                                    ✅ Looks Good - Continue
+                                </button>
+                                <button id="review-need-corrections-btn"
+                                    class="flex-1 bg-gradient-to-r from-orange-600 to-orange-700 text-white py-3 rounded-xl font-semibold hover:shadow-xl transition transform hover:scale-[1.02]">
+                                    ✏️ Need Corrections
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stage 4: Validate (Editable) -->
+            <div id="stage-validate" class="hidden">
+                <!-- Use calc height to fill screen minus header/padding -->
+                <div class="h-[calc(100vh-180px)] p-0 grid grid-cols-2 gap-0 border-t border-slate-200">
+                    <!-- Image Preview (Left - Fixed) -->
+                    <div
+                        class="h-full bg-slate-100 border-r border-slate-200 overflow-hidden relative flex items-center justify-center">
+                        <div class="absolute top-4 left-4 z-10">
+                            <h4
+                                class="font-semibold text-slate-700 bg-white/90 backdrop-blur px-3 py-1 rounded shadow-sm border border-slate-200 text-sm">
+                                Receipt Image</h4>
+                        </div>
+                        <div class="absolute bottom-4 left-4 z-10 flex gap-2">
+                            <span id="confidence-badge"
+                                class="px-3 py-1 rounded-full text-sm font-semibold shadow-sm backdrop-blur bg-white/50"></span>
+                        </div>
+                        <img id="validate-image" src=""
+                            class="max-w-full max-h-full object-contain p-4 transition-transform duration-200">
+                    </div>
+
+                    <!-- Validation Form (Right - Scrollable) -->
+                    <div class="h-full overflow-y-auto custom-scrollbar bg-white relative">
+                        <div class="p-8 pb-32"> <!-- pb-32 adds padding for sticky footer -->
+                            <div>
+                                <h4 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+                                    <span class="w-1 h-6 bg-indigo-600 rounded-full"></span>
+                                    Master Data
+                                </h4>
+                                <form id="validate-form" class="space-y-4">
+                                    <div>
+                                        <label
+                                            class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Voucher
+                                            Number</label>
+                                        <input type="text" name="voucher_number" id="input-voucher-number"
+                                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all font-mono text-slate-700">
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Voucher
+                                            Date</label>
+                                        <input type="text" name="voucher_date" id="input-voucher-date"
+                                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                                    </div>
+                                    <div>
+                                        <label
+                                            class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Supplier
+                                            Name</label>
+                                        <input type="text" name="supplier_name" id="input-supplier-name"
+                                            class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                                    </div>
+                                    <div class="grid grid-cols-3 gap-3">
+                                        <div>
+                                            <label
+                                                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">Gross
+                                                Total</label>
+                                            <input type="number" step="0.01" name="gross_total" id="input-gross-total"
+                                                class="w-full px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 font-bold text-slate-700">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 text-red-600">Deductions</label>
+                                            <input type="number" step="0.01" name="total_deductions"
+                                                id="input-deductions"
+                                                class="w-full px-3 py-2 border border-red-200 bg-red-50 text-red-700 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 font-bold">
+                                        </div>
+                                        <div>
+                                            <label
+                                                class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1 text-green-600">Net
+                                                Total</label>
+                                            <input type="number" step="0.01" name="net_total" id="input-net-total"
+                                                class="w-full px-3 py-2 border border-green-200 bg-green-50 text-green-700 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 font-bold">
+                                        </div>
+                                    </div>
+
+                                    <!-- Validation Warnings -->
+                                    <div id="warnings-section"
+                                        class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 hidden">
+                                        <h5 class="font-semibold text-yellow-800 mb-2 flex items-center gap-2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z">
+                                                </path>
+                                            </svg>
+                                            Validation Warnings
+                                        </h5>
+                                        <ul id="warnings-list" class="text-sm text-yellow-700 space-y-1 ml-7 list-disc">
+                                        </ul>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Line Items Section -->
+                            <div id="items-section" class="hidden mt-8">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                                        <span class="w-1 h-6 bg-slate-400 rounded-full"></span>
+                                        Line Items
+                                    </h4>
+                                </div>
+                                <div id="items-list" class="space-y-3 mb-4">
+                                </div>
+                                <button type="button" id="add-item-btn"
+                                    class="w-full py-3 border-2 border-dashed border-indigo-200 text-indigo-600 rounded-xl hover:bg-indigo-50 hover:border-indigo-400 transition-all font-semibold flex items-center justify-center gap-2 group">
+                                    <svg class="w-5 h-5 transform group-hover:scale-110 transition-transform"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    Add New Item
+                                </button>
+                            </div>
+
+                            <!-- Deductions Section -->
+                            <div id="deductions-section" class="hidden mt-8">
+                                <div class="flex justify-between items-center mb-4">
+                                    <h4 class="font-bold text-slate-800 text-lg flex items-center gap-2">
+                                        <span class="w-1 h-6 bg-red-400 rounded-full"></span>
+                                        Deductions
+                                    </h4>
+                                </div>
+                                <div id="deductions-list" class="space-y-3 p-1 mb-4">
+                                </div>
+                                <button type="button" id="add-deduction-btn"
+                                    class="w-full py-3 border-2 border-dashed border-red-200 text-red-600 rounded-xl hover:bg-red-50 hover:border-red-400 transition-all font-semibold flex items-center justify-center gap-2 group">
+                                    <svg class="w-5 h-5 transform group-hover:scale-110 transition-transform"
+                                        fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                            d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                                    </svg>
+                                    Add New Deduction
+                                </button>
+                            </div>
+
+                            <!-- Validation Actions (Stick To Bottom of Container) -->
+                            <div
+                                class="sticky bottom-0 bg-white/95 backdrop-blur border-t border-slate-200 p-4 -mx-8 -mb-8 mt-8 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-20 flex justify-between items-center">
+                                <button type="button" onclick="document.getElementById('prev-btn').click()"
+                                    class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition text-sm">
+                                    ← Previous
+                                </button>
+                                <div class="flex gap-2">
+                                    <button type="button" onclick="document.getElementById('skip-btn').click()"
+                                        class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition text-sm">
+                                        Skip
+                                    </button>
+                                    <button type="button" onclick="document.getElementById('next-btn').click()"
+                                        class="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition text-sm">
+                                        Save & Next →
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completion Screen -->
+            <div id="stage-complete" class="hidden p-8">
+                <div class="text-center py-12">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
+                        <svg class="w-12 h-12 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                            </path>
+                        </svg>
+                    </div>
+
+                    <h3 class="text-3xl font-bold text-slate-800 mb-2">Queue Complete!</h3>
+                    <p class="text-slate-600 mb-8">All receipts have been processed</p>
+
+                    <div class="grid grid-cols-2 gap-4 max-w-md mx-auto mb-8">
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <div class="text-3xl font-bold text-green-600" id="completed-count">0</div>
+                            <div class="text-sm text-slate-600">Validated</div>
+                        </div>
+                        <div class="bg-yellow-50 p-4 rounded-lg">
+                            <div class="text-3xl font-bold text-yellow-600" id="skipped-count">0</div>
+                            <div class="text-sm text-slate-600">Skipped</div>
+                        </div>
+                    </div>
+
+                    <button id="save-batch-btn"
+                        class="px-8 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white rounded-lg font-semibold text-lg hover:shadow-xl transition">
+                        Save All to Database
+                    </button>
+                </div>
+            </div>
+
+            <!-- Global Navigation -->
+            <div id="navigation" class="border-t border-slate-200 px-8 py-4 bg-slate-50 flex justify-between hidden">
+                <button id="prev-btn"
+                    class="px-4 py-2 bg-slate-200 text-slate-700 rounded-lg hover:bg-slate-300 transition">
+                    ← Previous
+                </button>
+                <button id="skip-btn"
+                    class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition">
+                    Skip Receipt
+                </button>
+                <button id="next-btn"
+                    class="px-6 py-2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold hover:shadow-lg transition">
+                    Save & Next →
+                </button>
+            </div>
+        </div>
+
+        <!-- Cropper.js CSS & JS -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+
+        <script>
+            const queueId = '{{ queue_id }}';
+            let cropper = null;
+            let currentData = null;
+
+            const stages = {
+                CROP: 'crop',
+                OCR: 'ocr',
+                REVIEW: 'review',      // New read-only review stage
+                VALIDATE: 'validate',   // Editable validation stage
+                COMPLETE: 'complete'
+            };
+
+            let currentStage = stages.CROP;
+
+            // Load current queue status
+            async function loadCurrent() {
+                try {
+                    const response = await fetch(`/api/queue/${queueId}/status`);
+                    const data = await response.json();
+
+                    if (!data.success) {
+                        alert('Error loading queue: ' + data.message);
+                        return;
+                    }
+
+                    currentData = data;
+                    updateProgress(data.progress);
+
+                    if (data.completed) {
+                        showCompletionScreen(data);
+                        return;
+                    }
+
+                    // Determine stage based on file status
+                    const file = data.current_file;
+                    if (!file) {
+                        // Should be complete if no file, but double check
+                        console.warn('No current file but not marked complete?');
+                        return;
+                    }
+
+                    if (file.status === 'pending') {
+                        showCropStage(file.original_path);
+                    } else if (file.status === 'uploaded' || file.status === 'cropped') {
+                        // If we have a crop but no OCR yet, go to OCR
+                        if (file.cropped_path) {
+                            showOCRStage();
+                            runOCR();
+                        } else {
+                            showCropStage(file.original_path);
+                        }
+                    } else if (file.status === 'ocr_complete') {
+                        // OCR done, show Review
+                        showReviewStage({
+                            confidence: data.ocr_confidence,
+                            parsed_data: data.parsed_data
+                        });
+                    } else if (file.status === 'validated') {
+                        // Should have moved to next, but if we are here, maybe just show review?
+                        showReviewStage({
+                            confidence: data.ocr_confidence,
+                            parsed_data: data.parsed_data
+                        });
+                    }
+
+                } catch (error) {
+                    console.error('Error loading current:', error);
+                }
+            }
+
+            // Initialize
+            async function init() {
+                await loadCurrent();
+            }
+
+            function updateProgress(progress) {
+                if (!progress) return;
+
+                const current = progress.current || 0;
+                const total = progress.total || 0;
+                const percent = progress.percent || 0;
+
+                // Update text
+                const statusText = `Receipt ${current} of ${total}`;
+                const queueStatus = document.querySelector('.text-slate-500.text-sm.float-right');
+                if (queueStatus) {
+                    queueStatus.textContent = statusText;
+                }
+
+                // Update bar
+                const progressBar = document.querySelector('.bg-indigo-600.h-2.rounded-full');
+                if (progressBar) {
+                    progressBar.style.width = `${percent}%`;
+                }
+
+                // Update percentage text
+                const percentText = document.querySelector('.text-xs.font-semibold.inline-block.text-indigo-600');
+                if (percentText) {
+                    percentText.textContent = `${percent}% Complete`;
+                }
+
+                console.log(`[PROGRESS] Updated: ${statusText} (${percent}%)`);
+            }
+
+            async function loadCurrent() {
+                try {
+                    const response = await fetch(`/api/queue/${queueId}/current`);
+                    const data = await response.json();
+                    console.log("[DEBUG] Queue Data Received:", data);
+
+                    if (data.success) {
+                        console.log(`[DEBUG] Progress: ${data.progress?.current}/${data.progress?.total}`);
+                    }
+
+                    if (!data.success) {
+                        // Handle session expiry or invalid queue
+                        alert('Session expired: ' + (data.message || 'Queue not found'));
+                        window.location.href = '/beta_v2/queue/upload';
+                        return;
+                    }
+
+                    if (data.completed) {
+                        showCompletionScreen(data);
+                        return;
+                    }
+
+                    currentData = data;
+                    updateProgress(data.progress);
+
+                    // Start with crop stage
+                    showCropStage(data.current_file.original_path);
+
+                } catch (error) {
+                    console.error('Queue load error:', error);
+                    if (confirm('Session expired or queue not found. Return to upload page?')) {
+                        window.location.href = '/beta_v2/queue/upload';
+                    }
+                }
+            }
+
+            function updateProgress(progress) {
+                document.getElementById('current-num').textContent = progress.current;
+                document.getElementById('total-num').textContent = progress.total;
+                document.getElementById('progress-percent').textContent = progress.percent;
+                document.getElementById('progress-bar').style.width = progress.percent + '%';
+            }
+
+            function showCropStage(imagePath) {
+                hideAllStages();
+                document.getElementById('stage-crop').classList.remove('hidden');
+                document.getElementById('stage-indicator').textContent = 'Stage: Crop';
+                currentStage = stages.CROP;
+
+                // Navigation state: Hide Save & Next/Skip, Show Previous
+                document.getElementById('navigation').classList.remove('hidden');
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('skip-btn').classList.remove('hidden');
+                document.getElementById('prev-btn').classList.remove('hidden');
+
+                const imgElement = document.getElementById('crop-image');
+
+                if (!imagePath) {
+                    console.error('No image path provided for cropping');
+                    alert('Error: Image missing. Skipping to next...');
+                    // Try to recover by skipping (optional logic)
+                    return;
+                }
+
+                // Extract just the filename from the path (works for both forward and backslashes)
+                const filename = imagePath.replace(/\\/g, '/').split('/').pop();
+                imgElement.src = '/uploads/' + filename;
+
+                // Wait for image to load before initializing cropper
+                imgElement.onload = function () {
+                    // Destroy existing cropper if exists
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+
+                    // Check if Cropper is available
+                    if (typeof Cropper === 'undefined') {
+                        console.error('Cropper.js library not loaded');
+                        alert('Error: Cropper library failed to load. Please refresh the page.');
+                        return;
+                    }
+
+                    // Initialize cropper
+                    cropper = new Cropper(imgElement, {
+                        aspectRatio: NaN,
+                        viewMode: 1,
+                        autoCropArea: 0.9,
+                        responsive: true,
+                        zoomable: true,
+                        rotatable: true
+                    });
+                };
+            }
+
+            function showOCRStage() {
+                hideAllStages();
+                document.getElementById('stage-ocr').classList.remove('hidden');
+                document.getElementById('stage-indicator').textContent = 'Stage: OCR Processing';
+                currentStage = stages.OCR;
+
+                // Navigation state: Hide all navigation during processing
+                document.getElementById('navigation').classList.add('hidden');
+            }
+
+            function showValidateStage(ocrData) {
+                hideAllStages();
+                document.getElementById('stage-validate').classList.remove('hidden');
+                document.getElementById('stage-indicator').textContent = 'Stage: Validate';
+                currentStage = stages.VALIDATE;
+
+                // Navigation state: Hide global nav (using inline buttons instead)
+                document.getElementById('navigation').classList.add('hidden');
+
+                // Show image - USE CROPPED if available, otherwise original
+                const validateImg = document.getElementById('validate-image');
+                const imagePath = currentData.current_file.cropped_path || currentData.current_file.original_path;
+                const filename = imagePath.replace(/\\/g, '/').split('/').pop();
+                validateImg.src = '/uploads/' + filename;
+
+                // Show confidence
+                const confidence = ocrData.confidence;
+                const badge = document.getElementById('confidence-badge');
+                if (confidence >= 85) {
+                    badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-700';
+                    badge.textContent = `✅ ${confidence.toFixed(0)}% Confidence`;
+                } else if (confidence >= 65) {
+                    badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-700';
+                    badge.textContent = `⚠️ ${confidence.toFixed(0)}% Confidence`;
+                } else {
+                    badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-700';
+                    badge.textContent = `❌ ${confidence.toFixed(0)}% Confidence`;
+                }
+
+                // Defensive check for data
+                if (!ocrData || !ocrData.parsed_data) {
+                    console.error('[REVIEW] Missing parsed_data in ocrData:', ocrData);
+                    document.getElementById('navigation').classList.remove('hidden'); // Show nav so user isn't stuck
+                    return;
+                }
+
+                // Populate master form
+                const master = ocrData.parsed_data.master || {};
+                document.getElementById('review-voucher-number').textContent = master.voucher_number || '-';
+                document.getElementById('review-voucher-date').textContent = master.voucher_date || '-';
+                document.getElementById('review-supplier-name').textContent = master.supplier_name || '-';
+                document.getElementById('review-gross-total').textContent = `₹${parseFloat(master.gross_total || 0).toFixed(2)}`;
+                document.getElementById('review-deductions').textContent = `₹${parseFloat(master.total_deductions || 0).toFixed(2)}`;
+                document.getElementById('review-net-total').textContent = `₹${parseFloat(master.net_total || 0).toFixed(2)}`;
+
+                // Show warnings
+                const warnings = (ocrData.parsed_data.metadata && ocrData.parsed_data.metadata.validation_warnings) ? ocrData.parsed_data.metadata.validation_warnings : [];
+                if (warnings.length > 0) {
+                    document.getElementById('review-warnings-section').classList.remove('hidden');
+                    const warningsList = document.getElementById('review-warnings-list');
+                    warningsList.innerHTML = warnings.map(w => `<li>• ${w}</li>`).join('');
+                } else {
+                    document.getElementById('review-warnings-section').classList.add('hidden');
+                }
+
+                // Display Line Items (Editable)
+                const items = ocrData.parsed_data.items || [];
+                document.getElementById('review-items-section').classList.remove('hidden');
+                const itemsList = document.getElementById('review-items-list');
+                itemsList.innerHTML = '';
+
+                if (items.length === 0) {
+                    itemsList.innerHTML = '<p class="text-xs text-slate-500 italic p-2">No items found.</p>';
+                } else {
+                    // FIX: Iterate correctly and create simple non-editable rows for review
+                    itemsList.innerHTML = items.map(item => `
+                                <div class="flex justify-between items-center bg-slate-50 border border-slate-100 p-2 rounded">
+                                    <div class="flex-1">
+                                        <div class="font-medium text-slate-700">${item.item_name || item.item_description || 'Item'}</div>
+                                        <div class="text-xs text-slate-500">${item.quantity || 0} x ₹${item.unit_price || item.rate || 0}</div>
+                                    </div>
+                                    <div class="font-bold text-slate-800">
+                                        ₹${(item.line_amount || 0).toFixed(2)}
+                                    </div>
+                                </div>
+                            `).join('');
+                }
+
+                // Display Deductions (Editable)
+                const deductions = ocrData.parsed_data.deductions || [];
+                document.getElementById('review-deductions-section').classList.remove('hidden');
+                const deductionsList = document.getElementById('review-deductions-list');
+                deductionsList.innerHTML = '';
+
+                if (deductions.length === 0) {
+                    deductionsList.innerHTML = '<p class="text-xs text-slate-500 italic p-2">No deductions found.</p>';
+                } else {
+                    deductionsList.innerHTML = deductions.map(ded => `
+                                <div class="flex justify-between items-center bg-slate-50 border border-slate-100 p-2 rounded">
+                                    <div class="text-slate-700 font-medium">${ded.deduction_type || 'Deduction'}</div>
+                                    <div class="text-red-600 font-bold">-₹${(ded.amount || 0).toFixed(2)}</div>
+                                </div>
+                            `).join('');
+                }
+
+                // Store parsed data for later submission
+                currentData.parsed_data = ocrData.parsed_data;
+            }
+
+            function showCompletionScreen(data) {
+                console.log('[COMPLETE] Showing completion screen', data);
+                hideAllStages();
+
+                const completeStage = document.getElementById('stage-complete');
+                completeStage.classList.remove('hidden');
+
+                document.getElementById('navigation').classList.add('hidden');
+
+                if (data.completed_count !== undefined) {
+                    document.getElementById('completed-count').textContent = data.completed_count;
+                }
+                if (data.skipped_count !== undefined) {
+                    document.getElementById('skipped-count').textContent = data.skipped_count;
+                }
+            }
+
+            function hideAllStages() {
+                document.getElementById('stage-crop').classList.add('hidden');
+                document.getElementById('stage-ocr').classList.add('hidden');
+                document.getElementById('stage-review').classList.add('hidden');
+                document.getElementById('stage-validate').classList.add('hidden');
+                document.getElementById('stage-complete').classList.add('hidden');
+            }
+
+            // Button Handlers
+            document.getElementById('crop-apply-btn').addEventListener('click', async () => {
+                const canvas = cropper.getCroppedCanvas();
+
+                canvas.toBlob(async (blob) => {
+                    const formData = new FormData();
+                    formData.append('cropped_image', blob);
+
+                    await fetch(`/api/queue/${queueId}/crop`, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    // Move to OCR stage
+                    showOCRStage();
+                    await runOCR();
+                });
+            });
+
+            document.getElementById('crop-skip-btn').addEventListener('click', async () => {
+                await fetch(`/api/queue/${queueId}/skip_crop`, { method: 'POST' });
+                showOCRStage();
+                await runOCR();
+            });
+
+            // Review Stage Buttons
+            document.getElementById('review-looks-good-btn').addEventListener('click', async () => {
+                console.log('[REVIEW] Looks good - proceeding to next receipt');
+                // Move directly to next receipt without validation form
+                const response = await fetch(`/api/queue/${queueId}/validate`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        master: currentData.parsed_data.master,
+                        items: currentData.parsed_data.items || [],
+                        deductions: currentData.parsed_data.deductions || []
+                    })
+                });
+                const result = await response.json();
+                console.log('[REVIEW] Auto-save response:', result);
+                if (result.success) {
+                    loadCurrent();  // Load next receipt or completion
+                }
+            });
+
+            document.getElementById('review-need-corrections-btn').addEventListener('click', () => {
+                console.log('[REVIEW] Need corrections - opening validate form');
+                showValidateStage({
+                    confidence: currentData.ocr_confidence,
+                    parsed_data: currentData.parsed_data
+                });
+            });
+
+            async function runOCR() {
+                // Animate progress steps
+                function updateStep(stepId, status) {
+                    const step = document.getElementById(stepId);
+                    const circle = step.querySelector('div');
+                    const text = step.querySelector('span');
+
+                    if (status === 'active') {
+                        circle.innerHTML = '<div class="w-3 h-3 rounded-full bg-indigo-600 animate-pulse"></div>';
+                        text.classList.remove('text-gray-500');
+                        text.classList.add('text-indigo-600', 'font-semibold');
+                    } else if (status === 'complete') {
+                        circle.innerHTML = '<svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path></svg>';
+                        circle.classList.remove('bg-gray-200');
+                        circle.classList.add('bg-green-100');
+                        text.classList.remove('text-gray-500', 'text-indigo-600');
+                        text.classList.add('text-green-600');
+                    }
+                }
+
+                // Show timeout message after 30 seconds
+                const timeoutTimer = setTimeout(() => {
+                    document.getElementById('timeout-message').classList.remove('hidden');
+                }, 30000);
+
+                try {
+                    // Step 1: Upload complete (already done)
+                    updateStep('step-upload', 'complete');
+                    document.getElementById('ocr-status').textContent = 'Uploading cropped image...';
+
+                    await new Promise(r => setTimeout(r, 300)); // Small delay for UX
+
+                    // Step 2: Preprocessing
+                    updateStep('step-preprocess', 'active');
+                    document.getElementById('ocr-status').textContent = 'Preprocessing image...';
+
+                    await new Promise(r => setTimeout(r, 500));
+
+                    // Step 3: Running OCR
+                    updateStep('step-preprocess', 'complete');
+                    updateStep('step-ocr', 'active');
+                    document.getElementById('ocr-status').textContent = 'Running OCR (this may take 10-30 seconds)...';
+
+                    const response = await fetch(`/api/queue/${queueId}/ocr`, { method: 'POST' });
+                    const data = await response.json();
+
+                    updateStep('step-ocr', 'complete');
+
+                    // Step 4: Parsing
+                    updateStep('step-parse', 'active');
+                    document.getElementById('ocr-status').textContent = 'Parsing extracted text...';
+
+                    await new Promise(r => setTimeout(r, 500));
+                    updateStep('step-parse', 'complete');
+
+                    clearTimeout(timeoutTimer);
+
+                    if (data.success) {
+                        // Critical: Update global state so buttons can access it
+                        currentData.parsed_data = data.parsed_data;
+                        currentData.ocr_confidence = data.confidence;
+
+                        showReviewStage(data);  // Show REVIEW first, not VALIDATE
+                    } else {
+                        // Show detailed error
+                        const errorMsg = data.message || 'Unknown error occurred';
+                        document.getElementById('ocr-status').textContent = '❌ OCR Failed: ' + errorMsg;
+                        document.getElementById('timeout-message').classList.remove('hidden');
+                        document.getElementById('timeout-message').innerHTML = `
+                    <p class="text-red-800 text-sm font-semibold mb-2">❌ OCR Processing Failed</p>
+                    <p class="text-red-700 text-sm mb-2">Error: ${errorMsg}</p>
+                    <button onclick="location.reload()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                        Restart Process
+                    </button>
+                `;
+                        console.error('OCR Error:', data);
+                    }
+                } catch (error) {
+                    clearTimeout(timeoutTimer);
+                    const errorMsg = error.message || 'Network error occurred';
+                    document.getElementById('ocr-status').textContent = '❌ Request Failed: ' + errorMsg;
+                    document.getElementById('timeout-message').classList.remove('hidden');
+                    document.getElementById('timeout-message').innerHTML = `
+                <p class="text-red-800 text-sm font-semibold mb-2">❌ Request Failed</p>
+                <p class="text-red-700 text-sm mb-2">Error: ${errorMsg}</p>
+                <button onclick="location.reload()" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700">
+                    Restart Process
+                </button>
+            `;
+                    console.error('Network Error:', error);
+                }
+            }
+
+            function showReviewStage(ocrData) {
+                hideAllStages();
+                document.getElementById('stage-review').classList.remove('hidden');
+                document.getElementById('stage-indicator').textContent = 'Stage: Review';
+                currentStage = stages.REVIEW;
+
+                // Navigation state: Hide Save & Next (handled by stage buttons), show others
+                document.getElementById('navigation').classList.remove('hidden');
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('skip-btn').classList.remove('hidden');
+                document.getElementById('prev-btn').classList.remove('hidden');
+
+                // Show CROPPED image (this is the key fix!)
+                const reviewImg = document.getElementById('review-image');
+                const croppedPath = currentData.current_file.cropped_path;
+                if (croppedPath) {
+                    // Use cropped image
+                    const filename = croppedPath.replace(/\\/g, '/').split('/').pop();
+                    reviewImg.src = '/uploads/' + filename;
+                    console.log('[REVIEW] Using cropped image:', filename);
+                } else {
+                    // Fallback to original if no crop
+                    const originalPath = currentData.current_file.original_path;
+                    const filename = originalPath.replace(/\\/g, '/').split('/').pop();
+                    reviewImg.src = '/uploads/' + filename;
+                    console.log('[REVIEW] Using original image:', filename);
+                }
+
+                // Show confidence
+                const confidence = ocrData.confidence;
+                const badge = document.getElementById('review-confidence-badge');
+                if (confidence >= 85) {
+                    badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-green-100 text-green-700';
+                    badge.textContent = `✅ ${confidence.toFixed(0)}% Confidence`;
+                } else if (confidence >= 65) {
+                    badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-yellow-100 text-yellow-700';
+                    badge.textContent = `⚠️ ${confidence.toFixed(0)}% Confidence`;
+                } else {
+                    badge.className = 'px-3 py-1 rounded-full text-sm font-semibold bg-red-100 text-red-700';
+                    badge.textContent = `❌ ${confidence.toFixed(0)}% Confidence`;
+                }
+
+                // Populate review fields (read-only)
+                const master = ocrData.parsed_data.master;
+                document.getElementById('review-voucher-number').textContent = master.voucher_number || '-';
+                document.getElementById('review-voucher-date').textContent = master.voucher_date || '-';
+                document.getElementById('review-supplier-name').textContent = master.supplier_name || '-';
+                document.getElementById('review-gross-total').textContent = `₹${master.gross_total || 0}`;
+                document.getElementById('review-deductions').textContent = `₹${master.total_deductions || 0}`;
+                document.getElementById('review-net-total').textContent = `₹${master.net_total || 0}`;
+
+                // Display Line Items
+                const items = ocrData.parsed_data.items || [];
+                if (items.length > 0) {
+                    document.getElementById('review-items-section').classList.remove('hidden');
+                    document.getElementById('review-items-list').innerHTML = items.map((item, idx) => {
+                        const desc = item.item_name || item.item_description || `Item ${idx + 1}`;
+                        const price = item.unit_price !== undefined && item.unit_price !== null ? item.unit_price : (item.rate || 0);
+                        return `
+                <div class="p-2 bg-white rounded border border-slate-200">
+                    <div class="font-semibold text-slate-800">${desc}</div>
+                    <div class="text-slate-600 text-xs mt-1">
+                        Qty: ${item.quantity || 0} × ₹${price} = ₹${item.line_amount || 0}
+                    </div>
+                </div>
+            `}).join('');
+                } else {
+                    document.getElementById('review-items-section').classList.add('hidden');
+                }
+
+                // Display Deductions
+                const deductions = ocrData.parsed_data.deductions || [];
+                if (deductions.length > 0) {
+                    document.getElementById('review-deductions-section').classList.remove('hidden');
+                    document.getElementById('review-deductions-list').innerHTML = deductions.map((ded, idx) => `
+                <div class="flex justify-between p-2 bg-white rounded border border-slate-200">
+                    <span class="font-medium text-slate-800">${ded.deduction_type || `Deduction ${idx + 1}`}</span>
+                    <span class="text-red-600 font-semibold">-₹${ded.amount || 0}</span>
+                </div>
+            `).join('');
+                } else {
+                    document.getElementById('review-deductions-section').classList.add('hidden');
+                }
+
+                // Show warnings
+                const warnings = ocrData.parsed_data.metadata?.validation_warnings || [];
+                if (warnings.length > 0) {
+                    document.getElementById('review-warnings-section').classList.remove('hidden');
+                    document.getElementById('review-warnings-list').innerHTML = warnings.map(w => `<li>• ${w}</li>`).join('');
+                } else {
+                    document.getElementById('review-warnings-section').classList.add('hidden');
+                }
+            }
+
+            // Add Item/Deduction Handlers
+            document.getElementById('add-item-btn').addEventListener('click', () => {
+                addItemRow();
+            });
+
+            document.getElementById('add-deduction-btn').addEventListener('click', () => {
+                addDeductionRow();
+            });
+
+            function addItemRow(data = {}) {
+                const list = document.getElementById('items-list');
+                // Remove "No items found" message if present
+                if (list.querySelector('p.italic')) {
+                    list.innerHTML = '';
+                }
+
+                const div = document.createElement('div');
+                div.className = 'p-2 bg-white rounded border border-slate-200 item-row mb-2';
+                div.innerHTML = `
+            <div class="grid grid-cols-12 gap-2 mb-2">
+                <div class="col-span-12">
+                    <label class="text-[10px] text-slate-500 uppercase">Description</label>
+                    <input type="text" class="item-desc w-full px-2 py-1 text-sm border rounded" value="${data.item_name || data.item_description || ''}" placeholder="Item Description">
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-2">
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase">Qty</label>
+                    <input type="number" step="0.01" class="item-qty w-full px-2 py-1 text-sm border rounded" value="${data.quantity || ''}" placeholder="0" oninput="calculateRow(this)">
+                </div>
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase">Rate</label>
+                    <input type="number" step="0.01" class="item-rate w-full px-2 py-1 text-sm border rounded" value="${(data.unit_price !== undefined && data.unit_price !== null) ? data.unit_price : (data.rate || '')}" placeholder="0.00" oninput="calculateRow(this)">
+                </div>
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase">Amount</label>
+                    <input type="number" step="0.01" class="item-amount w-full px-2 py-1 text-sm border rounded font-bold" value="${data.line_amount || ''}" placeholder="0.00" readonly>
+                </div>
+            </div>
+            <div class="mt-2 text-right">
+                <button type="button" onclick="this.closest('.item-row').remove(); calculateTotals();" class="text-xs text-red-500 hover:text-red-700">Remove</button>
+            </div>
+        `;
+                list.appendChild(div);
+
+                // Trigger initial calculation if data exists
+                const qtyInput = div.querySelector('.item-qty');
+                if (qtyInput.value && div.querySelector('.item-rate').value) {
+                    calculateRow(qtyInput);
+                }
+            }
+
+            function addDeductionRow(data = {}) {
+                const list = document.getElementById('deductions-list');
+                if (list.querySelector('p.italic')) {
+                    list.innerHTML = '';
+                }
+
+                const div = document.createElement('div');
+                div.className = 'p-2 bg-white rounded border border-slate-200 deduction-row mb-2';
+                div.innerHTML = `
+            <div class="grid grid-cols-3 gap-2 items-end">
+                <div class="col-span-2">
+                    <label class="text-[10px] text-slate-500 uppercase">Type</label>
+                    <input type="text" class="ded-type w-full px-2 py-1 text-sm border rounded" value="${data.deduction_type || ''}" placeholder="Deduction Type">
+                </div>
+                <div>
+                    <label class="text-[10px] text-slate-500 uppercase">Amount</label>
+                    <input type="number" step="0.01" class="ded-amount w-full px-2 py-1 text-sm border rounded font-semibold text-red-600" value="${data.amount || ''}" placeholder="0.00" oninput="calculateTotals()">
+                </div>
+            </div>
+            <div class="mt-2 text-right">
+                <button type="button" onclick="this.closest('.deduction-row').remove(); calculateTotals();" class="text-xs text-red-500 hover:text-red-700">Remove</button>
+            </div>
+        `;
+                list.appendChild(div);
+            }
+
+            function calculateRow(inputClient) {
+                const row = inputClient.closest('.item-row');
+                const qty = parseFloat(row.querySelector('.item-qty').value) || 0;
+                const rate = parseFloat(row.querySelector('.item-rate').value) || 0;
+
+                if (qty && rate) {
+                    const amount = (qty * rate).toFixed(2);
+                    row.querySelector('.item-amount').value = amount;
+                }
+                calculateTotals();
+            }
+
+            function calculateTotals() {
+                // 1. Sum Items
+                let itemsTotal = 0;
+                document.querySelectorAll('.item-amount').forEach(el => {
+                    itemsTotal += parseFloat(el.value) || 0;
+                });
+
+                // 2. Sum Deductions
+                let dedTotal = 0;
+                document.querySelectorAll('.ded-amount').forEach(el => {
+                    dedTotal += parseFloat(el.value) || 0;
+                });
+
+                // 3. Update Inputs
+                document.getElementById('input-gross-total').value = itemsTotal.toFixed(2);
+                document.getElementById('input-deductions').value = dedTotal.toFixed(2);
+                document.getElementById('input-net-total').value = (itemsTotal - dedTotal).toFixed(2);
+            }
+
+
+            document.getElementById('next-btn').addEventListener('click', async () => {
+                console.log('[NEXT] Button clicked, currentStage:', currentStage);
+
+                if (currentStage === stages.VALIDATE) {
+                    console.log('[NEXT] In VALIDATE stage, saving data...');
+
+                    // Save validated data
+                    const formData = new FormData(document.getElementById('validate-form'));
+
+                    // Gather Items from DOM
+                    const itemRows = document.querySelectorAll('.item-row');
+                    const items = Array.from(itemRows).map(row => ({
+                        item_description: row.querySelector('.item-desc').value,
+                        quantity: parseFloat(row.querySelector('.item-qty').value) || 0,
+                        rate: parseFloat(row.querySelector('.item-rate').value) || 0,
+                        line_amount: parseFloat(row.querySelector('.item-amount').value) || 0
+                    }));
+
+                    // Gather Deductions from DOM
+                    const dedRows = document.querySelectorAll('.deduction-row');
+                    const deductions = Array.from(dedRows).map(row => ({
+                        deduction_type: row.querySelector('.ded-type').value,
+                        amount: parseFloat(row.querySelector('.ded-amount').value) || 0
+                    }));
+
+                    const validated = {
+                        master: Object.fromEntries(formData),
+                        items: items,
+                        deductions: deductions
+                    };
+
+                    console.log('[NEXT] Validated data:', validated);
+
+                    try {
+                        const response = await fetch(`/api/queue/${queueId}/validate`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(validated)
+                        });
+
+                        const result = await response.json();
+                        console.log('[NEXT] Validate response:', result);
+
+                        if (result.success) {
+                            if (result.completed) {
+                                console.log('[NEXT] Queue completed! Loading completion screen...');
+                                loadCurrent();  // Will show completion screen
+                            } else {
+                                console.log('[NEXT] Loading next receipt...');
+                                loadCurrent();  // Load next receipt
+                            }
+                        } else {
+                            alert('Failed to save: ' + (result.message || 'Unknown error'));
+                        }
+                    } catch (error) {
+                        console.error('[NEXT] Error:', error);
+                        alert('Error saving data: ' + error.message);
+                    }
+                }
+            });
+
+            document.getElementById('skip-btn').addEventListener('click', async () => {
+                const response = await fetch(`/api/queue/${queueId}/skip`, { method: 'POST' });
+                const result = await response.json();
+
+                if (result.completed) {
+                    loadCurrent();
+                } else {
+                    loadCurrent();
+                }
+            });
+
+            document.getElementById('prev-btn').addEventListener('click', async () => {
+                await fetch(`/api/queue/${queueId}/previous`, { method: 'POST' });
+                loadCurrent();
+            });
+
+            document.getElementById('save-batch-btn').addEventListener('click', async () => {
+                if (!confirm('Save all validated receipts to database?')) return;
+
+                try {
+                    const response = await fetch(`/api/queue/${queueId}/save_batch`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        let msg = `✅ Batch Saved Successfully!\n\n• ${result.saved_count} receipts saved`;
+                        if (result.failed_count > 0) {
+                            msg += `\n• ⚠️ ${result.failed_count} receipts failed to save`;
+                        }
+                        msg += `\n• Batch marked as completed`;
+
+                        alert(msg);
+                        if (result.batch_id) {
+                            window.location.href = `/beta_v2/batch/${result.batch_id}`;
+                        } else {
+                            window.location.href = '/beta_v2/vouchers';
+                        }
+                    } else {
+                        alert('Save failed: ' + result.message);
+                    }
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            });
+
+            // Initialize on page load
+            init();
+        </script>
+        {% endblock %}
