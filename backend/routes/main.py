@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, send_from_directory
 from backend.services.voucher_service import VoucherService
 from backend.services.batch_service import BatchService
+from backend.services.supplier_service import SupplierService
 import json
 import os
 
@@ -272,3 +273,20 @@ def review_voucher_beta(voucher_id):
     }
     
     return render_template("review_beta.html", **context)
+
+@main_bp.route("/suppliers", methods=["GET"])
+def suppliers_list():
+    """List all suppliers with stats"""
+    suppliers = SupplierService.get_all_suppliers()
+    return render_template("suppliers.html", suppliers=suppliers)
+
+@main_bp.route("/suppliers/<int:supplier_id>", methods=["GET"])
+def supplier_detail(supplier_id):
+    """View single supplier details and receipts"""
+    supplier = SupplierService.get_supplier_by_id(supplier_id)
+    if not supplier:
+        flash("Supplier not found", "error")
+        return redirect(url_for('main.suppliers_list'))
+        
+    receipts = SupplierService.get_supplier_receipts(supplier_id)
+    return render_template("supplier_detail.html", supplier=supplier, receipts=receipts)

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Suppliers - VoucherOCR{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="flex justify-between items-center mb-8">
+        <div>
+            <h1 class="text-3xl font-bold text-slate-900">Supplier Management</h1>
+            <p class="text-slate-600 mt-1">Manage farmers and vendors linked to your receipts</p>
+        </div>
+        <!-- Placeholder for future "Add Supplier" button -->
+    </div>
+
+    <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-slate-200">
+                <thead class="bg-slate-50">
+                    <tr>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                            Supplier / Farmer
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3 text-left text-xs font-bold text-slate-500 uppercase tracking-wider">
+                            Contact Info
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">
+                            receipts
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">
+                            Total Spend
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-3 text-center text-xs font-bold text-slate-500 uppercase tracking-wider">
+                            Actions
+                        </th>
+                    </tr>
+                </thead>
+                <tbody class="bg-white divide-y divide-slate-200">
+                    {% for supplier in suppliers %}
+                    <tr class="hover:bg-slate-50 transition-colors">
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div
+                                    class="flex-shrink-0 h-10 w-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-bold">
+                                    {{ supplier.name[:2].upper() }}
+                                </div>
+                                <div class="ml-4">
+                                    <div class="text-sm font-medium text-slate-900">{{ supplier.name }}</div>
+                                    <div class="text-xs text-slate-500">ID: #{{ supplier.id }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-slate-900">{{ supplier.phone or '-' }}</div>
+                            <div class="text-xs text-slate-500 truncate max-w-xs" title="{{ supplier.address }}">
+                                {{ supplier.address or 'No address' }}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-slate-600">
+                            {{ supplier.receipt_count }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-bold text-slate-900">
+                            ₹{{ "{:,.2f}".format(supplier.total_spend) }}
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                            <a href="{{ url_for('main.supplier_detail', supplier_id=supplier.id) }}"
+                                class="text-indigo-600 hover:text-indigo-900 bg-indigo-50 px-3 py-1 rounded hover:bg-indigo-100 transition-colors">
+                                View Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="5" class="px-6 py-12 text-center text-slate-500">
+                            <div class="flex flex-col items-center justify-center">
+                                <svg class="w-12 h-12 text-slate-300 mb-3" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z">
+                                    </path>
+                                </svg>
+                                <p class="text-lg font-medium">No Suppliers Found</p>
+                                <p class="text-sm">Suppliers will be created automatically when you sync batches.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

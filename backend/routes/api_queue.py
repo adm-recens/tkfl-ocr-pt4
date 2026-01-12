@@ -12,6 +12,7 @@ import os
 import uuid
 from datetime import datetime
 from backend.services.batch_service import BatchService
+from backend.services.production_sync_service import ProductionSyncService
 import hashlib
 
 def calculate_file_hash(filepath):
@@ -571,6 +572,13 @@ def save_batch(queue_id):
                     failure_count=len(failed_vouchers)
                 )
                 BatchService.complete_batch(batch_id)
+                
+                # Sync to Production Tables (Independent Copy)
+                try:
+                    ProductionSyncService.sync_batch_to_production(batch_id)
+                except Exception as sync_err:
+                    print(f"[ERROR] Production Sync Failed: {sync_err}")
+                    # We do not rollback the main save, as this is a secondary process
             
             
         except Exception as e:

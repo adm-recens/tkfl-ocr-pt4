@@ -93,6 +93,26 @@
                         </div>
                     </div>
 
+                    <!-- Supplier Management Dropdown -->
+                    <div class="relative group" id="suppliers-dropdown">
+                        <button
+                            class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors flex items-center gap-1">
+                            Supplier Management
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div
+                            class="absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform group-hover:translate-y-0 translate-y-2">
+                            <a href="{{ url_for('main.suppliers_list') }}"
+                                class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary-600">
+                                All Suppliers
+                            </a>
+                        </div>
+                    </div>
+
                     <a href="{{ url_for('main.training_page') }}"
                         class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors relative group">
                         Training

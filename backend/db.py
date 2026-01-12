@@ -217,6 +217,46 @@ def init_db():
             EXECUTE PROCEDURE update_updated_at_column();
         """)
 
+        # 6. Suppliers Table (Independent)
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS suppliers (
+            id SERIAL PRIMARY KEY,
+            name TEXT UNIQUE NOT NULL,
+            address TEXT,
+            phone TEXT,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+        
+        # 7. Receipts Table (Independent Production Data)
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS receipts (
+            id SERIAL PRIMARY KEY,
+            supplier_id INTEGER REFERENCES suppliers(id),
+            
+            -- Traceability
+            ocr_voucher_id INTEGER, 
+            
+            -- Business Data
+            receipt_number TEXT,
+            receipt_date DATE,
+            
+            -- Totals
+            gross_total NUMERIC(12, 2),
+            total_deductions NUMERIC(12, 2),
+            net_total NUMERIC(12, 2),
+            
+            -- Mapped Deductions
+            deduction_commission NUMERIC(10, 2) DEFAULT 0,
+            deduction_damage NUMERIC(10, 2) DEFAULT 0,
+            deduction_unloading NUMERIC(10, 2) DEFAULT 0,
+            deduction_lf_cash NUMERIC(10, 2) DEFAULT 0,
+            deduction_other NUMERIC(10, 2) DEFAULT 0,
+            
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """)
+
         conn.commit()
         print("✅ Database tables initialized successfully.")
         
