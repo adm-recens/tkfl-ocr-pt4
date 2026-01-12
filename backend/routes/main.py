@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, current_app, send_from_directory
 from backend.services.voucher_service import VoucherService
+from backend.services.batch_service import BatchService
 import json
 import os
 
@@ -12,6 +13,60 @@ def index():
 @main_bp.route("/upload", methods=["GET"])
 def upload_page():
     return render_template("upload_receipt.html")
+
+@main_bp.route("/queue/upload", methods=["GET"])
+def queue_upload_page():
+    """Bulk upload page"""
+    return render_template("queue_upload.html")
+
+@main_bp.route("/queue/<queue_id>/process", methods=["GET"])
+def queue_processor_page(queue_id):
+    """Queue processor wizard interface"""
+    return render_template("queue_processor.html", queue_id=queue_id)
+
+@main_bp.route("/batches", methods=["GET"])
+def batch_list_page():
+    """Batch List Page"""
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+    offset = (page - 1) * per_page
+    
+    result = BatchService.get_all_batches(limit=per_page, offset=offset)
+    
+    # Calculate pages
+    total_pages = (result['total'] + per_page - 1) // per_page
+    
+    return render_template(
+        "batch_list.html", 
+        batches=result['batches'],
+        page=page,
+        total_pages=total_pages,
+        total_batches=result['total']
+    )
+
+@main_bp.route("/batch/<batch_id>", methods=["GET"])
+def batch_summary_page(batch_id):
+    """Batch Summary Page"""
+    batch = BatchService.get_batch_with_vouchers(batch_id)
+    if not batch:
+        flash(f"Batch {batch_id} not found", "error")
+        return redirect(url_for('main.batch_list_page'))
+    
+    # Format dates for display (handles both date objects and strings)
+    for voucher in batch.get('vouchers', []):
+        voucher_date = voucher.get('voucher_date')
+        if voucher_date:
+            # If it's already a string, keep it; if it's a date object, format it
+            if hasattr(voucher_date, 'strftime'):
+                voucher['voucher_date_display'] = voucher_date.strftime('%Y-%m-%d')
+            else:
+                voucher['voucher_date_display'] = str(voucher_date)
+        else:
+            voucher['voucher_date_display'] = 'N/A'
+        
+    return render_template("batch_summary.html", batch=batch)
+
+# Duplicate `review_voucher` removed: consolidated implementation exists later in this file
 
 @main_bp.route("/upload_beta", methods=["GET"])
 def upload_beta_page():
@@ -67,8 +122,13 @@ def review_voucher(voucher_id):
         if voucher.get('ocr_mode') == 'roi_beta':
             return redirect(url_for('main.review_voucher_beta', voucher_id=voucher_id))
 
-        filename = voucher['file_name']
-        image_url = url_for('main.uploaded_file', filename=filename)
+        # Use file_storage_path to get actual filename on disk (which has unique prefix)
+        if voucher.get('file_storage_path'):
+            real_filename = os.path.basename(voucher['file_storage_path'])
+            image_url = url_for('main.uploaded_file', filename=real_filename)
+        else:
+            filename = voucher['file_name']
+            image_url = url_for('main.uploaded_file', filename=filename)
         
         # Get parsed data
         parsed_data = voucher.get('parsed_json', {})
@@ -77,6 +137,25 @@ def review_voucher(voucher_id):
         elif parsed_data is None:
             parsed_data = {}
             
+        # Fallback: Reconstruct from DB columns if parsed_json is missing
+        if not parsed_data or (not parsed_data.get('master') and not parsed_data.get('items')):
+            db_items = VoucherService.get_voucher_items(voucher_id)
+            db_deductions = VoucherService.get_voucher_deductions(voucher_id)
+            
+            parsed_data = {
+                "master": {
+                    "voucher_number": voucher.get('voucher_number'),
+                    "voucher_date": str(voucher.get('voucher_date')) if voucher.get('voucher_date') else None,
+                    "supplier_name": voucher.get('supplier_name'),
+                    "vendor_details": voucher.get('vendor_details'),
+                    "gross_total": float(voucher['gross_total']) if voucher.get('gross_total') is not None else None,
+                    "total_deductions": float(voucher['total_deductions']) if voucher.get('total_deductions') is not None else None,
+                    "net_total": float(voucher['net_total']) if voucher.get('net_total') is not None else None,
+                },
+                "items": [dict(i) for i in db_items],
+                "deductions": [dict(d) for d in db_deductions]
+            }
+
         # Get raw OCR text
         raw_text = voucher.get('raw_ocr_text', '')
         
@@ -109,9 +188,23 @@ def validate_voucher_page(voucher_id):
         db_items = VoucherService.get_voucher_items(voucher_id)
         db_deductions = VoucherService.get_voucher_deductions(voucher_id)
         
-        parsed_json_data = voucher['parsed_json']
+        parsed_json_data = voucher.get('parsed_json')
         if isinstance(parsed_json_data, str):
             parsed_json_data = json.loads(parsed_json_data)
+        elif parsed_json_data is None:
+            parsed_json_data = {}
+            
+        # Fallback: Reconstruct master data if missing
+        if not parsed_json_data.get('master'):
+            parsed_json_data['master'] = {
+                "voucher_number": voucher.get('voucher_number'),
+                "voucher_date": str(voucher.get('voucher_date')) if voucher.get('voucher_date') else None,
+                "supplier_name": voucher.get('supplier_name'),
+                "vendor_details": voucher.get('vendor_details'),
+                "gross_total": float(voucher['gross_total']) if voucher.get('gross_total') is not None else None,
+                "total_deductions": float(voucher['total_deductions']) if voucher.get('total_deductions') is not None else None,
+                "net_total": float(voucher['net_total']) if voucher.get('net_total') is not None else None,
+            }
             
         items_data = [dict(item) for item in db_items] if db_items else parsed_json_data.get('items', [])
         deductions_data = [dict(ded) for ded in db_deductions] if db_deductions else parsed_json_data.get('deductions', [])
@@ -120,7 +213,12 @@ def validate_voucher_page(voucher_id):
         if voucher.get('ocr_mode') == 'roi_beta':
             image_url = url_for('main.uploaded_file_beta', filename=voucher['file_name'])
         else:
-            image_url = url_for('main.uploaded_file', filename=voucher['file_name'])
+            # Fix for production bulk upload images (use actual filename from storage path)
+            if voucher.get('file_storage_path'):
+                real_filename = os.path.basename(voucher['file_storage_path'])
+                image_url = url_for('main.uploaded_file', filename=real_filename)
+            else:
+                image_url = url_for('main.uploaded_file', filename=voucher['file_name'])
 
         return render_template(
             "validate.html",

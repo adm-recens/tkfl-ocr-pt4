@@ -126,7 +126,8 @@ def init_db():
             gross_total NUMERIC(12, 2),
             total_deductions NUMERIC(12, 2),
             net_total NUMERIC(12, 2),
-            ocr_confidence NUMERIC(5, 2)
+            ocr_confidence NUMERIC(5, 2),
+            batch_id TEXT
         );
         """)
 
@@ -164,6 +165,56 @@ def init_db():
             box_w INTEGER,
             box_h INTEGER
         );
+        """)
+
+        # 5. File Lifecycle Meta Table (Tracks all uploads)
+        cur.execute("""
+        CREATE OR REPLACE FUNCTION update_updated_at_column()
+        RETURNS TRIGGER AS $$
+        BEGIN
+            NEW.updated_at = CURRENT_TIMESTAMP;
+            RETURN NEW;
+        END;
+        $$ language 'plpgsql';
+        """)
+
+        cur.execute("""
+        CREATE TABLE IF NOT EXISTS file_lifecycle_meta (
+            id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+            original_filename TEXT NOT NULL,
+            stored_filename TEXT NOT NULL UNIQUE,
+            file_path TEXT NOT NULL,
+            file_size_bytes BIGINT,
+            file_hash TEXT, -- MD5/SHA256 for duplicate detection
+            mime_type TEXT,
+            
+            -- Context
+            upload_batch_id TEXT,
+            source_type TEXT DEFAULT 'web_upload',
+            client_ip TEXT,
+            user_agent TEXT,
+            
+            -- Status & Links
+            processing_status TEXT DEFAULT 'pending', 
+            voucher_id INTEGER REFERENCES vouchers_master(id) ON DELETE SET NULL,
+            
+            -- Timestamps
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            processed_at TIMESTAMP,
+            archived_at TIMESTAMP,
+            
+            -- Extensible Data
+            meta_data JSONB
+        );
+        """)
+
+        cur.execute("""
+        DROP TRIGGER IF EXISTS update_file_lifecycle_modtime ON file_lifecycle_meta;
+        CREATE TRIGGER update_file_lifecycle_modtime
+            BEFORE UPDATE ON file_lifecycle_meta
+            FOR EACH ROW
+            EXECUTE PROCEDURE update_updated_at_column();
         """)
 
         conn.commit()

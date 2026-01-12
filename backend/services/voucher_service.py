@@ -184,16 +184,13 @@ class VoucherService:
         conn = get_connection()
         cur = conn.cursor()
         
-        # Delete production tables
+        # Delete all tables (beta tables were migrated to production)
         cur.execute("DELETE FROM voucher_items")
         cur.execute("DELETE FROM voucher_deductions")
         cur.execute("DELETE FROM ml_bounding_boxes")
         cur.execute("DELETE FROM vouchers_master")
-        
-        # Delete beta tables
-        cur.execute("DELETE FROM voucher_items_beta")
-        cur.execute("DELETE FROM voucher_deductions_beta")
-        cur.execute("DELETE FROM vouchers_master_beta")
+        cur.execute("DELETE FROM batch_uploads")
+        cur.execute("DELETE FROM file_lifecycle_meta")
         
         conn.commit()
 

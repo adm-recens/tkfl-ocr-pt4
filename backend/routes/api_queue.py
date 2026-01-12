@@ -12,6 +12,15 @@ import os
 import uuid
 from datetime import datetime
 from backend.services.batch_service import BatchService
+import hashlib
+
+def calculate_file_hash(filepath):
+    """Calculate MD5 hash of a file"""
+    hash_md5 = hashlib.md5()
+    with open(filepath, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_md5.update(chunk)
+    return hash_md5.hexdigest()
 
 api_queue_bp = Blueprint('api_queue', __name__)
 
@@ -83,6 +92,36 @@ def create_queue():
             unique_filename = f"{queue_id}_{filename}"
             filepath = os.path.join(upload_folder, unique_filename)
             file.save(filepath)
+
+            # Metadata Logging
+            try:
+                conn = get_connection()
+                cur = conn.cursor()
+                
+                file_hash = calculate_file_hash(filepath)
+                file_size = os.path.getsize(filepath)
+                
+                cur.execute("""
+                    INSERT INTO file_lifecycle_meta
+                    (original_filename, stored_filename, file_path, file_size_bytes, file_hash, mime_type, 
+                     upload_batch_id, source_type, client_ip, user_agent, processing_status)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                """, (
+                    filename,
+                    unique_filename,
+                    filepath,
+                    file_size,
+                    file_hash,
+                    file.content_type,
+                    batch_id,
+                    'web_bulk_upload',
+                    request.remote_addr,
+                    request.user_agent.string,
+                    'pending'
+                ))
+                conn.commit()
+            except Exception as e:
+                print(f"[ERROR] Failed to save file metadata: {e}")
             
             saved_files.append({
                 'original_filename': filename,
@@ -431,10 +470,10 @@ def save_batch(queue_id):
                     
                     # Insert master
                     cur.execute("""
-                        INSERT INTO vouchers_master_beta 
+                        INSERT INTO vouchers_master 
                         (file_name, file_storage_path, voucher_number, voucher_date, 
-                         supplier_name, vendor_details, gross_total, total_deductions, net_total, ocr_mode, batch_id, ocr_confidence)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                         supplier_name, vendor_details, gross_total, total_deductions, net_total, ocr_mode, batch_id, ocr_confidence, parsed_json)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                         RETURNING id
                     """, (
                         file_info['original_filename'],
@@ -448,7 +487,8 @@ def save_batch(queue_id):
                         master.get('net_total'),
                         'optimal',
                         batch_id,
-                        file_info.get('ocr_result', {}).get('confidence', 0)
+                        file_info.get('ocr_result', {}).get('confidence', 0),
+                        json.dumps(data, ensure_ascii=False)
                     ))
                     
                     master_id = cur.fetchone()['id']
@@ -456,7 +496,7 @@ def save_batch(queue_id):
                     # Insert items
                     for item in items:
                         cur.execute("""
-                            INSERT INTO voucher_items_beta
+                            INSERT INTO voucher_items
                             (master_id, item_name, quantity, unit_price, line_amount)
                             VALUES (%s, %s, %s, %s, %s)
                         """, (
@@ -470,7 +510,7 @@ def save_batch(queue_id):
                     # Insert deductions
                     for deduction in deductions:
                         cur.execute("""
-                            INSERT INTO voucher_deductions_beta
+                            INSERT INTO voucher_deductions
                             (master_id, deduction_type, amount)
                             VALUES (%s, %s, %s)
                         """, (
@@ -482,6 +522,16 @@ def save_batch(queue_id):
                     # If we get here, this voucher is good
                     cur.execute("RELEASE SAVEPOINT sp_save_voucher")
                     saved_count += 1
+                    
+                    # Update Lifecycle Metadata
+                    try:
+                        cur.execute("""
+                            UPDATE file_lifecycle_meta
+                            SET voucher_id = %s, processing_status = 'processed', processed_at = CURRENT_TIMESTAMP
+                            WHERE file_path = %s
+                        """, (master_id, file_info['original_path']))
+                    except Exception as e:
+                        print(f"[WARN] Failed to update lifecycle meta for {master_id}: {e}")
                     
                 except Exception as e:
                     # Rollback this specific voucher but keep the connection alive
@@ -497,7 +547,7 @@ def save_batch(queue_id):
                     try:
                         cur.execute("SAVEPOINT sp_save_failed")
                         cur.execute("""
-                            INSERT INTO vouchers_master_beta 
+                            INSERT INTO vouchers_master 
                             (file_name, file_storage_path, supplier_name, vendor_details, batch_id, net_total)
                             VALUES (%s, %s, 'UPLOAD FAILED', %s, %s, 0)
                         """, (

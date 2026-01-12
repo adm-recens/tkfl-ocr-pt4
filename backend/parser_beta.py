@@ -476,7 +476,10 @@ def parse_receipt_text(ocr_text: str) -> dict:
         data["total_deductions"] = sum(get_float_or_zero(d["amount"]) for d in data["deductions"])
 
     # Phase 4: Run Validation & Correction Pipeline
-    data, validation_warnings, corrections = validate_and_correct(data)
+    # DISABLED for Beta: User requested raw extraction only
+    # data, validation_warnings, corrections = validate_and_correct(data)
+    validation_warnings = []
+    corrections = []
     
     # Store corrections in metadata for UI
     data['corrections'] = corrections

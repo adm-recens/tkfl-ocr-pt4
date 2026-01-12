@@ -1,0 +1,1773 @@
+{
+    "bc1774da-a2f9-4c9d-9110-c8c92cb571b1": {
+        "queue_id": "bc1774da-a2f9-4c9d-9110-c8c92cb571b1",
+        "batch_id": "9f9bbbbf-0321-4007-9b18-2045f16f58f1",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\bc1774da-a2f9-4c9d-9110-c8c92cb571b1_IMG-20240402-WA0015.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\bc1774da-a2f9-4c9d-9110-c8c92cb571b1_IMG-20240426-WA0033.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240615-WA0016.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\bc1774da-a2f9-4c9d-9110-c8c92cb571b1_IMG-20240615-WA0016.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            }
+        ],
+        "current_index": 0,
+        "total": 3,
+        "completed": 0,
+        "skipped": 0,
+        "created_at": "2025-12-26T21:26:36.360388"
+    },
+    "2bf22608-a47f-4413-be8f-70efecbfac8d": {
+        "queue_id": "2bf22608-a47f-4413-be8f-70efecbfac8d",
+        "batch_id": "b5d04e70-d048-42c3-9a34-6bff0aa31a1e",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\2bf22608-a47f-4413-be8f-70efecbfac8d_IMG-20240402-WA0015.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\2bf22608-a47f-4413-be8f-70efecbfac8d_IMG-20240426-WA0033.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240615-WA0016.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\2bf22608-a47f-4413-be8f-70efecbfac8d_IMG-20240615-WA0016.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            }
+        ],
+        "current_index": 0,
+        "total": 3,
+        "completed": 0,
+        "skipped": 0,
+        "created_at": "2025-12-26T21:27:25.081984"
+    },
+    "ad55d23e-e6ab-4d51-bda9-f70aed8db9f4": {
+        "queue_id": "ad55d23e-e6ab-4d51-bda9-f70aed8db9f4",
+        "batch_id": "65016896-61de-45c9-ac49-2c6e3fcf1c2c",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\ad55d23e-e6ab-4d51-bda9-f70aed8db9f4_IMG-20240402-WA0015.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\ad55d23e-e6ab-4d51-bda9-f70aed8db9f4_IMG-20240426-WA0033.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240615-WA0016.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\ad55d23e-e6ab-4d51-bda9-f70aed8db9f4_IMG-20240615-WA0016.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            }
+        ],
+        "current_index": 0,
+        "total": 3,
+        "completed": 0,
+        "skipped": 0,
+        "created_at": "2025-12-26T21:32:16.211253"
+    },
+    "34073067-24ff-4925-8062-af909ce5aed4": {
+        "queue_id": "34073067-24ff-4925-8062-af909ce5aed4",
+        "batch_id": "fa65a00a-3711-441f-9613-508155a16c80",
+        "files": [
+            {
+                "original_filename": "IMG-20240909-WA0076.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\34073067-24ff-4925-8062-af909ce5aed4_IMG-20240909-WA0076.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\34073067-24ff-4925-8062-af909ce5aed4_cropped_0.jpg",
+                "ocr_result": {
+                    "text": "VYouokerDate     0570972024\nSeppBene        TK\neee\nQty     Price    Anount\n61550.00   9300.00\n1   1400.00   1400.00\nTotal      9           10700.00\n(-)      Comn?4.00    42800\n(-)       LessForDamages     535.00\n(-)        UnLoading    S110\n(-)                   10700\n(-)        L/FAndCash     38500\nGrandTotals9194-00\n",
+                    "confidence": 73.85
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": null,
+                        "voucher_date": null,
+                        "supplier_name": null,
+                        "vendor_details": null,
+                        "gross_total": 10700.0,
+                        "total_deductions": 92645.0,
+                        "net_total": null
+                    },
+                    "items": [
+                        {
+                            "item_name": "Item",
+                            "quantity": 1.0,
+                            "unit_price": 1400.0,
+                            "line_amount": 1400.0
+                        }
+                    ],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comn?4.00",
+                            "amount": 42800.0
+                        },
+                        {
+                            "deduction_type": "LessForDamages",
+                            "amount": 535.0
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 110.0
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 10700.0
+                        },
+                        {
+                            "deduction_type": "L/FAndCash",
+                            "amount": 38500.0
+                        }
+                    ],
+                    "metadata": {
+                        "parse_confidence": 20.83,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "voucher_number": "71",
+                        "voucher_date": "05-09-2024",
+                        "supplier_name": "TK",
+                        "gross_total": "10700.00",
+                        "total_deductions": "1506.10",
+                        "net_total": "9193.90"
+                    },
+                    "items": [
+                        {
+                            "item_description": "Item",
+                            "quantity": 1,
+                            "rate": 1400,
+                            "line_amount": 1400
+                        },
+                        {
+                            "item_description": "Item",
+                            "quantity": 6,
+                            "rate": 1550,
+                            "line_amount": 9300
+                        }
+                    ],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comn?4.00",
+                            "amount": 428
+                        },
+                        {
+                            "deduction_type": "LessForDamages",
+                            "amount": 535
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 51.1
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 107
+                        },
+                        {
+                            "deduction_type": "L/FAndCash",
+                            "amount": 385
+                        }
+                    ]
+                },
+                "status": "validated"
+            },
+            {
+                "original_filename": "IMG-20240909-WA0140.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\34073067-24ff-4925-8062-af909ce5aed4_IMG-20240909-WA0140.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\34073067-24ff-4925-8062-af909ce5aed4_cropped_1.jpg",
+                "ocr_result": {
+                    "text": "AS\nAHMEDSHARIF& BROS\nLEMONPURCHASER& COMMAGENT\nDARUSHAFAXROAD. HYDERABAD500024\nPhone:040-24412139., 9949333786\n\nVoucherNumber154\nVoucherDate     0670972024\nSuppName      TK\n\n1   123000   1230.00\n\n1   110000   110000\n18400084000\n\n(-)       Comm? 400415320.\nto)      LessForDamages    191SO\ncm            Unloading      29-20\ni        LvFAndCash     220.00\n\n",
+                    "confidence": 76.47
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "154",
+                        "voucher_date": null,
+                        "supplier_name": "TK",
+                        "vendor_details": "AHMEDSHARIF& BROS",
+                        "gross_total": null,
+                        "total_deductions": 400415731.0,
+                        "net_total": null
+                    },
+                    "items": [
+                        {
+                            "item_name": "Item",
+                            "quantity": 1.0,
+                            "unit_price": 123000.0,
+                            "line_amount": 1230.0
+                        },
+                        {
+                            "item_name": "Item",
+                            "quantity": 1.0,
+                            "unit_price": 110000.0,
+                            "line_amount": 110000.0
+                        }
+                    ],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comm?",
+                            "amount": 400415320.0
+                        },
+                        {
+                            "deduction_type": "to)      LessForDamages",
+                            "amount": 191.0
+                        },
+                        {
+                            "deduction_type": "i        LvFAndCash",
+                            "amount": 220.0
+                        }
+                    ],
+                    "metadata": {
+                        "parse_confidence": 50.0,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "voucher_number": "154",
+                        "voucher_date": "",
+                        "supplier_name": "TK",
+                        "gross_total": "3830.00",
+                        "total_deductions": "631.90",
+                        "net_total": "3198.10"
+                    },
+                    "items": [
+                        {
+                            "item_description": "Item",
+                            "quantity": 1,
+                            "rate": 1230,
+                            "line_amount": 1230
+                        },
+                        {
+                            "item_description": "Item",
+                            "quantity": 1,
+                            "rate": 1100,
+                            "line_amount": 1100
+                        },
+                        {
+                            "item_description": "Item",
+                            "quantity": 1,
+                            "rate": 840,
+                            "line_amount": 840
+                        },
+                        {
+                            "item_description": "Item",
+                            "quantity": 1,
+                            "rate": 660,
+                            "line_amount": 660
+                        }
+                    ],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comm?",
+                            "amount": 153.2
+                        },
+                        {
+                            "deduction_type": "LessForDamages",
+                            "amount": 191.5
+                        },
+                        {
+                            "deduction_type": "Unloading",
+                            "amount": 29.2
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 38
+                        },
+                        {
+                            "deduction_type": "    LvFAndCash",
+                            "amount": 220
+                        }
+                    ]
+                },
+                "status": "validated"
+            }
+        ],
+        "current_index": 2,
+        "total": 2,
+        "completed": 2,
+        "skipped": 0,
+        "created_at": "2026-01-05T12:02:40.594162"
+    },
+    "2e7e8214-dc63-4c0b-b11a-e8748d87fbd1": {
+        "queue_id": "2e7e8214-dc63-4c0b-b11a-e8748d87fbd1",
+        "batch_id": "e7f590c3-0d91-4a80-9f7d-97d54a484169",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\2e7e8214-dc63-4c0b-b11a-e8748d87fbd1_IMG-20240402-WA0015.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\2e7e8214-dc63-4c0b-b11a-e8748d87fbd1_cropped_0.jpg",
+                "ocr_result": {
+                    "text": "GucherNunber340\n!VoucherDate     01/04/2024\n\nSuppNane      TK\nQty     Price    Arnount\n81800.0014400.00\nTotal      8            1440000\n(-)      Comm?4.00    576.00\n(-)      LessForDamages    720.00\n(-)                   UnLoading          SS.60\n()                   14400\n\n(-)        L/FAndCash     605.00\n",
+                    "confidence": 79.47
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": null,
+                        "voucher_date": "01-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": null,
+                        "gross_total": 1440000.0,
+                        "total_deductions": 16301.6,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comm?4.00",
+                            "amount": 576.0
+                        },
+                        {
+                            "deduction_type": "LessForDamages",
+                            "amount": 720.0
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 0.6
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 14400.0
+                        },
+                        {
+                            "deduction_type": "L/FAndCash",
+                            "amount": 605.0
+                        }
+                    ],
+                    "metadata": {
+                        "parse_confidence": 33.33,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "voucher_number": "340",
+                        "voucher_date": "01-04-2024",
+                        "supplier_name": "TK",
+                        "gross_total": "14400.00",
+                        "total_deductions": "2100.60",
+                        "net_total": "12299.40"
+                    },
+                    "items": [
+                        {
+                            "item_description": "Item",
+                            "quantity": 8,
+                            "rate": 1800,
+                            "line_amount": 14400
+                        }
+                    ],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comm?4.00",
+                            "amount": 576
+                        },
+                        {
+                            "deduction_type": "LessForDamages",
+                            "amount": 720
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 55.6
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 144
+                        },
+                        {
+                            "deduction_type": "L/FAndCash",
+                            "amount": 605
+                        }
+                    ]
+                },
+                "status": "validated"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\2e7e8214-dc63-4c0b-b11a-e8748d87fbd1_IMG-20240426-WA0033.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\2e7e8214-dc63-4c0b-b11a-e8748d87fbd1_cropped_1.jpg",
+                "ocr_result": {
+                    "text": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139,9949333786\nYoucherDate     26/04/2024\nSuppNane      TK\n-3.-2100:00630000\n2   2100.00   42000oa\n3   1360.00   4080oOn\n\nGrandTot4l         Looldoe\n\nVoucherNumber214\n\nTotal        8            14580oOn\n-:       Comm?400:    $8320\n--     LessForDamages    PO9On\n-             UnLoading      $842\nl4b05\n\nLFAndCash     44008\n",
+                    "confidence": 83.21
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "214",
+                        "voucher_date": "26-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "gross_total": 14580.0,
+                        "total_deductions": null,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [],
+                    "metadata": {
+                        "parse_confidence": 50.0,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": 14580,
+                        "net_total": null,
+                        "supplier_name": null,
+                        "total_deductions": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "voucher_date": "26-04-2024",
+                        "voucher_number": "214"
+                    },
+                    "items": [],
+                    "deductions": []
+                },
+                "status": "validated"
+            }
+        ],
+        "current_index": 2,
+        "total": 2,
+        "completed": 2,
+        "skipped": 0,
+        "created_at": "2026-01-05T12:25:57.696202"
+    },
+    "dd081202-c2a1-41af-bd25-7364296e2aaa": {
+        "queue_id": "dd081202-c2a1-41af-bd25-7364296e2aaa",
+        "batch_id": "56e0a6df-6467-4581-ac4f-7ad1aa14b3fb",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\dd081202-c2a1-41af-bd25-7364296e2aaa_IMG-20240402-WA0015.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\dd081202-c2a1-41af-bd25-7364296e2aaa_cropped_0.jpg",
+                "ocr_result": {
+                    "text": "a\nWouckesNunber340\nVYoucherDate      01/04/2024\nSuppNane      TK\neeerrreeereneneneneneneneneaneeoenane\nQty      Price     Anount\n81800.0014400.00\nTotal         8              14400.00\n(-)      Conm?4.00    576.00\n(-)      LessForDanages    720.00\n(-)                   UnLoading          SS.60\n(-)                                       144.00\n(-)           L/FAndCash      60S.00\n         GrandTotal-     1229900\n",
+                    "confidence": 79.33
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": null,
+                        "voucher_date": "01-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": null,
+                        "gross_total": 14400.0,
+                        "total_deductions": 1500.6,
+                        "net_total": 1229900.0
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "deduction_type": "Conm?4.00",
+                            "amount": 576.0
+                        },
+                        {
+                            "deduction_type": "LessForDanages",
+                            "amount": 720.0
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 0.6
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 144.0
+                        },
+                        {
+                            "deduction_type": "L/FAndCash",
+                            "amount": 60.0
+                        }
+                    ],
+                    "metadata": {
+                        "parse_confidence": 50.0,
+                        "validation_warnings": [
+                            "Totals mismatch: 14400.0 - 1500.6 \u2260 1229900.0 (diff: 1217000.60)"
+                        ],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "voucher_number": "340",
+                        "voucher_date": "01-04-2024",
+                        "supplier_name": "TK",
+                        "gross_total": "14400.00",
+                        "total_deductions": "2100.60",
+                        "net_total": "12299.40"
+                    },
+                    "items": [
+                        {
+                            "item_description": "",
+                            "quantity": 8,
+                            "rate": 1800,
+                            "line_amount": 14400
+                        }
+                    ],
+                    "deductions": [
+                        {
+                            "deduction_type": "Conm?4.00",
+                            "amount": 576
+                        },
+                        {
+                            "deduction_type": "LessForDanages",
+                            "amount": 720
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 55.6
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 144
+                        },
+                        {
+                            "deduction_type": "L/FAndCash",
+                            "amount": 605
+                        }
+                    ]
+                },
+                "status": "validated"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\dd081202-c2a1-41af-bd25-7364296e2aaa_IMG-20240426-WA0033.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\dd081202-c2a1-41af-bd25-7364296e2aaa_cropped_1.jpg",
+                "ocr_result": {
+                    "text": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139,9949333786\nYoucherDate     26/04/2024\nSuppName      TK\n3210000630000\n2   -100.00   4200dga\n3   1360.00   4080On\n\nVoucherNumber214\n\notal        8            14580oOn\n-        Comm400,    $8320\n--      LessForDamages    PO9On\n-             UnLoading      $3848\nl4b95\n\nL-FAndCash     440oe\n",
+                    "confidence": 72.43
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "214",
+                        "voucher_date": "26-04-2024",
+                        "supplier_name": "TK",
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "gross_total": null,
+                        "total_deductions": null,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [],
+                    "metadata": {
+                        "parse_confidence": 50.0,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": null,
+                        "net_total": null,
+                        "supplier_name": "TK",
+                        "total_deductions": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "voucher_date": "26-04-2024",
+                        "voucher_number": "214"
+                    },
+                    "items": [],
+                    "deductions": []
+                },
+                "status": "validated"
+            }
+        ],
+        "current_index": 2,
+        "total": 2,
+        "completed": 2,
+        "skipped": 0,
+        "created_at": "2026-01-05T12:37:06.020662"
+    },
+    "29447940-35f2-473b-a582-236833a3b48a": {
+        "queue_id": "29447940-35f2-473b-a582-236833a3b48a",
+        "batch_id": "0658a1f6-9e52-4d68-8071-d4a9907a16f5",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\29447940-35f2-473b-a582-236833a3b48a_IMG-20240402-WA0015.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\29447940-35f2-473b-a582-236833a3b48a_cropped_0.jpg",
+                "ocr_result": {
+                    "text": "w\nt\n\neen\n\n340\n01/04/2024\n\nTK\nQty    Price    Arnount\n81800.0014400.00\nTotal      8         14400.00\n(-)      Comm?4.00    576.00\n(-)      LessForDanages    720.00\n(-)                   UnLoading          SS.60\n(-)                       14400\n(-)        L/FAndCash    605.00\n",
+                    "confidence": 78.0
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": null,
+                        "voucher_date": "01-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": null,
+                        "gross_total": 14400.0,
+                        "total_deductions": 16301.6,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comm?4.00",
+                            "amount": 576.0
+                        },
+                        {
+                            "deduction_type": "LessForDanages",
+                            "amount": 720.0
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 0.6
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 14400.0
+                        },
+                        {
+                            "deduction_type": "L/FAndCash",
+                            "amount": 605.0
+                        }
+                    ],
+                    "metadata": {
+                        "parse_confidence": 33.33,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": 14400,
+                        "net_total": null,
+                        "supplier_name": null,
+                        "total_deductions": 16301.6,
+                        "vendor_details": null,
+                        "voucher_date": "01-04-2024",
+                        "voucher_number": null
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "amount": 576,
+                            "deduction_type": "Comm?4.00"
+                        },
+                        {
+                            "amount": 720,
+                            "deduction_type": "LessForDanages"
+                        },
+                        {
+                            "amount": 0.6,
+                            "deduction_type": "UnLoading"
+                        },
+                        {
+                            "amount": 14400,
+                            "deduction_type": "Other"
+                        },
+                        {
+                            "amount": 605,
+                            "deduction_type": "L/FAndCash"
+                        }
+                    ]
+                },
+                "status": "validated"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\29447940-35f2-473b-a582-236833a3b48a_IMG-20240426-WA0033.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\29447940-35f2-473b-a582-236833a3b48a_cropped_1.jpg",
+                "ocr_result": {
+                    "text": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139,9949333786\nYoucherDate     26/04/2024\n\nSuppNane      TK\n\nGrandTot4l         Looldoe\n\nVoucherNumber214\n\nTotal        8            14580oOn\n-:       Comm?400:    $8320\n--      LessForDamages    PO9On\n-             UnLoading      $842\nl4bO5\n\nLFAndCash     44008\n",
+                    "confidence": 75.64
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "214",
+                        "voucher_date": "26-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "gross_total": 14580.0,
+                        "total_deductions": null,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [],
+                    "metadata": {
+                        "parse_confidence": 50.0,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": 14580,
+                        "net_total": null,
+                        "supplier_name": null,
+                        "total_deductions": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "voucher_date": "26-04-2024",
+                        "voucher_number": "214"
+                    },
+                    "items": [],
+                    "deductions": []
+                },
+                "status": "validated"
+            }
+        ],
+        "current_index": 2,
+        "total": 2,
+        "completed": 2,
+        "skipped": 0,
+        "created_at": "2026-01-05T12:41:12.625305"
+    },
+    "67f77f3c-efbf-404f-b561-de60e537dfac": {
+        "queue_id": "67f77f3c-efbf-404f-b561-de60e537dfac",
+        "batch_id": "341eb488-87d5-4306-a906-95a4dce63671",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\67f77f3c-efbf-404f-b561-de60e537dfac_IMG-20240402-WA0015.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\67f77f3c-efbf-404f-b561-de60e537dfac_cropped_0.jpg",
+                "ocr_result": {
+                    "text": "340\n01/04/2024\nTK\n\nQty     Price    Arnount\n81800.0014400.00\n\nTotal       8            1440000\n(-)      Comm7?4.00    576.00\n(-)      LessForDanages    720.00\n(-)           UnLoading      SS.60\n(-)                        14400\n(-)        LYFAndCash    60S5.00\n\nTe\n",
+                    "confidence": 77.55
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": null,
+                        "voucher_date": "01-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": null,
+                        "gross_total": 1440000.0,
+                        "total_deductions": 16301.6,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comm7?4.00",
+                            "amount": 576.0
+                        },
+                        {
+                            "deduction_type": "LessForDanages",
+                            "amount": 720.0
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 0.6
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 14400.0
+                        },
+                        {
+                            "deduction_type": "LYFAndCash",
+                            "amount": 605.0
+                        }
+                    ],
+                    "metadata": {
+                        "parse_confidence": 33.33,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": 1440000,
+                        "net_total": null,
+                        "supplier_name": null,
+                        "total_deductions": 16301.6,
+                        "vendor_details": null,
+                        "voucher_date": "01-04-2024",
+                        "voucher_number": null
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "amount": 576,
+                            "deduction_type": "Comm7?4.00"
+                        },
+                        {
+                            "amount": 720,
+                            "deduction_type": "LessForDanages"
+                        },
+                        {
+                            "amount": 0.6,
+                            "deduction_type": "UnLoading"
+                        },
+                        {
+                            "amount": 14400,
+                            "deduction_type": "Other"
+                        },
+                        {
+                            "amount": 605,
+                            "deduction_type": "LYFAndCash"
+                        }
+                    ]
+                },
+                "status": "validated"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\67f77f3c-efbf-404f-b561-de60e537dfac_IMG-20240426-WA0033.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\67f77f3c-efbf-404f-b561-de60e537dfac_cropped_1.jpg",
+                "ocr_result": {
+                    "text": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139,9949333786\nYoucherDate     26/04/2024\nSuppNane      TK\n-3.-2100:00630000\n2   2100.00   42000oa\n3   1360.00   4080oOn\n\nGrandTotal       llesau\n\nVoucherNumber214\n\nTotal        8            14580oOn\n-:       Comm?400:    $8320\n--      LessForDamages    PO9On\n-             UnLoading      $842\nl4bO5\n\nLFAndCash     44008\n",
+                    "confidence": 77.87
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "214",
+                        "voucher_date": "26-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "gross_total": 14580.0,
+                        "total_deductions": null,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [],
+                    "metadata": {
+                        "parse_confidence": 50.0,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": 14580,
+                        "net_total": null,
+                        "supplier_name": null,
+                        "total_deductions": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "voucher_date": "26-04-2024",
+                        "voucher_number": "214"
+                    },
+                    "items": [],
+                    "deductions": []
+                },
+                "status": "validated"
+            }
+        ],
+        "current_index": 2,
+        "total": 2,
+        "completed": 2,
+        "skipped": 0,
+        "created_at": "2026-01-05T12:50:18.099702"
+    },
+    "0665eeea-5293-4ba7-82ea-d51474130d55": {
+        "queue_id": "0665eeea-5293-4ba7-82ea-d51474130d55",
+        "batch_id": "e814bb70-5883-4b47-8911-67c66d1e2ada",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\0665eeea-5293-4ba7-82ea-d51474130d55_IMG-20240402-WA0015.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\0665eeea-5293-4ba7-82ea-d51474130d55_cropped_0.jpg",
+                "ocr_result": {
+                    "text": "340\n01/04/2024\nTK\n\nQty     Price    Arnount\n81800.0014400.00\n\nTotal       8            1440000\n(-)      Comm7?4.00    576.00\n(-)      LessForDanages    720.00\n(-)           UnLoading      SS.60\n(-)                        14400\n(-)        LYFAndCash    60S5.00\n\nTe\n",
+                    "confidence": 77.55
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": null,
+                        "voucher_date": "01-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": null,
+                        "gross_total": 1440000.0,
+                        "total_deductions": 16301.6,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comm7?4.00",
+                            "amount": 576.0
+                        },
+                        {
+                            "deduction_type": "LessForDanages",
+                            "amount": 720.0
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 0.6
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 14400.0
+                        },
+                        {
+                            "deduction_type": "LYFAndCash",
+                            "amount": 605.0
+                        }
+                    ],
+                    "metadata": {
+                        "parse_confidence": 33.33,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": 1440000,
+                        "net_total": null,
+                        "supplier_name": null,
+                        "total_deductions": 16301.6,
+                        "vendor_details": null,
+                        "voucher_date": "01-04-2024",
+                        "voucher_number": null
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "amount": 576,
+                            "deduction_type": "Comm7?4.00"
+                        },
+                        {
+                            "amount": 720,
+                            "deduction_type": "LessForDanages"
+                        },
+                        {
+                            "amount": 0.6,
+                            "deduction_type": "UnLoading"
+                        },
+                        {
+                            "amount": 14400,
+                            "deduction_type": "Other"
+                        },
+                        {
+                            "amount": 605,
+                            "deduction_type": "LYFAndCash"
+                        }
+                    ]
+                },
+                "status": "validated"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\0665eeea-5293-4ba7-82ea-d51474130d55_IMG-20240426-WA0033.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\0665eeea-5293-4ba7-82ea-d51474130d55_cropped_1.jpg",
+                "ocr_result": {
+                    "text": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139,9949333786\nYoucherDate     26/04/2024\nSuppName      TK\n3210000630000\n2   -100.00   4200dga\n3   1360.00   4080On\n\nVoucherNumber214\n\notal        8            14580oOn\n-        Comm400,    $8320\n--      LessForDamages    PO9On\n-             UnLoading      $3848\nl4b95\n\nL-FAndCash     440oe\n",
+                    "confidence": 72.43
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "214",
+                        "voucher_date": "26-04-2024",
+                        "supplier_name": "TK",
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "gross_total": null,
+                        "total_deductions": null,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [],
+                    "metadata": {
+                        "parse_confidence": 50.0,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": null,
+                        "net_total": null,
+                        "supplier_name": "TK",
+                        "total_deductions": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "voucher_date": "26-04-2024",
+                        "voucher_number": "214"
+                    },
+                    "items": [],
+                    "deductions": []
+                },
+                "status": "validated"
+            }
+        ],
+        "current_index": 2,
+        "total": 2,
+        "completed": 2,
+        "skipped": 0,
+        "created_at": "2026-01-05T12:56:15.058980"
+    },
+    "99c772b4-2057-45a6-9c19-0c2adc23852c": {
+        "queue_id": "99c772b4-2057-45a6-9c19-0c2adc23852c",
+        "batch_id": "2eeabc60-1019-49df-a6e8-c3d090978e52",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\99c772b4-2057-45a6-9c19-0c2adc23852c_IMG-20240402-WA0015.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\99c772b4-2057-45a6-9c19-0c2adc23852c_cropped_0.jpg",
+                "ocr_result": {
+                    "text": "YoucherNumber340\nVoucherDate     01/04/2024\nSuppNane      TK\nQty     Price    Arnount\n8   1800.0014400.00\nTotaltiiSW         1440000\n(-)       Comm?4.00    576.00\n(-)      LessForDamages    720.00\n(-)           UnLoading      SS.60\n(-)                        14400\n()         LYFAndCash     605.00\nGrandTotal-     1229900.\n\nAy\nAHMEDSHARIF& Like,\nLEMON PUROHASER4 COMMENT\nDARUSHAFAx ROADHYDERABAL Wud,\nPhone0.41)-441.2139  hres\n          oe     cenit\n\naaadiesets\n",
+                    "confidence": 75.9
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "2024",
+                        "voucher_date": "01-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": null,
+                        "gross_total": null,
+                        "total_deductions": 16301.6,
+                        "net_total": 1229900.0
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comm?4.00",
+                            "amount": 576.0
+                        },
+                        {
+                            "deduction_type": "LessForDamages",
+                            "amount": 720.0
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 0.6
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 14400.0
+                        },
+                        {
+                            "deduction_type": "()         LYFAndCash",
+                            "amount": 605.0
+                        }
+                    ],
+                    "metadata": {
+                        "parse_confidence": 58.33,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": null,
+                        "net_total": 1229900,
+                        "supplier_name": null,
+                        "total_deductions": 16301.6,
+                        "vendor_details": null,
+                        "voucher_date": "01-04-2024",
+                        "voucher_number": "2024"
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "amount": 576,
+                            "deduction_type": "Comm?4.00"
+                        },
+                        {
+                            "amount": 720,
+                            "deduction_type": "LessForDamages"
+                        },
+                        {
+                            "amount": 0.6,
+                            "deduction_type": "UnLoading"
+                        },
+                        {
+                            "amount": 14400,
+                            "deduction_type": "Other"
+                        },
+                        {
+                            "amount": 605,
+                            "deduction_type": "()         LYFAndCash"
+                        }
+                    ]
+                },
+                "status": "validated"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\99c772b4-2057-45a6-9c19-0c2adc23852c_IMG-20240426-WA0033.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\99c772b4-2057-45a6-9c19-0c2adc23852c_cropped_1.jpg",
+                "ocr_result": {
+                    "text": "PrintToBile\n\nClose\n\nAS\n\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139,9949333786\nYoucherDate     26/04/2024\n\nSuppName      TK\n\n3   210000   6300On\n2   -10000   4200a0\n3   136000   4030on\n\nVoucherNumber214\n\nvital        8            14580o0\n-        lomm4O0-.    S83026\n-       LessForLamages    PISO\n-             Unloading      5342\n   ;        l4doo27\nLFandCash    d4uo\nWHMELHaedksdie\neetdRUbeHaeb COMMENT\nVARY THAFAKWeogi  HVDERRABALSitla, 4\n\n",
+                    "confidence": 80.36
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "214",
+                        "voucher_date": "26-04-2024",
+                        "supplier_name": "TK",
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "gross_total": null,
+                        "total_deductions": null,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [],
+                    "metadata": {
+                        "parse_confidence": 50.0,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": null,
+                        "net_total": null,
+                        "supplier_name": "TK",
+                        "total_deductions": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "voucher_date": "26-04-2024",
+                        "voucher_number": "214"
+                    },
+                    "items": [],
+                    "deductions": []
+                },
+                "status": "validated"
+            }
+        ],
+        "current_index": 2,
+        "total": 2,
+        "completed": 2,
+        "skipped": 0,
+        "created_at": "2026-01-05T13:02:37.443833"
+    },
+    "af95e304-e739-4eb5-a775-a647746a8ec4": {
+        "queue_id": "af95e304-e739-4eb5-a775-a647746a8ec4",
+        "batch_id": "032a9c0a-5b15-4d89-aba7-cd09c7513e3c",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\af95e304-e739-4eb5-a775-a647746a8ec4_IMG-20240402-WA0015.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\af95e304-e739-4eb5-a775-a647746a8ec4_IMG-20240426-WA0033.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            }
+        ],
+        "current_index": 0,
+        "total": 2,
+        "completed": 0,
+        "skipped": 0,
+        "created_at": "2026-01-05T13:07:50.004293"
+    },
+    "b84378e4-1764-42ad-bf55-92a637996ad5": {
+        "queue_id": "b84378e4-1764-42ad-bf55-92a637996ad5",
+        "batch_id": "298c9581-a1b0-4dc9-8d94-ef08c8dea5a7",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\b84378e4-1764-42ad-bf55-92a637996ad5_IMG-20240402-WA0015.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\b84378e4-1764-42ad-bf55-92a637996ad5_IMG-20240426-WA0033.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            }
+        ],
+        "current_index": 0,
+        "total": 2,
+        "completed": 0,
+        "skipped": 0,
+        "created_at": "2026-01-05T13:12:15.077338"
+    },
+    "4b951c77-b9c8-424e-8e84-86a6b5fea991": {
+        "queue_id": "4b951c77-b9c8-424e-8e84-86a6b5fea991",
+        "batch_id": "a3abf196-b59d-4fa1-b846-fee9ceb4c43d",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\4b951c77-b9c8-424e-8e84-86a6b5fea991_IMG-20240402-WA0015.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\4b951c77-b9c8-424e-8e84-86a6b5fea991_IMG-20240426-WA0033.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            }
+        ],
+        "current_index": 0,
+        "total": 2,
+        "completed": 0,
+        "skipped": 0,
+        "created_at": "2026-01-05T13:15:05.648995"
+    },
+    "786db8ce-0459-49bd-ae56-ecf394d5d9b8": {
+        "queue_id": "786db8ce-0459-49bd-ae56-ecf394d5d9b8",
+        "batch_id": "b4e97f13-3ae1-4856-bb0b-99c4a0433c30",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\786db8ce-0459-49bd-ae56-ecf394d5d9b8_IMG-20240402-WA0015.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\786db8ce-0459-49bd-ae56-ecf394d5d9b8_IMG-20240426-WA0033.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            }
+        ],
+        "current_index": 0,
+        "total": 2,
+        "completed": 0,
+        "skipped": 0,
+        "created_at": "2026-01-05T13:15:34.406429"
+    },
+    "6e16b06c-2e5a-4d69-b898-54a7b06f3eff": {
+        "queue_id": "6e16b06c-2e5a-4d69-b898-54a7b06f3eff",
+        "batch_id": "0ca227d6-6abb-4c3f-9a2d-21393461eafe",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\6e16b06c-2e5a-4d69-b898-54a7b06f3eff_IMG-20240402-WA0015.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\6e16b06c-2e5a-4d69-b898-54a7b06f3eff_cropped_0.jpg",
+                "ocr_result": {
+                    "text": "wpe\nLLSSSCSSSSSDSYSASMEceeGeeweeeeemeceereee\n\n340\n01/04/2024\nTK\n\nQty     Price    Arnount\n81800.0014400.00\n\nTotal        8            14400.00\n(-)       Comm?4.00    576.00\n(-)      LessForDanages    720.00\n(-)           UnLoading      SS.60\n(-)                        144.00\n(-)         L/FAndCash     605.00\n",
+                    "confidence": 80.12
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": null,
+                        "voucher_date": "01-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": null,
+                        "gross_total": 14400.0,
+                        "total_deductions": 2045.6,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comm?4.00",
+                            "amount": 576.0
+                        },
+                        {
+                            "deduction_type": "LessForDanages",
+                            "amount": 720.0
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 0.6
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 144.0
+                        },
+                        {
+                            "deduction_type": "L/FAndCash",
+                            "amount": 605.0
+                        }
+                    ],
+                    "metadata": {
+                        "parse_confidence": 33.33,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": 14400,
+                        "net_total": null,
+                        "supplier_name": null,
+                        "total_deductions": 2045.6,
+                        "vendor_details": null,
+                        "voucher_date": "01-04-2024",
+                        "voucher_number": null
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "amount": 576,
+                            "deduction_type": "Comm?4.00"
+                        },
+                        {
+                            "amount": 720,
+                            "deduction_type": "LessForDanages"
+                        },
+                        {
+                            "amount": 0.6,
+                            "deduction_type": "UnLoading"
+                        },
+                        {
+                            "amount": 144,
+                            "deduction_type": "Other"
+                        },
+                        {
+                            "amount": 605,
+                            "deduction_type": "L/FAndCash"
+                        }
+                    ]
+                },
+                "status": "validated"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\6e16b06c-2e5a-4d69-b898-54a7b06f3eff_IMG-20240426-WA0033.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\6e16b06c-2e5a-4d69-b898-54a7b06f3eff_cropped_1.jpg",
+                "ocr_result": {
+                    "text": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139,9949333786\nVoucher Number214\nYoucherDate     26/04/2024\nSuppName      TK\nQty     Price    Amount\n3  210000  6300 00.\n2  -100.00  4200O0\n3  1360.00  4080On\nTotal       g       -14580.o0-\n-      Comm?400.S83cn-\n--     LessForDamages    729onn\n-         UnLoading    S8o4n\n-                   ldbO5\n oo   L-FAndCash    440s\n   Grand Totalodonoqe\n",
+                    "confidence": 79.89
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "214",
+                        "voucher_date": "26-04-2024",
+                        "supplier_name": "TK",
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "gross_total": null,
+                        "total_deductions": null,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [],
+                    "metadata": {
+                        "parse_confidence": 50.0,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": null,
+                        "net_total": null,
+                        "supplier_name": "TK",
+                        "total_deductions": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "voucher_date": "26-04-2024",
+                        "voucher_number": "214"
+                    },
+                    "items": [],
+                    "deductions": []
+                },
+                "status": "validated"
+            }
+        ],
+        "current_index": 2,
+        "total": 2,
+        "completed": 2,
+        "skipped": 0,
+        "created_at": "2026-01-05T13:18:29.815912"
+    },
+    "06e8e1f2-6a57-44c7-b944-05bf0ba481f9": {
+        "queue_id": "06e8e1f2-6a57-44c7-b944-05bf0ba481f9",
+        "batch_id": "4e1cfa5d-91e5-4291-ba16-e885eecfb38a",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\06e8e1f2-6a57-44c7-b944-05bf0ba481f9_IMG-20240402-WA0015.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\06e8e1f2-6a57-44c7-b944-05bf0ba481f9_cropped_0.jpg",
+                "ocr_result": {
+                    "text": "YoucherNumber340\nVoucherDate     01/04/2024\nSuppNane      TK\nQty     Price    Arnount\n8   1800.0014400.00\nTotaltiiSW         1440000\n(-)       Comm?4.00    576.00\n(-)      LessForDamages    720.00\n(-)           UnLoading      SS.60\n(-)                        14400\n()         LYFAndCash     605.00\nGrandTotal-     1229900.\n\nAy\nAHMEDSHARIF& Like,\nLEMON PUROHASER4 COMMENT\nDARUSHAFAx ROADHYDERABAL Wud,\nPhone0.41)-441.2139  hres\n          oe     cenit\n\naaadiesets\n",
+                    "confidence": 75.9
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "2024",
+                        "voucher_date": "01-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": null,
+                        "gross_total": null,
+                        "total_deductions": 16301.6,
+                        "net_total": 1229900.0
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comm?4.00",
+                            "amount": 576.0
+                        },
+                        {
+                            "deduction_type": "LessForDamages",
+                            "amount": 720.0
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 0.6
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 14400.0
+                        },
+                        {
+                            "deduction_type": "()         LYFAndCash",
+                            "amount": 605.0
+                        }
+                    ],
+                    "metadata": {
+                        "parse_confidence": 58.33,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": null,
+                        "net_total": 1229900,
+                        "supplier_name": null,
+                        "total_deductions": 16301.6,
+                        "vendor_details": null,
+                        "voucher_date": "01-04-2024",
+                        "voucher_number": "2024"
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "amount": 576,
+                            "deduction_type": "Comm?4.00"
+                        },
+                        {
+                            "amount": 720,
+                            "deduction_type": "LessForDamages"
+                        },
+                        {
+                            "amount": 0.6,
+                            "deduction_type": "UnLoading"
+                        },
+                        {
+                            "amount": 14400,
+                            "deduction_type": "Other"
+                        },
+                        {
+                            "amount": 605,
+                            "deduction_type": "()         LYFAndCash"
+                        }
+                    ]
+                },
+                "status": "validated"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\06e8e1f2-6a57-44c7-b944-05bf0ba481f9_IMG-20240426-WA0033.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\06e8e1f2-6a57-44c7-b944-05bf0ba481f9_cropped_1.jpg",
+                "ocr_result": {
+                    "text": "PrintToBile\n\nClose\n\nAS\n\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139,9949333786\nYoucherDate     26/04/2024\n\nSuppName      TK\n\n3   210000   6300On\n2   -10000   4200a0\n3   136000   4030on\n\nVoucherNumber214\n\nvital        8            14580o0\n-        lomm4O0-.    S83026\n-       LessForLamages    PISO\n-             Unloading      5342\n   ;        l4doo27\nLFandCash    d4uo\nWHMELHaedksdie\neetdRUbeHaeb COMMENT\nVARY THAFAKWeogi  HVDERRABALSitla, 4\n\n",
+                    "confidence": 80.36
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "214",
+                        "voucher_date": "26-04-2024",
+                        "supplier_name": "TK",
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "gross_total": null,
+                        "total_deductions": null,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [],
+                    "metadata": {
+                        "parse_confidence": 50.0,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": null,
+                        "net_total": null,
+                        "supplier_name": "TK",
+                        "total_deductions": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "voucher_date": "26-04-2024",
+                        "voucher_number": "214"
+                    },
+                    "items": [],
+                    "deductions": []
+                },
+                "status": "validated"
+            }
+        ],
+        "current_index": 2,
+        "total": 2,
+        "completed": 2,
+        "skipped": 0,
+        "created_at": "2026-01-05T13:27:31.311439"
+    },
+    "3e82586d-c186-4ca4-b54e-b332c9008393": {
+        "queue_id": "3e82586d-c186-4ca4-b54e-b332c9008393",
+        "batch_id": "0effde4f-474c-446a-a23a-1029cef0d420",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\3e82586d-c186-4ca4-b54e-b332c9008393_IMG-20240402-WA0015.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\3e82586d-c186-4ca4-b54e-b332c9008393_cropped_0.jpg",
+                "ocr_result": {
+                    "text": "340\n01/04/2024\nTK\n\nQty     Price    Anount\n81800.0014400.00\n\nTotal        8            14400.00\n(-)       Comm?4.00    576.00\n(-)      LessForDanages    720.00\n(-)           UnLoading      SS.60\n(-)                        14400\n(-)         LYFAndCash     605.00\n\nFMSONSUDOe\n",
+                    "confidence": 86.29
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": null,
+                        "voucher_date": "01-04-2024",
+                        "supplier_name": null,
+                        "vendor_details": null,
+                        "gross_total": 14400.0,
+                        "total_deductions": 16301.6,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "deduction_type": "Comm?4.00",
+                            "amount": 576.0
+                        },
+                        {
+                            "deduction_type": "LessForDanages",
+                            "amount": 720.0
+                        },
+                        {
+                            "deduction_type": "UnLoading",
+                            "amount": 0.6
+                        },
+                        {
+                            "deduction_type": "Other",
+                            "amount": 14400.0
+                        },
+                        {
+                            "deduction_type": "LYFAndCash",
+                            "amount": 605.0
+                        }
+                    ],
+                    "metadata": {
+                        "parse_confidence": 33.33,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": 14400,
+                        "net_total": null,
+                        "supplier_name": null,
+                        "total_deductions": 16301.6,
+                        "vendor_details": null,
+                        "voucher_date": "01-04-2024",
+                        "voucher_number": null
+                    },
+                    "items": [],
+                    "deductions": [
+                        {
+                            "amount": 576,
+                            "deduction_type": "Comm?4.00"
+                        },
+                        {
+                            "amount": 720,
+                            "deduction_type": "LessForDanages"
+                        },
+                        {
+                            "amount": 0.6,
+                            "deduction_type": "UnLoading"
+                        },
+                        {
+                            "amount": 14400,
+                            "deduction_type": "Other"
+                        },
+                        {
+                            "amount": 605,
+                            "deduction_type": "LYFAndCash"
+                        }
+                    ]
+                },
+                "status": "validated"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\3e82586d-c186-4ca4-b54e-b332c9008393_IMG-20240426-WA0033.jpg",
+                "cropped_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\3e82586d-c186-4ca4-b54e-b332c9008393_cropped_1.jpg",
+                "ocr_result": {
+                    "text": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139,9949333786\nVoucher Number214\nYoucherDate     26/04/2024\nSuppName      TK\nQty     Price    Amount\n3  210000  6300 00.\n2  -100.00  4200O0\n3  1360.00  4080On\nTotal       g       -14580.o0-\n-      Comm?400.S83cn-\n--     LessForDamages    729onn\n-         UnLoading    S8o4n\n-                   ldbO5\n: oo   L-FAndCash    $408\n   Grand Totalodonoqe\n",
+                    "confidence": 73.81
+                },
+                "parsed_data": {
+                    "master": {
+                        "voucher_number": "214",
+                        "voucher_date": "26-04-2024",
+                        "supplier_name": "TK",
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "gross_total": null,
+                        "total_deductions": null,
+                        "net_total": null
+                    },
+                    "items": [],
+                    "deductions": [],
+                    "metadata": {
+                        "parse_confidence": 50.0,
+                        "validation_warnings": [],
+                        "corrections": []
+                    }
+                },
+                "validated_data": {
+                    "master": {
+                        "gross_total": null,
+                        "net_total": null,
+                        "supplier_name": "TK",
+                        "total_deductions": null,
+                        "vendor_details": "AHMEDSHARIF&BROS",
+                        "voucher_date": "26-04-2024",
+                        "voucher_number": "214"
+                    },
+                    "items": [],
+                    "deductions": []
+                },
+                "status": "validated"
+            }
+        ],
+        "current_index": 2,
+        "total": 2,
+        "completed": 2,
+        "skipped": 0,
+        "created_at": "2026-01-05T14:07:09.465902"
+    },
+    "6d66fb27-5f64-4447-9cdc-fa5abd867d26": {
+        "queue_id": "6d66fb27-5f64-4447-9cdc-fa5abd867d26",
+        "batch_id": "18caf0a7-70d4-47ab-acc6-0cf879efe0f9",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\temp\\6d66fb27-5f64-4447-9cdc-fa5abd867d26_IMG-20240402-WA0015.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\temp\\6d66fb27-5f64-4447-9cdc-fa5abd867d26_IMG-20240426-WA0033.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            }
+        ],
+        "current_index": 0,
+        "total": 2,
+        "completed": 0,
+        "skipped": 0,
+        "created_at": "2026-01-05T14:37:34.800204"
+    },
+    "8631d6d0-0922-47ea-9354-30ec6ca4c6d7": {
+        "queue_id": "8631d6d0-0922-47ea-9354-30ec6ca4c6d7",
+        "batch_id": "ba02dc4c-5cd4-4d80-aa86-0d342c0ff78d",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\temp\\8631d6d0-0922-47ea-9354-30ec6ca4c6d7_IMG-20240402-WA0015.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\temp\\8631d6d0-0922-47ea-9354-30ec6ca4c6d7_IMG-20240426-WA0033.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            }
+        ],
+        "current_index": 0,
+        "total": 2,
+        "completed": 0,
+        "skipped": 0,
+        "created_at": "2026-01-05T14:39:41.541161"
+    },
+    "b7c60362-dc8a-42a8-a121-3a2e17060d7d": {
+        "queue_id": "b7c60362-dc8a-42a8-a121-3a2e17060d7d",
+        "batch_id": "1b8f1368-5d2f-48b3-9a3b-eb72f8da78a2",
+        "files": [
+            {
+                "original_filename": "IMG-20240402-WA0015.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\temp\\b7c60362-dc8a-42a8-a121-3a2e17060d7d_IMG-20240402-WA0015.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            },
+            {
+                "original_filename": "IMG-20240426-WA0033.jpg",
+                "original_path": "C:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt4\\uploads\\temp\\b7c60362-dc8a-42a8-a121-3a2e17060d7d_IMG-20240426-WA0033.jpg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending"
+            }
+        ],
+        "current_index": 0,
+        "total": 2,
+        "completed": 0,
+        "skipped": 0,
+        "created_at": "2026-01-05T14:41:12.168340"
+    }
+}

@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Breadcrumb -->
+    <nav class="flex mb-4" aria-label="Breadcrumb">
+        <ol class="flex items-center space-x-4">
+            <li>
+                <a href="{{ url_for('main_beta_v2.batch_list_page') }}" class="text-gray-500 hover:text-gray-700">
+                    Batch Uploads
+                </a>
+            </li>
+            <li>
+                <svg class="flex-shrink-0 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                    fill="currentColor">
+                    <path fill-rule="evenodd"
+                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                        clip-rule="evenodd" />
+                </svg>
+            </li>
+            <li>
+                <span class="text-gray-900 font-medium" aria-current="page">{{ batch.batch_name }}</span>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Header -->
+    <div class="md:flex md:items-center md:justify-between mb-8">
+        <div class="flex-1 min-w-0">
+            <h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">
+                {{ batch.batch_name }}
+            </h2>
+            <div class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-6">
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Created on {{ batch.created_at.strftime('%Y-%m-%d %H:%M') }}
+                </div>
+                <div class="mt-2 flex items-center text-sm text-gray-500">
+                    <svg class="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                    {{ batch.total_files }} Files
+                </div>
+            </div>
+        </div>
+        <div class="mt-4 flex md:mt-0 md:ml-4">
+            <a href="{{ url_for('main_beta_v2.bulk_upload_page') }}"
+                class="ml-3 inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50">
+                Upload More
+            </a>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 gap-5 sm:grid-cols-4 mb-8">
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <dt class="text-sm font-medium text-gray-500 truncate">Total Receipts</dt>
+                <dd class="mt-1 text-3xl font-semibold text-gray-900">{{ batch.total_files }}</dd>
+            </div>
+        </div>
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <dt class="text-sm font-medium text-gray-500 truncate">Validated</dt>
+                <dd class="mt-1 text-3xl font-semibold text-green-600">{{ batch.validated_files }}</dd>
+            </div>
+        </div>
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <dt class="text-sm font-medium text-gray-500 truncate">Skipped</dt>
+                <dd class="mt-1 text-3xl font-semibold text-yellow-600">{{ batch.skipped_files }}</dd>
+            </div>
+        </div>
+        <div class="bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-5 sm:p-6">
+                <dt class="text-sm font-medium text-gray-500 truncate">Failed</dt>
+                <dd class="mt-1 text-3xl font-semibold text-red-600">{{ batch.failed_files }}</dd>
+            </div>
+        </div>
+    </div>
+
+    <!-- Receipts Table -->
+    <div class="bg-white shadow overflow-hidden sm:rounded-lg">
+        <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Processed Receipts</h3>
+        </div>
+        <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+                <tr>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">File /
+                        Info</th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Voucher
+                        Details</th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amounts
+                    </th>
+                    <th scope="col"
+                        class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        Confidence</th>
+                    <th scope="col"
+                        class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions
+                    </th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                {% for voucher in batch.vouchers %}
+                <tr class="hover:bg-gray-50 {% if voucher.supplier_name == 'UPLOAD FAILED' %}bg-red-50{% endif %}">
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-medium text-gray-900 truncate max-w-xs"
+                            title="{{ voucher.file_name }}">
+                            {{ voucher.file_name }}
+                        </div>
+                        <div class="text-xs text-gray-500">ID: {{ voucher.id }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {% if voucher.supplier_name == 'UPLOAD FAILED' %}
+                        <div class="text-sm font-bold text-red-600">UPLOAD FAILED</div>
+                        <div class="text-xs text-red-500 truncate max-w-xs" title="{{ voucher.vendor_details }}">
+                            Error: {{ voucher.vendor_details }}
+                        </div>
+                        {% else %}
+                        <div class="text-sm text-gray-900">{{ voucher.supplier_name or 'Unknown Supplier' }}</div>
+                        <div class="text-xs text-gray-500">No: {{ voucher.voucher_number or '-' }}</div>
+                        <div class="text-xs text-gray-500">Date: {{ voucher.voucher_date_display or '-' }}</div>
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        <div class="text-sm font-bold text-gray-900">₹{{ "%.2f"|format(voucher.net_total or 0) }}</div>
+                        <div class="text-xs text-gray-500">Gross: {{ "%.2f"|format(voucher.gross_total or 0) }}</div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                        {% if voucher.supplier_name == 'UPLOAD FAILED' %}
+                        <span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                            Failed
+                        </span>
+                        {% else %}
+                        {% set conf = voucher.ocr_confidence or 0 %}
+                        {% if conf >= 85 %}
+                        <span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+                            {{ "%.0f"|format(conf) }}%
+                        </span>
+                        {% elif conf >= 60 %}
+                        <span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                            {{ "%.0f"|format(conf) }}%
+                        </span>
+                        {% else %}
+                        <span
+                            class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+                            {{ "%.0f"|format(conf) }}%
+                        </span>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                        {% if voucher.supplier_name == 'UPLOAD FAILED' %}
+                        <span class="text-gray-400 cursor-not-allowed">Cannot Edit</span>
+                        {% else %}
+                        <a href="{{ url_for('main_beta_v2.review_voucher_beta', voucher_id=voucher.id) }}"
+                            class="text-indigo-600 hover:text-indigo-900 mr-3">Edit / Review</a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                        No receipts found in this batch.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

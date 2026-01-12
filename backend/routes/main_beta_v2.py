@@ -94,3 +94,70 @@ def list_vouchers_beta():
         current_app.logger.error(f"Error listing beta vouchers: {e}")
         flash(f"Error: {e}", "error")
         return render_template("view_receipts_beta_v2.html", vouchers=[], page=1, total_pages=1, total_vouchers=0)
+
+@main_beta_v2_bp.route("/bulk_upload", methods=["GET"])
+def bulk_upload_page():
+    """Bulk upload page"""
+    return render_template("bulk_upload_beta.html")
+
+@main_beta_v2_bp.route("/bulk_review/<batch_id>", methods=["GET"])
+def bulk_review_page(batch_id):
+    """Bulk review/validation dashboard"""
+    return render_template("bulk_review_beta.html", batch_id=batch_id)
+
+@main_beta_v2_bp.route("/queue/upload", methods=["GET"])
+def queue_upload_page():
+    """Queue-based workflow upload page"""
+    return render_template("queue_upload_beta.html")
+
+@main_beta_v2_bp.route("/queue/<queue_id>/process", methods=["GET"])
+def queue_processor_page(queue_id):
+    """Queue processor wizard interface"""
+    return render_template("queue_processor_beta.html", queue_id=queue_id)
+
+@main_beta_v2_bp.route("/batch/<batch_id>", methods=["GET"])
+def batch_summary_page(batch_id):
+    """Batch Summary Page"""
+    from backend.services.batch_service import BatchService
+    
+    batch = BatchService.get_batch_with_vouchers(batch_id)
+    if not batch:
+        flash(f"Batch {batch_id} not found", "error")
+        return redirect(url_for('main_beta_v2.batch_list_page'))
+    
+    # Format dates for display (handles both date objects and strings)
+    for voucher in batch.get('vouchers', []):
+        voucher_date = voucher.get('voucher_date')
+        if voucher_date:
+            # If it's already a string, keep it; if it's a date object, format it
+            if hasattr(voucher_date, 'strftime'):
+                voucher['voucher_date_display'] = voucher_date.strftime('%Y-%m-%d')
+            else:
+                voucher['voucher_date_display'] = str(voucher_date)
+        else:
+            voucher['voucher_date_display'] = 'N/A'
+        
+    return render_template("batch_summary_beta.html", batch=batch)
+
+@main_beta_v2_bp.route("/batches", methods=["GET"])
+def batch_list_page():
+    """Batch List Page"""
+    from backend.services.batch_service import BatchService
+    
+    page = request.args.get('page', 1, type=int)
+    per_page = 20
+    offset = (page - 1) * per_page
+    
+    result = BatchService.get_all_batches(limit=per_page, offset=offset)
+    
+    # Calculate pages
+    total_pages = (result['total'] + per_page - 1) // per_page
+    
+    return render_template(
+        "batch_list_beta.html", 
+        batches=result['batches'],
+        page=page,
+        total_pages=total_pages,
+        total_batches=result['total']
+    )
+
