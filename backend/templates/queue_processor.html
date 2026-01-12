@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Queue Processor - Beta v2{% endblock %}
+{% block title %}Queue Processor{% endblock %}
 
 {% block head %}
 <!-- Cropper.js will be loaded in content block -->
@@ -588,7 +588,7 @@
                     if (!data.success) {
                         // Handle session expiry or invalid queue
                         alert('Session expired: ' + (data.message || 'Queue not found'));
-                        window.location.href = '/beta_v2/queue/upload';
+                        window.location.href = '/queue/upload';
                         return;
                     }
 
@@ -606,7 +606,7 @@
                 } catch (error) {
                     console.error('Queue load error:', error);
                     if (confirm('Session expired or queue not found. Return to upload page?')) {
-                        window.location.href = '/beta_v2/queue/upload';
+                        window.location.href = '/queue/upload';
                     }
                 }
             }
@@ -1250,9 +1250,9 @@
 
                         alert(msg);
                         if (result.batch_id) {
-                            window.location.href = `/beta_v2/batch/${result.batch_id}`;
+                            window.location.href = `/batch/${result.batch_id}`;
                         } else {
-                            window.location.href = '/beta_v2/vouchers';
+                            window.location.href = '/batches';
                         }
                     } else {
                         alert('Save failed: ' + result.message);

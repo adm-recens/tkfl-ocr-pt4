@@ -40,11 +40,6 @@ def create_app(config_name='default'):
     # Register Blueprints
     from backend.routes.main import main_bp
     from backend.routes.api import api_bp
-    from backend.routes.api_beta import api_beta_bp
-    from backend.routes.api_beta_v2 import api_beta_v2_bp
-    from backend.routes.main_beta_v2 import main_beta_v2_bp
-    from backend.routes.comparison import comparison_bp
-    from backend.routes.api_bulk import api_bulk_bp
     from backend.routes.api_queue import api_queue_bp  # Import the queue API blueprint
 
     # Exempt queue API from CSRF protection (it doesn't use forms)
@@ -52,11 +47,6 @@ def create_app(config_name='default'):
 
     app.register_blueprint(main_bp)
     app.register_blueprint(api_bp, url_prefix='/api')
-    app.register_blueprint(api_beta_bp, url_prefix='/api')
-    app.register_blueprint(api_beta_v2_bp)  # Already has /api/beta_v2 prefix
-    app.register_blueprint(main_beta_v2_bp)  # Already has /beta_v2 prefix
-    app.register_blueprint(comparison_bp)  # Has /api/comparison prefix
-    app.register_blueprint(api_bulk_bp, url_prefix='/api/bulk')  # Bulk upload API
     app.register_blueprint(api_queue_bp, url_prefix='/api/queue')  # Queue workflow API
 
     return app

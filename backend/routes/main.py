@@ -12,7 +12,8 @@ def index():
 
 @main_bp.route("/upload", methods=["GET"])
 def upload_page():
-    return render_template("upload_receipt.html")
+    # Redirect legacy single upload to new Queue/Bulk upload
+    return redirect(url_for('main.queue_upload_page'))
 
 @main_bp.route("/queue/upload", methods=["GET"])
 def queue_upload_page():
@@ -68,23 +69,9 @@ def batch_summary_page(batch_id):
 
 # Duplicate `review_voucher` removed: consolidated implementation exists later in this file
 
-@main_bp.route("/upload_beta", methods=["GET"])
-def upload_beta_page():
-    return render_template("upload_beta.html")
-
 @main_bp.route("/uploads/<filename>")
 def uploaded_file(filename):
     return send_from_directory(current_app.config["UPLOAD_FOLDER"], filename)
-
-@main_bp.route("/uploads/beta/<filename>")
-def uploaded_file_beta(filename):
-    beta_folder = os.path.join(current_app.config["UPLOAD_FOLDER"], "beta")
-    return send_from_directory(beta_folder, filename)
-
-@main_bp.route("/uploads/beta_v2/<filename>")
-def uploaded_file_beta_v2(filename):
-    beta_v2_folder = os.path.join(current_app.config["UPLOAD_FOLDER"], "beta_v2")
-    return send_from_directory(beta_v2_folder, filename)
 
 @main_bp.route("/receipts", methods=["GET"])
 def view_receipts():
@@ -118,10 +105,6 @@ def review_voucher(voucher_id):
             flash(f"Voucher #{voucher_id} not found.", "error")
             return redirect(url_for('main.view_receipts'))
             
-        # Redirect Beta vouchers to Beta Review
-        if voucher.get('ocr_mode') == 'roi_beta':
-            return redirect(url_for('main.review_voucher_beta', voucher_id=voucher_id))
-
         # Use file_storage_path to get actual filename on disk (which has unique prefix)
         if voucher.get('file_storage_path'):
             real_filename = os.path.basename(voucher['file_storage_path'])

@@ -6,7 +6,7 @@ Session-based queue storage for guided receipt processing
 from flask import Blueprint, request, jsonify, current_app, session
 from werkzeug.utils import secure_filename
 from backend.ocr_service import extract_text
-from backend.parser_beta import parse_receipt_text
+from backend.parser import parse_receipt_text
 from backend.db import get_connection
 import os
 import uuid

@@ -64,36 +64,40 @@
                         <span
                             class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full"></span>
                     </a>
-                    <a href="{{ url_for('main.upload_page') }}"
-                        class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors relative group">
-                        Upload
-                        <span
-                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full"></span>
-                    </a>
-                    <a href="{{ url_for('main.view_receipts') }}"
-                        class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors relative group">
-                        Receipts
-                        <span
-                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full"></span>
-                    </a>
+
+                    <!-- Receipt Management Dropdown -->
+                    <div class="relative group" id="receipts-dropdown">
+                        <button
+                            class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors flex items-center gap-1">
+                            Receipt Management
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </button>
+                        <div
+                            class="absolute left-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-slate-100 py-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 transform group-hover:translate-y-0 translate-y-2">
+                            <a href="{{ url_for('main.queue_upload_page') }}"
+                                class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary-600">
+                                Upload Receipts
+                            </a>
+                            <a href="{{ url_for('main.view_receipts') }}"
+                                class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary-600">
+                                View Receipts
+                            </a>
+                            <a href="{{ url_for('main.batch_list_page') }}"
+                                class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 hover:text-primary-600">
+                                Batch History
+                            </a>
+                        </div>
+                    </div>
+
                     <a href="{{ url_for('main.training_page') }}"
                         class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors relative group">
                         Training
                         <span
                             class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full"></span>
-                    </a>
-                    <a href="{{ url_for('main_beta_v2.batch_list_page') }}"
-                        class="text-sm font-medium text-slate-600 hover:text-primary-600 transition-colors relative group">
-                        Batch History
-                        <span
-                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary-600 transition-all group-hover:w-full"></span>
-                    </a>
-                    <a href="{{ url_for('main_beta_v2.upload_page_beta') }}"
-                        class="text-sm font-medium text-indigo-600 hover:text-indigo-700 transition-colors relative group flex items-center gap-1">
-                        <span class="px-1.5 py-0.5 bg-indigo-100 text-indigo-700 text-xs font-bold rounded">BETA</span>
-                        OCR Testing
-                        <span
-                            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-indigo-600 transition-all group-hover:w-full"></span>
                     </a>
                 </div>
 
