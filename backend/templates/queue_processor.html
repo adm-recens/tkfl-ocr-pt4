@@ -245,6 +245,18 @@
                                 </ul>
                             </div>
 
+                            <!-- Raw OCR Text -->
+                            <div class="mt-6 border-t border-slate-100 pt-6">
+                                <h4 class="font-bold text-slate-800 text-lg mb-4 flex items-center gap-2">
+                                    <span class="w-1 h-6 bg-slate-400 rounded-full"></span>
+                                    Raw OCR Text
+                                </h4>
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                    <pre id="review-raw-text"
+                                        class="text-xs text-slate-600 font-mono whitespace-pre-wrap h-48 overflow-y-auto custom-scrollbar leading-relaxed"></pre>
+                                </div>
+                            </div>
+
                             <!-- Action Buttons (Sticky Footer) -->
                             <div
                                 class="sticky bottom-0 bg-white/95 backdrop-blur border-t border-slate-200 p-4 -mx-8 -mb-8 mt-8 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-20 flex gap-3">
@@ -395,6 +407,18 @@
                                 </button>
                             </div>
 
+                            <!-- Raw OCR Text -->
+                            <div class="mt-8 border-t border-slate-100 pt-6">
+                                <h4 class="font-bold text-slate-80- text-lg mb-4 flex items-center gap-2">
+                                    <span class="w-1 h-6 bg-slate-400 rounded-full"></span>
+                                    Raw OCR Text
+                                </h4>
+                                <div class="bg-slate-50 p-4 rounded-lg border border-slate-200">
+                                    <pre id="validate-raw-text"
+                                        class="text-xs text-slate-600 font-mono whitespace-pre-wrap h-48 overflow-y-auto custom-scrollbar leading-relaxed"></pre>
+                                </div>
+                            </div>
+
                             <!-- Validation Actions (Stick To Bottom of Container) -->
                             <div
                                 class="sticky bottom-0 bg-white/95 backdrop-blur border-t border-slate-200 p-4 -mx-8 -mb-8 mt-8 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)] z-20 flex justify-between items-center">
@@ -449,6 +473,30 @@
                 </div>
             </div>
 
+
+
+            <!-- Intermediate: Batch Processing Trigger -->
+            <div id="stage-batch-start" class="hidden p-8">
+                <div class="text-center py-12">
+                    <div class="inline-flex items-center justify-center w-20 h-20 bg-indigo-100 rounded-full mb-6">
+                        <svg class="w-12 h-12 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                            </path>
+                        </svg>
+                    </div>
+
+                    <h3 class="text-3xl font-bold text-slate-800 mb-2">Cropping Complete!</h3>
+                    <p class="text-slate-600 mb-8">All receipts are ready for OCR processing. This will process all
+                        images at once.</p>
+
+                    <button id="start-batch-btn"
+                        class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-lg font-semibold text-lg hover:shadow-xl transition transform hover:scale-105">
+                        Start Batch Processing
+                    </button>
+                </div>
+            </div>
+
             <!-- Global Navigation -->
             <div id="navigation" class="border-t border-slate-200 px-8 py-4 bg-slate-50 flex justify-between hidden">
                 <button id="prev-btn"
@@ -464,6 +512,15 @@
                     Save & Next →
                 </button>
             </div>
+
+            <!-- Datalist for Autocomplete -->
+            <datalist id="deduction-types">
+                <option value="Commission">
+                <option value="Less for Damage">
+                <option value="UnLoading">
+                <option value="L/F and Cash">
+                <option value="Other">
+            </datalist>
         </div>
 
         <!-- Cropper.js CSS & JS -->
@@ -477,6 +534,7 @@
 
             const stages = {
                 CROP: 'crop',
+                BATCH_START: 'batch_start',
                 OCR: 'ocr',
                 REVIEW: 'review',      // New read-only review stage
                 VALIDATE: 'validate',   // Editable validation stage
@@ -488,7 +546,7 @@
             // Load current queue status
             async function loadCurrent() {
                 try {
-                    const response = await fetch(`/api/queue/${queueId}/status`);
+                    const response = await fetch(`/api/queue/${queueId}/current`);
                     const data = await response.json();
 
                     if (!data.success) {
@@ -504,36 +562,53 @@
                         return;
                     }
 
-                    // Determine stage based on file status
+                    // Determine logic based on phase and file status
+                    const phase = data.phase || 'crop';
                     const file = data.current_file;
-                    if (!file) {
-                        // Should be complete if no file, but double check
-                        console.warn('No current file but not marked complete?');
-                        return;
-                    }
 
-                    if (file.status === 'pending') {
-                        showCropStage(file.original_path);
-                    } else if (file.status === 'uploaded' || file.status === 'cropped') {
-                        // If we have a crop but no OCR yet, go to OCR
-                        if (file.cropped_path) {
-                            showOCRStage();
-                            runOCR();
-                        } else {
-                            showCropStage(file.original_path);
+                    console.log(`[LOGIC] Phase: ${phase}, Status: ${file ? file.status : 'null'}`);
+
+                    if (phase === 'crop') {
+                        // PHASE 1: CROP
+
+                        // Check if we are done with cropping (index >= total) IS handled by data.completed in backend? 
+                        // Backend actually sets 'completed=True' only if processing is done? 
+                        // Let's rely on total check in loadCurrent wrapper or backend logic.
+
+                        // Backend 'completed' flag might be strictly for Review phase completion.
+                        // We check if we've looped through all for cropping.
+                        if (data.current_index >= data.total) {
+                            showBatchStartStage();
+                            return;
                         }
-                    } else if (file.status === 'ocr_complete') {
-                        // OCR done, show Review
-                        showReviewStage({
-                            confidence: data.ocr_confidence,
-                            parsed_data: data.parsed_data
-                        });
-                    } else if (file.status === 'validated') {
-                        // Should have moved to next, but if we are here, maybe just show review?
-                        showReviewStage({
-                            confidence: data.ocr_confidence,
-                            parsed_data: data.parsed_data
-                        });
+
+                        // Otherwise show crop
+                        showCropStage(file.original_path);
+
+                    } else if (phase === 'processing') {
+                        // PHASE 2: PROCESSING (Recovering from refresh)
+                        showOCRStage(); // Show loading spinner
+                        // Poll for completion? or just wait?
+                        // Ideally we should poll status if we land here
+                        pollBatchStatus();
+
+                    } else if (phase === 'review') {
+                        // PHASE 3: REVIEW
+                        if (file.status === 'ocr_complete' || file.status === 'validated') {
+                            showValidateStage({
+                                confidence: data.ocr_confidence,
+                                parsed_data: data.parsed_data,
+                                raw_text: data.raw_text
+                            });
+                        } else {
+                            // Fallback?
+                            console.warn('In review phase but file not ready?', file);
+                            // If it was skipped in crop phase?
+                            if (file.status === 'crop_skipped') {
+                                // It should still have OCR result if we processed everything?
+                                // Yes, process_batch runs on all.
+                            }
+                        }
                     }
 
                 } catch (error) {
@@ -544,6 +619,45 @@
             // Initialize
             async function init() {
                 await loadCurrent();
+            }
+
+            function pollBatchStatus() {
+                // Poll every 2 seconds
+                setTimeout(async () => {
+                    if (currentStage !== stages.OCR) return; // Stop if we moved away
+
+                    try {
+                        const response = await fetch(`/api/queue/${queueId}/current`);
+                        const data = await response.json();
+
+                        // Update progress bar helper
+                        function updatePollProgress(prog) {
+                            if (!prog) return;
+                            const pText = document.getElementById('progress-percent');
+                            if (pText) pText.textContent = prog.percent;
+                            const pBar = document.getElementById('progress-bar');
+                            if (pBar) pBar.style.width = prog.percent + '%';
+                        }
+
+                        if (data.progress) {
+                            updatePollProgress(data.progress);
+                            const percent = data.progress.percent || 0;
+                            const statusEl = document.getElementById('ocr-status');
+                            if (statusEl) statusEl.textContent = `Batch Processing: ${percent}% Complete`;
+                        }
+
+                        if (data.phase === 'review' || data.completed) {
+                            // Ready!
+                            loadCurrent();
+                        } else {
+                            // Keep polling
+                            pollBatchStatus();
+                        }
+                    } catch (e) {
+                        console.error("Poll error", e);
+                        pollBatchStatus(); // Retry
+                    }
+                }, 2000);
             }
 
             function updateProgress(progress) {
@@ -575,48 +689,9 @@
                 console.log(`[PROGRESS] Updated: ${statusText} (${percent}%)`);
             }
 
-            async function loadCurrent() {
-                try {
-                    const response = await fetch(`/api/queue/${queueId}/current`);
-                    const data = await response.json();
-                    console.log("[DEBUG] Queue Data Received:", data);
 
-                    if (data.success) {
-                        console.log(`[DEBUG] Progress: ${data.progress?.current}/${data.progress?.total}`);
-                    }
 
-                    if (!data.success) {
-                        // Handle session expiry or invalid queue
-                        alert('Session expired: ' + (data.message || 'Queue not found'));
-                        window.location.href = '/queue/upload';
-                        return;
-                    }
 
-                    if (data.completed) {
-                        showCompletionScreen(data);
-                        return;
-                    }
-
-                    currentData = data;
-                    updateProgress(data.progress);
-
-                    // Start with crop stage
-                    showCropStage(data.current_file.original_path);
-
-                } catch (error) {
-                    console.error('Queue load error:', error);
-                    if (confirm('Session expired or queue not found. Return to upload page?')) {
-                        window.location.href = '/queue/upload';
-                    }
-                }
-            }
-
-            function updateProgress(progress) {
-                document.getElementById('current-num').textContent = progress.current;
-                document.getElementById('total-num').textContent = progress.total;
-                document.getElementById('progress-percent').textContent = progress.percent;
-                document.getElementById('progress-bar').style.width = progress.percent + '%';
-            }
 
             function showCropStage(imagePath) {
                 hideAllStages();
@@ -711,72 +786,54 @@
                 // Defensive check for data
                 if (!ocrData || !ocrData.parsed_data) {
                     console.error('[REVIEW] Missing parsed_data in ocrData:', ocrData);
-                    document.getElementById('navigation').classList.remove('hidden'); // Show nav so user isn't stuck
+                    document.getElementById('navigation').classList.remove('hidden');
                     return;
                 }
 
-                // Populate master form
+                // Populate master form inputs
                 const master = ocrData.parsed_data.master || {};
-                document.getElementById('review-voucher-number').textContent = master.voucher_number || '-';
-                document.getElementById('review-voucher-date').textContent = master.voucher_date || '-';
-                document.getElementById('review-supplier-name').textContent = master.supplier_name || '-';
-                document.getElementById('review-gross-total').textContent = `₹${parseFloat(master.gross_total || 0).toFixed(2)}`;
-                document.getElementById('review-deductions').textContent = `₹${parseFloat(master.total_deductions || 0).toFixed(2)}`;
-                document.getElementById('review-net-total').textContent = `₹${parseFloat(master.net_total || 0).toFixed(2)}`;
+                document.getElementById('input-voucher-number').value = master.voucher_number || '';
+                document.getElementById('input-voucher-date').value = master.voucher_date || '';
+                document.getElementById('input-supplier-name').value = master.supplier_name || '';
+                document.getElementById('input-gross-total').value = parseFloat(master.gross_total || 0).toFixed(2);
+                document.getElementById('input-deductions').value = parseFloat(master.total_deductions || 0).toFixed(2);
+                document.getElementById('input-net-total').value = parseFloat(master.net_total || 0).toFixed(2);
 
                 // Show warnings
                 const warnings = (ocrData.parsed_data.metadata && ocrData.parsed_data.metadata.validation_warnings) ? ocrData.parsed_data.metadata.validation_warnings : [];
                 if (warnings.length > 0) {
-                    document.getElementById('review-warnings-section').classList.remove('hidden');
-                    const warningsList = document.getElementById('review-warnings-list');
+                    document.getElementById('warnings-section').classList.remove('hidden');
+                    const warningsList = document.getElementById('warnings-list');
                     warningsList.innerHTML = warnings.map(w => `<li>• ${w}</li>`).join('');
                 } else {
-                    document.getElementById('review-warnings-section').classList.add('hidden');
+                    document.getElementById('warnings-section').classList.add('hidden');
                 }
 
-                // Display Line Items (Editable)
-                const items = ocrData.parsed_data.items || [];
-                document.getElementById('review-items-section').classList.remove('hidden');
-                const itemsList = document.getElementById('review-items-list');
-                itemsList.innerHTML = '';
+                // Clear Lists
+                document.getElementById('items-list').innerHTML = '';
+                document.getElementById('deductions-list').innerHTML = '';
 
-                if (items.length === 0) {
-                    itemsList.innerHTML = '<p class="text-xs text-slate-500 italic p-2">No items found.</p>';
+                // Display Line Items (Editable)
+                document.getElementById('items-section').classList.remove('hidden');
+                const items = ocrData.parsed_data.items || [];
+                if (items.length > 0) {
+                    items.forEach(item => addItemRow(item));
                 } else {
-                    // FIX: Iterate correctly and create simple non-editable rows for review
-                    itemsList.innerHTML = items.map(item => `
-                                <div class="flex justify-between items-center bg-slate-50 border border-slate-100 p-2 rounded">
-                                    <div class="flex-1">
-                                        <div class="font-medium text-slate-700">${item.item_name || item.item_description || 'Item'}</div>
-                                        <div class="text-xs text-slate-500">${item.quantity || 0} x ₹${item.unit_price || item.rate || 0}</div>
-                                    </div>
-                                    <div class="font-bold text-slate-800">
-                                        ₹${(item.line_amount || 0).toFixed(2)}
-                                    </div>
-                                </div>
-                            `).join('');
+                    // Try to populate at least one empty row? Or just leave empty
                 }
 
                 // Display Deductions (Editable)
+                document.getElementById('deductions-section').classList.remove('hidden');
                 const deductions = ocrData.parsed_data.deductions || [];
-                document.getElementById('review-deductions-section').classList.remove('hidden');
-                const deductionsList = document.getElementById('review-deductions-list');
-                deductionsList.innerHTML = '';
-
-                if (deductions.length === 0) {
-                    deductionsList.innerHTML = '<p class="text-xs text-slate-500 italic p-2">No deductions found.</p>';
-                } else {
-                    deductionsList.innerHTML = deductions.map(ded => `
-                                <div class="flex justify-between items-center bg-slate-50 border border-slate-100 p-2 rounded">
-                                    <div class="text-slate-700 font-medium">${ded.deduction_type || 'Deduction'}</div>
-                                    <div class="text-red-600 font-bold">-₹${(ded.amount || 0).toFixed(2)}</div>
-                                </div>
-                            `).join('');
+                if (deductions.length > 0) {
+                    deductions.forEach(ded => addDeductionRow(ded));
                 }
 
-                // Store parsed data for later submission
-                currentData.parsed_data = ocrData.parsed_data;
+                // Show Raw Text
+                const rawText = ocrData.raw_text || '';
+                document.getElementById('validate-raw-text').textContent = rawText || 'No raw text available';
             }
+
 
             function showCompletionScreen(data) {
                 console.log('[COMPLETE] Showing completion screen', data);
@@ -795,37 +852,104 @@
                 }
             }
 
+            function showBatchStartStage() {
+                hideAllStages();
+                document.getElementById('stage-batch-start').classList.remove('hidden');
+                document.getElementById('stage-indicator').textContent = 'Stage: Ready to Process';
+                currentStage = stages.BATCH_START;
+                document.getElementById('navigation').classList.add('hidden');
+            }
+
             function hideAllStages() {
                 document.getElementById('stage-crop').classList.add('hidden');
                 document.getElementById('stage-ocr').classList.add('hidden');
                 document.getElementById('stage-review').classList.add('hidden');
                 document.getElementById('stage-validate').classList.add('hidden');
                 document.getElementById('stage-complete').classList.add('hidden');
+                document.getElementById('stage-batch-start').classList.add('hidden');
             }
 
             // Button Handlers
             document.getElementById('crop-apply-btn').addEventListener('click', async () => {
+                if (!cropper) return;
                 const canvas = cropper.getCroppedCanvas();
 
                 canvas.toBlob(async (blob) => {
                     const formData = new FormData();
                     formData.append('cropped_image', blob);
 
-                    await fetch(`/api/queue/${queueId}/crop`, {
-                        method: 'POST',
-                        body: formData
-                    });
+                    try {
+                        const response = await fetch(`/api/queue/${queueId}/crop`, {
+                            method: 'POST',
+                            body: formData
+                        });
+                        const data = await response.json();
 
-                    // Move to OCR stage
-                    showOCRStage();
-                    await runOCR();
-                });
+                        if (data.success) {
+                            if (data.phase_complete) {
+                                showBatchStartStage();
+                            } else {
+                                loadCurrent(); // Load next image for cropping
+                            }
+                        } else {
+                            alert('Error saving crop: ' + data.message);
+                        }
+                    } catch (e) {
+                        console.error(e);
+                        alert('Error saving crop');
+                    }
+                }, 'image/jpeg');
             });
 
+            // Add Start Batch Listener
+            const startBatchBtn = document.getElementById('start-batch-btn');
+            if (startBatchBtn) {
+                startBatchBtn.addEventListener('click', async () => {
+                    console.log('[BATCH] Start button clicked');
+                    showOCRStage();
+                    document.getElementById('ocr-status').textContent = "Starting batch processing...";
+
+                    try {
+                        // Trigger batch process
+                        const response = await fetch(`/api/queue/${queueId}/process_batch`, {
+                            method: 'POST'
+                        });
+                        const data = await response.json();
+                        console.log('[BATCH] Response:', data);
+
+                        if (data.success) {
+                            // Start polling or reload which triggers polling logic
+                            console.log('[BATCH] Success, reloading/polling...');
+                            // location.reload(); // Reload can be flaky if cache issues
+                            // Let's explicitly switch to OCR/Polling mode
+                            init();
+                        } else {
+                            alert('Batch processing failed: ' + data.message);
+                            location.reload();
+                        }
+
+                    } catch (e) {
+                        console.error('[BATCH] Exception:', e);
+                        alert('Batch error: ' + e);
+                    }
+                });
+            } else {
+                console.error('[BATCH] Start button not found!');
+            }
+
             document.getElementById('crop-skip-btn').addEventListener('click', async () => {
-                await fetch(`/api/queue/${queueId}/skip_crop`, { method: 'POST' });
-                showOCRStage();
-                await runOCR();
+                const response = await fetch(`/api/queue/${queueId}/skip_crop`, { method: 'POST' });
+                const data = await response.json();
+
+                if (data.success) {
+                    if (data.phase_complete) {
+                        showBatchStartStage();
+                    } else {
+                        loadCurrent();
+                    }
+                } else {
+                    alert('Error skipping crop: ' + data.message);
+                }
             });
 
             // Review Stage Buttons
@@ -1041,6 +1165,10 @@
                 } else {
                     document.getElementById('review-warnings-section').classList.add('hidden');
                 }
+
+                // Show Raw Text
+                const rawText = ocrData.raw_text || (ocrData.ocr_result ? ocrData.ocr_result.text : '');
+                document.getElementById('review-raw-text').textContent = rawText || 'No raw text available';
             }
 
             // Add Item/Deduction Handlers
@@ -1107,7 +1235,7 @@
             <div class="grid grid-cols-3 gap-2 items-end">
                 <div class="col-span-2">
                     <label class="text-[10px] text-slate-500 uppercase">Type</label>
-                    <input type="text" class="ded-type w-full px-2 py-1 text-sm border rounded" value="${data.deduction_type || ''}" placeholder="Deduction Type">
+                    <input type="text" class="ded-type w-full px-2 py-1 text-sm border rounded" value="${data.deduction_type || ''}" placeholder="Deduction Type" list="deduction-types">
                 </div>
                 <div>
                     <label class="text-[10px] text-slate-500 uppercase">Amount</label>

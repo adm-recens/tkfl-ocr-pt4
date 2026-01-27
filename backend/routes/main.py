@@ -211,7 +211,8 @@ def validate_voucher_page(voucher_id):
             save_url=url_for('api.save_validated_data', voucher_id=voucher_id),
             parsed_data=parsed_json_data,
             items_data_json=json.dumps(items_data, ensure_ascii=False, default=str),
-            deductions_data_json=json.dumps(deductions_data, ensure_ascii=False, default=str)
+            deductions_data_json=json.dumps(deductions_data, ensure_ascii=False, default=str),
+            raw_text=voucher.get('raw_ocr_text', '')  # Pass raw text
         )
     except Exception as e:
         current_app.logger.error(f"Error loading validation page for {voucher_id}: {e}")

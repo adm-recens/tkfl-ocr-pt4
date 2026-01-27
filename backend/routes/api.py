@@ -10,6 +10,7 @@ from PIL import Image
 import os
 import json
 import shutil
+from backend.services.production_sync_service import ProductionSyncService
 
 api_bp = Blueprint('api', __name__)
 
@@ -133,6 +134,10 @@ def save_validated_data(voucher_id):
         total_deductions = sum(float(ded.get('amount', 0) or 0) for ded in validated_deductions)
         net_total = subtotal - total_deductions
         
+        # Fix: Convert empty date to None
+        if not voucher_date:
+            voucher_date = None
+
         master_data = {
             'supplier_name': supplier_name,
             'voucher_date': voucher_date,
@@ -144,6 +149,12 @@ def save_validated_data(voucher_id):
         
         # Save via Service
         VoucherService.save_validated_voucher(voucher_id, master_data, validated_items, validated_deductions)
+        
+        # Sync to Production immediately (for updates)
+        try:
+            ProductionSyncService.sync_voucher_to_production(voucher_id)
+        except Exception as sync_err:
+            current_app.logger.error(f"Failed to sync updated voucher {voucher_id}: {sync_err}")
         
         flash(f"Voucher #{voucher_id} saved successfully!", "success")
         return redirect(url_for('main.view_receipts'))

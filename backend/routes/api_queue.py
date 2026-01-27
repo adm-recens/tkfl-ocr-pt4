@@ -44,16 +44,21 @@ def load_queue_store():
     return {}
 
 def save_queue_store(store):
-    """Save queue store to JSON file"""
-    try:
-        os.makedirs(os.path.dirname(QUEUE_STORE_FILE), exist_ok=True)
-        with open(QUEUE_STORE_FILE, 'w') as f:
-            json.dump(store, f, indent=4, default=str)
-    except Exception as e:
-        print(f"[ERROR] Failed to save queue store: {e}")
+    """Save queue store to JSON file (thread-safe)"""
+    with queue_store_lock:
+        try:
+            os.makedirs(os.path.dirname(QUEUE_STORE_FILE), exist_ok=True)
+            with open(QUEUE_STORE_FILE, 'w') as f:
+                json.dump(store, f, indent=4, default=str)
+        except Exception as e:
+            print(f"[ERROR] Failed to save queue store: {e}")
 
 # Initialize local store from file
 queue_store = load_queue_store()
+
+# Thread safety for async processing
+import threading
+queue_store_lock = threading.Lock()
 
 def allowed_file(filename):
     """Check if file extension is allowed"""
@@ -148,6 +153,7 @@ def create_queue():
         'batch_id': batch_id,
         'files': saved_files,
         'current_index': 0,
+        'phase': 'crop', # crop, processing, review, complete
         'total': len(saved_files),
         'completed': 0,
         'skipped': 0,
@@ -167,6 +173,110 @@ def create_queue():
         'total': len(saved_files)
     })
 
+@api_queue_bp.route('/<queue_id>/process_batch', methods=['POST'])
+def process_batch_ocr(queue_id):
+    """
+    Run OCR on all files in the queue (Async Batch Processing)
+    """
+    if queue_id not in queue_store:
+        return jsonify({'success': False, 'message': 'Queue not found'}), 404
+    
+    queue = queue_store[queue_id]
+    
+    # Check if already processing
+    if queue.get('phase') == 'processing' and not request.args.get('force'):
+        return jsonify({
+            'success': True, 
+            'message': 'Batch processing already in progress',
+            'async': True
+        })
+
+    # Update phase immediately
+    queue['phase'] = 'processing'
+    save_queue_store(queue_store)
+    
+    print(f"[BATCH] Starting ASYNC batch OCR for queue {queue_id}")
+
+    # Define the background task
+    def run_batch_task(qid):
+        try:
+            print(f"[BATCH-THREAD] Started for {qid}")
+            
+            # Re-read queue inside thread to ensure freshness if needed
+            # (In this simple dict-store, reference is shared, so queue var is fine)
+            
+            from backend.ocr_service import extract_text
+            
+            total_files = len(queue['files'])
+            processed_count = 0
+            
+            for i, file_info in enumerate(queue['files']):
+                # Check for cancellation signals here if implemented
+                
+                # Skip if already complete
+                if file_info.get('status') in ['ocr_complete', 'validated']:
+                    processed_count += 1
+                    continue
+                
+                print(f"[BATCH-THREAD] Processing file {i+1}/{total_files}: {file_info['original_filename']}")
+                
+                # Use cropped image if available
+                image_path = file_info.get('cropped_path') or file_info['original_path']
+                
+                if not os.path.exists(image_path):
+                    print(f"[BATCH-THREAD] Error: File not found {image_path}")
+                    file_info['ocr_result'] = {'error': 'File not found'}
+                    continue
+                    
+                # Run OCR
+                try:
+                    ocr_result = extract_text(image_path, method='optimal')
+                    
+                    raw_text = ocr_result.get('text', '') if isinstance(ocr_result, dict) else str(ocr_result)
+                    confidence = ocr_result.get('confidence', 0) if isinstance(ocr_result, dict) else 0
+                    
+                    parsed_data = parse_receipt_text(raw_text)
+                    
+                    file_info['ocr_result'] = {
+                        'text': raw_text,
+                        'confidence': confidence
+                    }
+                    file_info['parsed_data'] = parsed_data
+                    file_info['status'] = 'ocr_complete'
+                    
+                    processed_count += 1
+                    
+                    # Update progress
+                    save_queue_store(queue_store)
+                    
+                except Exception as ex:
+                    print(f"[BATCH-THREAD] Error processing file {i}: {ex}")
+                    file_info['ocr_result'] = {'error': str(ex)}
+            
+            # Batch complete
+            queue['phase'] = 'review'
+            queue['current_index'] = 0 
+            save_queue_store(queue_store)
+            print(f"[BATCH-THREAD] Batch Complete. Ready for review.")
+            
+        except Exception as e:
+            print(f"[BATCH-THREAD] Critical Error: {e}")
+            import traceback
+            traceback.print_exc()
+            # Optionally mark queue as error state
+
+    # Start Thread
+    import threading
+    thread = threading.Thread(target=run_batch_task, args=(queue_id,))
+    thread.daemon = True # Daemonize so it doesn't block shutdown
+    thread.start()
+    
+    return jsonify({
+        'success': True,
+        'message': 'Batch processing started',
+        'async': True
+    }), 202
+
 @api_queue_bp.route('/<queue_id>/current', methods=['GET'])
 def get_current_receipt(queue_id):
     """
@@ -184,12 +294,47 @@ def get_current_receipt(queue_id):
 
     # Check termination condition FIRST
     if current_index >= queue['total']:
+        # If we are in crop phase, this means we are ready for batch processing
+        current_phase = queue.get('phase', 'crop')
+        
+        if current_phase == 'crop':
+             print(f"[DEBUG] Queue {queue_id}: Crop Phase Complete")
+             return jsonify({
+                'success': True,
+                'completed': False, # Not fully completed
+                'phase_complete': True, # Explicit flag
+                'current_index': current_index,
+                'total': queue['total'],
+                'phase': 'crop',
+                # Empty current_file to avoid errors, logic should handle this
+                'current_file': None 
+             })
+        
+        # If processing phase, the background thread will update to 'review' when done
+        # So we should NOT return completed yet - just wait for phase change
+        if current_phase == 'processing':
+            print(f"[DEBUG] Queue {queue_id}: Still processing, waiting for review phase")
+            return jsonify({
+                'success': True,
+                'completed': False,
+                'phase': 'processing',
+                'current_index': current_index,
+                'total': queue['total'],
+                'progress': {
+                    'current': current_index,
+                    'total': queue['total'],
+                    'percent': 100
+                }
+            })
+        
+        # Otherwise (review/complete phase), we are truly done
         print(f"[DEBUG] Queue {queue_id}: COMPLETED")
         return jsonify({
             'success': True,
             'completed': True,
             'completed_count': queue['completed'],
             'skipped_count': queue['skipped'],
+            'phase': queue.get('phase', 'review'), # Should be review or complete
             'progress': {
                 'current': queue['total'],
                 'total': queue['total'],
@@ -235,6 +380,7 @@ def get_current_receipt(queue_id):
         'completed': False,
         'current_index': current_index,
         'total': total,
+        'phase': queue.get('phase', 'crop'),
         'current_file': {
             'filename': current_file['original_filename'],
             'original_path': current_file['original_path'],
@@ -248,6 +394,7 @@ def get_current_receipt(queue_id):
         },
         # Add missing fields needed by frontend
         'ocr_confidence': current_file.get('ocr_result', {}).get('confidence', 0) if current_file.get('ocr_result') else 0,
+        'raw_text': current_file.get('ocr_result', {}).get('text', '') if current_file.get('ocr_result') else '',
         'parsed_data': current_file.get('parsed_data')
     })
 
@@ -276,9 +423,18 @@ def save_crop(queue_id):
     # Update queue
     queue['files'][current_index]['cropped_path'] = cropped_path
     queue['files'][current_index]['status'] = 'cropped'
+    
+    # Auto-advance index in crop phase
+    if queue.get('phase', 'crop') == 'crop':
+        queue['current_index'] += 1
+        
     save_queue_store(queue_store)
     
-    return jsonify({'success': True})
+    return jsonify({
+        'success': True,
+        'next_index': queue['current_index'],
+        'phase_complete': queue['current_index'] >= queue['total']
+    })
 
 @api_queue_bp.route('/<queue_id>/skip_crop', methods=['POST'])
 def skip_crop(queue_id):
@@ -294,9 +450,18 @@ def skip_crop(queue_id):
     # Mark as using original
     queue['files'][current_index]['cropped_path'] = None
     queue['files'][current_index]['status'] = 'crop_skipped'
+    
+    # Auto-advance index in crop phase
+    if queue.get('phase', 'crop') == 'crop':
+        queue['current_index'] += 1
+        
     save_queue_store(queue_store)
     
-    return jsonify({'success': True})
+    return jsonify({
+        'success': True,
+        'next_index': queue['current_index'],
+        'phase_complete': queue['current_index'] >= queue['total']
+    })
 
 @api_queue_bp.route('/<queue_id>/ocr', methods=['POST'])
 def run_ocr(queue_id):
@@ -326,7 +491,7 @@ def run_ocr(queue_id):
             return jsonify({'success': False, 'message': f'Image file not found: {image_path}'}), 400
         
         print(f"[OCR] Running OCR with optimal mode...")
-        # Run OCR
+# Run OCR
         ocr_result = extract_text(image_path, method='optimal')
         print(f"[OCR] OCR complete, result type: {type(ocr_result)}")
         
@@ -470,26 +635,38 @@ def save_batch(queue_id):
                     deductions = data.get('deductions', [])
                     
                     # Insert master
+                    # FIX: Handle empty date strings - convert to None for DB
+                    v_date = master.get('voucher_date')
+                    if not v_date:
+                        v_date = None
+
+                    # FIX: Handle empty numeric fields
+                    def clean_numeric(val):
+                        if not val and val != 0:
+                            return None
+                        return val
+
                     cur.execute("""
                         INSERT INTO vouchers_master 
                         (file_name, file_storage_path, voucher_number, voucher_date, 
-                         supplier_name, vendor_details, gross_total, total_deductions, net_total, ocr_mode, batch_id, ocr_confidence, parsed_json)
-                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                         supplier_name, vendor_details, gross_total, total_deductions, net_total, ocr_mode, batch_id, ocr_confidence, parsed_json, raw_ocr_text)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
                         RETURNING id
                     """, (
                         file_info['original_filename'],
                         file_info.get('cropped_path') or file_info['original_path'],
                         master.get('voucher_number'),
-                        master.get('voucher_date'),
+                        v_date,
                         master.get('supplier_name'),
                         master.get('vendor_details'),
-                        master.get('gross_total'),
-                        master.get('total_deductions'),
-                        master.get('net_total'),
+                        clean_numeric(master.get('gross_total')),
+                        clean_numeric(master.get('total_deductions')),
+                        clean_numeric(master.get('net_total')),
                         'optimal',
                         batch_id,
                         file_info.get('ocr_result', {}).get('confidence', 0),
-                        json.dumps(data, ensure_ascii=False)
+                        json.dumps(data, ensure_ascii=False),
+                        file_info.get('ocr_result', {}).get('text', '')
                     ))
                     
                     master_id = cur.fetchone()['id']
@@ -502,10 +679,10 @@ def save_batch(queue_id):
                             VALUES (%s, %s, %s, %s, %s)
                         """, (
                             master_id,
-                            item.get('item_description'),
-                            item.get('quantity'),
-                            item.get('rate'),
-                            item.get('line_amount')
+                            item.get('item_name'),
+                            clean_numeric(item.get('quantity')),
+                            clean_numeric(item.get('unit_price')),
+                            clean_numeric(item.get('line_amount'))
                         ))
                     
                     # Insert deductions
@@ -517,7 +694,7 @@ def save_batch(queue_id):
                         """, (
                             master_id,
                             deduction.get('deduction_type'),
-                            deduction.get('amount')
+                            clean_numeric(deduction.get('amount'))
                         ))
                     
                     # If we get here, this voucher is good
