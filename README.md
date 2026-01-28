@@ -1,208 +1,354 @@
-# TKFL OCR - Voucher Processing System
+# 🧾 TKFL OCR - Advanced Voucher Processing System
 
-Advanced OCR-based voucher processing application with isolated Beta environment for safe experimentation with OCR improvements.
+![Version](https://img.shields.io/badge/version-2.0-blue)
+![Python](https://img.shields.io/badge/Python-3.8+-green)
+![Flask](https://img.shields.io/badge/Flask-2.0+-red)
+![Database](https://img.shields.io/badge/PostgreSQL-12+-blue)
 
-## Features
+**TKFL OCR** is an advanced Optical Character Recognition (OCR) system for automated voucher processing. It extracts structured data from receipt images, learns from user corrections, and provides transparent ML training insights.
 
-### Production Environment
-- **Premium Upload UI** with image cropping and rotation
-- **OCR Processing** using Tesseract
-- **Smart Parsing** of voucher data (number, date, supplier, items, deductions, totals)
-- **Review & Validation** interface
-- **Database Storage** (PostgreSQL)
-- **Receipts History** with search and filtering
+---
 
-### Beta V2 Environment (Isolated Testing)
-- **Complete Isolation** - Separate database tables and file storage
-- **Enhanced OCR**:
-  - Tesseract optimization (PSM 6, OEM 1, LSTM mode)
-  - Character whitelist to reduce false positives
-  - Image upscaling for small images
-  - OCR confidence tracking (0-100%)
-- **Improved Parser**:
-  - Fuzzy keyword matching for OCR error handling
-  - Better number extraction (Indian format, noisy text)
-  - Auto-calculation of missing totals
-  - Totals validation with warnings
-  - Parse confidence scoring
-- **Preprocessing Methods**:
-  - Enhanced (production + optimizations)
-  - Simple (exact production)
-  - Experimental (advanced preprocessing)
+## 🌟 Key Features
 
-## Tech Stack
+### 📸 OCR Processing
+- **Tesseract Integration**: Advanced OCR with automatic image preprocessing
+- **Smart Preprocessing**: Auto-deskew, contrast enhancement, binarization
+- **Multiple OCR Methods**: Optimal PSM 4, Standard PSM 6, Adaptive, Aggressive modes
+- **Confidence Scoring**: Calculates OCR reliability (0-100%)
+- **Dynamic Whitelisting**: Reduces OCR errors through character filtering
+- **Multi-Scale Analysis**: Handles various image qualities and resolutions
 
-- **Backend**: Python 3.x, Flask
-- **Database**: PostgreSQL
-- **OCR**: Tesseract OCR, Pytesseract
-- **Image Processing**: Pillow (PIL), OpenCV
-- **Frontend**: HTML, Tailwind CSS, JavaScript
-- **Cropping**: Cropper.js
+### 📋 Intelligent Parsing
+- **Field Extraction**: Automatically extracts 8+ core fields from vouchers
+  - Voucher number, date, supplier name, vendor details
+  - Gross total, net total, total deductions
+  - Items (quantity, unit price, line amount)
+  - Deductions (type and amount)
+- **Flexible Format Support**: Handles multiple date formats and number styles
+- **Text Correction**: Auto-fixes common OCR errors before parsing
+- **Math Verification**: Validates totals and calculations
+- **Deduction Categorization**: Automatically categorizes deduction types
 
-## Installation
+### ✅ Validation & Review
+- **Rich Review Interface**: Edit and validate extracted data
+- **Editable Form Fields**: All fields can be corrected by users
+- **Items & Deductions Tables**: Manage line items and deductions
+- **Real-time Calculations**: Auto-calculates totals and line amounts
+- **Correction Tracking**: Records all user corrections for ML training
+
+### 🤖 ML Training System
+- **Auto-Learning**: Models learn from user corrections
+- **Correction Deduplication**: Prevents training on same correction twice
+- **Pattern Extraction**: Identifies and learns OCR correction patterns
+- **Performance Metrics**: Tracks OCR and parsing model accuracy
+- **Model Status Dashboard**: Shows trained patterns and model statistics
+
+### 📊 Learning Transparency System
+- **Learning History Page**: Complete dashboard of what models have learned
+- **Session Tracking**: Records every training session with details
+- **Pattern Visualization**: Shows specific corrections learned by field
+- **Learning Statistics**: Total corrections, patterns, fields trained
+- **Real-time Updates**: Learning history updates after each training
+
+### 📈 Interactive Data Tables
+- **DataTables Integration**: Professional data table with advanced features
+- **Search**: Real-time full-text search across all fields
+- **Sorting**: Click column headers to sort ascending/descending
+- **Filtering**: Filter by any column
+- **Page Size Selection**: Choose 5, 10, 25, or 50 rows per page
+- **Responsive Design**: Works on desktop, tablet, mobile
+
+### 🏢 Supplier Management
+- **Supplier Directory**: Complete supplier database
+- **Supplier Profiles**: View supplier details and transaction history
+- **Receipts by Supplier**: See all receipts from specific suppliers
+- **Supplier Analytics**: Track supplier statistics
+
+### 📁 Batch Processing
+- **Bulk Upload**: Process multiple receipts in one batch
+- **Batch Tracking**: Monitor processing status per batch
+- **Batch Summary**: Overview of all batches with completion status
+- **Error Handling**: Detailed error reporting for failed uploads
+
+### 🔍 Advanced Features
+- **Duplicate Detection**: Identify potentially duplicate vouchers
+- **Data History**: Complete audit trail of all changes
+- **File Tracking**: Know exactly which image produced which data
+- **Metadata Preservation**: Keep original OCR output separate from corrections
+- **JSON Export**: Export parsed data in structured format
+
+## 🛠 Technology Stack
+
+| Component | Technology | Version |
+|-----------|-----------|---------|
+| **Backend** | Flask | 2.0+ |
+| **Language** | Python | 3.8+ |
+| **Database** | PostgreSQL | 12+ |
+| **OCR Engine** | Tesseract | 5.x |
+| **Image Processing** | OpenCV, Pillow | Latest |
+| **Frontend Framework** | Tailwind CSS | 3.0+ |
+| **Data Tables** | DataTables | 1.13.8 |
+| **JavaScript** | jQuery | 3.7.0 |
+| **Templating** | Jinja2 | 3.0+ |
+
+## 🚀 Quick Start
 
 ### Prerequisites
 - Python 3.8+
-- PostgreSQL
-- Tesseract OCR
+- PostgreSQL 12+
+- Tesseract OCR 5.x
 
-### Setup
+### Installation
 
-1. **Clone the repository**
-```bash
-git clone https://github.com/adm-recens/tkfl-ocr-pt4.git
-cd tkfl-ocr-pt4
-```
+1. **Clone repository**
+   ```bash
+   git clone https://github.com/adm-recens/tkfl-ocr-pt4.git
+   cd tkfl_ocr/pt5
+   ```
 
 2. **Create virtual environment**
-```bash
-python -m venv venv
-venv\Scripts\activate  # Windows
-# or
-source venv/bin/activate  # Linux/Mac
-```
+   ```bash
+   python -m venv venv
+   venv\Scripts\activate  # Windows
+   source venv/bin/activate  # Linux/macOS
+   ```
 
 3. **Install dependencies**
-```bash
-pip install -r requirements.txt
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Install Tesseract OCR**
+   - **Windows**: Download from https://github.com/UB-Mannheim/tesseract/wiki
+   - **Linux**: `sudo apt-get install tesseract-ocr`
+   - **macOS**: `brew install tesseract`
+
+5. **Configure database**
+   - Edit `backend/config.py` with your PostgreSQL connection
+   - Initialize database: `python backend/db.py`
+
+6. **Run application**
+   ```bash
+   python run.py
+   ```
+   - Access at http://localhost:5000
+
+## 📖 Usage Guide
+
+### Uploading a Voucher
+1. Click **"Upload Receipt"** button
+2. Select image file or take photo
+3. Optional: Crop/rotate image using the crop tool
+4. Click **"Process"** to extract data via OCR
+
+### Reviewing Results
+1. View extracted data in the review form
+2. All fields are editable - make corrections as needed
+3. Edit **Items** and **Deductions** tables if needed
+4. Click **"Save Corrections"** to record data
+
+### Training the ML Models
+1. After reviewing and correcting, click **"Train Models"**
+2. Models learn from your corrections
+3. See **"Learning History"** to view what models learned
+4. As you correct more, models become more accurate
+
+### Viewing Learning History
+1. Go to **"ML Training"** menu
+2. Click **"View Learning History"**
+3. See all sessions, patterns learned, and statistics
+4. Each field shows specific corrections the model learned
+
+### Searching Receipts
+1. Go to **"All Receipts"** page
+2. Use search box for any field (voucher number, date, supplier, etc.)
+3. Sort by clicking column headers
+4. Filter results as needed
+5. Export data if needed
+
+## 📋 Project Structure
+
 ```
-
-4. **Configure environment**
-Create `backend/.env` file:
-```env
-DATABASE_URL=postgresql://user:password@localhost:5432/dbname
-FLASK_SECRET_KEY=your-secret-key-here
-UPLOAD_FOLDER=uploads
-```
-
-5. **Initialize database**
-```sql
--- Run the SQL scripts to create tables
--- Production tables: vouchers_master, voucher_items, voucher_deductions
--- Beta tables: vouchers_master_beta, voucher_items_beta, voucher_deductions_beta
-```
-
-6. **Run the application**
-```bash
-python backend/app.py
-```
-
-Application will be available at `http://localhost:5000`
-
-## Usage
-
-### Production Workflow
-1. Navigate to `/upload`
-2. Upload receipt image (with optional cropping)
-3. Review extracted data at `/review/<id>`
-4. Validate and save
-5. View history at `/receipts`
-
-### Beta Testing Workflow
-1. Navigate to `/beta_v2/upload`
-2. Upload receipt for testing
-3. Review with confidence scores at `/beta_v2/review/<id>`
-4. Test different preprocessing methods
-5. Compare results at `/beta_v2/vouchers`
-
-## Project Structure
-
-```
-tkfl-ocr-pt4/
+tkfl_ocr/pt5/
 ├── backend/
-│   ├── __init__.py
-│   ├── app.py                      # Main application
-│   ├── config.py                   # Configuration
+│   ├── __init__.py                 # Flask app initialization
+│   ├── app.py                      # Main application file
+│   ├── config.py                   # Configuration settings
 │   ├── db.py                       # Database connection
-│   ├── ocr_service.py             # Production OCR
-│   ├── ocr_service_beta.py        # Enhanced Beta OCR
-│   ├── parser.py                   # Production parser
-│   ├── parser_beta.py             # Improved Beta parser
+│   ├── errors.py                   # Error definitions
+│   ├── logger.py                   # Logging setup
+│   │
+│   ├── ocr_service.py             # OCR processing core
+│   ├── parser.py                   # Voucher data extraction
+│   ├── security.py                 # Security utilities
+│   │
 │   ├── routes/
-│   │   ├── main.py                # Production routes
-│   │   ├── main_beta_v2.py        # Beta routes
-│   │   ├── api.py                 # Production API
-│   │   └── api_beta_v2.py         # Beta API
+│   │   ├── __init__.py
+│   │   ├── main.py                # Main UI routes
+│   │   ├── api.py                 # REST API endpoints
+│   │   ├── learning.py            # Learning history API
+│   │   └── training.py            # ML training routes
+│   │
 │   ├── services/
-│   │   ├── voucher_service.py     # Production DB operations
-│   │   └── voucher_service_beta.py # Beta DB operations
-│   ├── templates/                  # HTML templates
-│   └── static/                     # CSS, JS, images
-├── uploads/                        # Uploaded files
-│   ├── beta_v2/                   # Beta uploads
-│   └── ...
-├── requirements.txt
-└── README.md
+│   │   ├── __init__.py
+│   │   ├── learning_history_tracker.py  # Learning tracker
+│   │   └── voucher_service.py           # Database operations
+│   │
+│   ├── templates/
+│   │   ├── base.html              # Base template
+│   │   ├── index.html             # Homepage
+│   │   ├── upload.html            # Upload form
+│   │   ├── review.html            # Review/edit interface
+│   │   ├── receipts.html          # Receipts list
+│   │   ├── training.html          # ML training hub
+│   │   ├── learning_history.html  # Learning dashboard
+│   │   └── suppliers.html         # Supplier directory
+│   │
+│   ├── static/
+│   │   ├── css/                   # Stylesheets
+│   │   └── js/                    # JavaScript files
+│   │
+│   ├── data/
+│   │   └── learning_history.json  # ML learning persistence
+│   │
+│   └── migrations/                # Database migrations
+│
+├── uploads/                       # User uploaded files
+├── tests/                         # Test suite
+├── logs/                          # Application logs
+│
+├── requirements.txt               # Python dependencies
+├── run.py                        # Application entry point
+├── README.md                     # This file
+├── SETUP_GUIDE.md               # Detailed setup instructions
+└── technical_documentation.md    # Technical architecture docs
 ```
 
-## Key Improvements in Beta V2
+## 🔌 API Reference
 
-### OCR Enhancements
-- **+20-30% accuracy** from Tesseract optimization
-- **+10-15% accuracy** for small images (upscaling)
-- **+5% confidence** from character whitelist
+### Upload & Processing
+- **POST** `/api/upload_file` - Upload and process receipt image
+- **GET** `/api/voucher/<id>` - Get voucher details
+- **POST** `/api/voucher/<id>/save` - Save corrections to voucher
+- **DELETE** `/api/voucher/<id>` - Delete a voucher
 
-### Parser Enhancements
-- **+30-40% field extraction** from fuzzy matching
-- **Better number handling** for Indian format
-- **Automatic validation** of totals
-- **Confidence scoring** for quality assessment
+### Learning & Training
+- **POST** `/api/train` - Train models from corrections
+- **GET** `/api/learning/page` - Get learning history page
+- **GET** `/api/learning/history` - Get full learning history JSON
+- **GET** `/api/learning/summary` - Get learning summary statistics
+- **GET** `/api/learning/report` - Get text report of learning
 
-### Expected Overall Impact
-- **Field extraction rate**: 80% → 95%
-- **Accuracy**: 70% → 90%
-- **Manual validation time**: -40%
+### Data Access
+- **GET** `/api/vouchers` - List all vouchers with pagination
+- **GET** `/api/suppliers` - List all suppliers
+- **GET** `/api/supplier/<id>/vouchers` - Get vouchers by supplier
 
-## API Endpoints
+## 🗄️ Database Schema
 
-### Production
-- `GET /` - Homepage
-- `GET /upload` - Upload page
-- `POST /api/upload_file` - Upload and process
-- `GET /review/<id>` - Review voucher
-- `GET /receipts` - List all vouchers
+### Core Tables
+- **vouchers_master** - Voucher headers (number, date, supplier, totals)
+- **voucher_items** - Line items (quantity, price, amount)
+- **voucher_deductions** - Deductions (type, amount)
+- **suppliers** - Supplier information
+- **batches** - Batch upload tracking
 
-### Beta V2
-- `GET /beta_v2/upload` - Beta upload page
-- `POST /api/beta_v2/upload` - Beta upload and process
-- `GET /beta_v2/review/<id>` - Beta review with confidence
-- `POST /api/beta_v2/re_extract/<id>` - Re-extract with different method
-- `GET /beta_v2/vouchers` - Beta receipts history
+### Metadata Tables
+- **file_tracking** - Maps images to extracted data
+- **training_data** - ML training corrections
+- **learning_history** - ML learning sessions and patterns
 
-## Development
+## 🤖 ML System Architecture
+
+### Correction Collection
+1. User reviews OCR results
+2. User makes corrections to any field
+3. Corrections are saved with OCR confidence scores
+4. System prevents duplicate corrections from being trained twice
+
+### Model Training
+1. **OCR Correction Model**: Learns patterns in what Tesseract got wrong
+2. **Parsing Correction Model**: Learns field extraction improvements
+3. Models trained on deduplicat corrections only
+4. Each model tracks patterns by field
+
+### Learning Transparency
+1. All training sessions recorded with:
+   - Timestamp and corrections learned
+   - Specific field improvements
+   - Pattern extraction results
+2. Dashboard shows exactly what models learned:
+   - How many corrections used
+   - Which fields improved most
+   - Specific OCR→Corrected examples
+3. Learning history persisted in JSON for audit trail
+
+## 🔒 Security Features
+
+- **CSRF Protection**: All forms CSRF-protected
+- **SQL Injection Prevention**: Parameterized queries throughout
+- **Input Validation**: All user inputs validated and sanitized
+- **Secure File Upload**: Files validated before processing
+- **Session Management**: Secure Flask session handling
+
+## 🐛 Troubleshooting
+
+### Tesseract Not Found
+- Verify Tesseract installation: `tesseract --version`
+- Update path in `backend/config.py` if needed
+- Restart application after installation
+
+### OCR Not Extracting Text
+- Check image quality - ensure receipt is readable
+- Try uploading a clearer image
+- Check Tesseract configuration in `backend/config.py`
+
+### Database Connection Error
+- Verify PostgreSQL is running
+- Check connection string in `backend/config.py`
+- Ensure database exists and user has access
+
+### Models Not Learning
+- Check `backend/data/learning_history.json` file exists
+- Verify corrections are being saved properly
+- Check application logs for errors
+
+## 📝 Development
 
 ### Running Tests
 ```bash
-python -m pytest tests/
+python -m pytest tests/ -v
 ```
 
 ### Code Style
-- Follow PEP 8
+- Follow PEP 8 guidelines
 - Use type hints where applicable
 - Document functions with docstrings
+- Max line length: 100 characters
 
-## Safety & Isolation
+### Adding New Features
+1. Create feature branch: `git checkout -b feature/my-feature`
+2. Make changes and test thoroughly
+3. Commit: `git commit -m "Add feature description"`
+4. Push: `git push origin feature/my-feature`
+5. Submit Pull Request
 
-The Beta V2 environment is completely isolated:
-- ✅ Separate database tables (`_beta` suffix)
-- ✅ Separate file storage (`uploads/beta_v2/`)
-- ✅ Zero impact on production
-- ✅ Easy rollback (can drop beta tables)
+## 📄 License
 
-## Contributing
+MIT License - See LICENSE file for details
 
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open Pull Request
+## 🙏 Acknowledgments
 
-## License
+- **Tesseract OCR Team** - Core OCR engine
+- **Flask Community** - Web framework
+- **DataTables** - Interactive tables
+- **Tailwind CSS** - Styling framework
+- **PostgreSQL** - Robust database
 
-[Add your license here]
+## 📞 Support
 
-## Acknowledgments
-
-- Tesseract OCR team
-- Flask framework
-- Cropper.js library
+For issues, questions, or suggestions:
+- Open an issue on GitHub
+- Check [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed setup
+- See [technical_documentation.md](technical_documentation.md) for architecture
