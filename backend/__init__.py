@@ -40,13 +40,19 @@ def create_app(config_name='default'):
     # Register Blueprints
     from backend.routes.main import main_bp
     from backend.routes.api import api_bp
-    from backend.routes.api_queue import api_queue_bp  # Import the queue API blueprint
+    from backend.routes.api_queue import api_queue_bp
+    from backend.routes.api_training import api_training_bp
+    from backend.routes.learning import learning_bp
 
     # Exempt queue API from CSRF protection (it doesn't use forms)
     csrf.exempt(api_queue_bp)
+    csrf.exempt(api_training_bp) # Also exempt training API
+    csrf.exempt(learning_bp)
 
     app.register_blueprint(main_bp)
     app.register_blueprint(api_bp, url_prefix='/api')
-    app.register_blueprint(api_queue_bp, url_prefix='/api/queue')  # Queue workflow API
+    app.register_blueprint(api_queue_bp, url_prefix='/api/queue')
+    app.register_blueprint(api_training_bp, url_prefix='/api/training')
+    app.register_blueprint(learning_bp)
 
     return app

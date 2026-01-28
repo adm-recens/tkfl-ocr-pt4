@@ -739,7 +739,23 @@
                         autoCropArea: 0.9,
                         responsive: true,
                         zoomable: true,
-                        rotatable: true
+                        rotatable: true,
+                        ready: function () {
+                            // Auto-set crop box if available
+                            if (currentData && currentData.current_file && currentData.current_file.auto_crop_info) {
+                                const bbox = currentData.current_file.auto_crop_info.bbox;
+                                // SmartReceiptDetector returns [x, y, w, h]
+                                if (bbox && bbox.length === 4) {
+                                    console.log('[AUTO-CROP] Applying detected box:', bbox);
+                                    cropper.setData({
+                                        x: bbox[0],
+                                        y: bbox[1],
+                                        width: bbox[2],
+                                        height: bbox[3]
+                                    });
+                                }
+                            }
+                        }
                     });
                 };
             }
@@ -877,6 +893,12 @@
                 canvas.toBlob(async (blob) => {
                     const formData = new FormData();
                     formData.append('cropped_image', blob);
+
+                    // FEEDBACK LOOP: Send crop coordinates for ML training
+                    if (cropper) {
+                        const cropData = cropper.getData();
+                        formData.append('crop_data', JSON.stringify(cropData));
+                    }
 
                     try {
                         const response = await fetch(`/api/queue/${queueId}/crop`, {

@@ -1,9 +1,7 @@
 """
-Beta OCR Service - Enhanced OCR with Tesseract Optimization
-Based on production ocr_service.py with improvements for better accuracy
+Production OCR Service - Enhanced OCR with Tesseract Optimization
+Includes text corrections, decimal fixing, and dynamic whitelisting.
 """
-print(f"[DEBUG] Loaded ocr_service_beta.py from: {__file__}, module: {__name__}")
-
 from PIL import Image, ImageOps, ImageFilter, ImageEnhance
 import pytesseract
 import cv2
@@ -82,9 +80,9 @@ def enhance_image_quality(image):
     
     return result
 
-def preprocess_image_beta(path, method='enhanced'):
+def preprocess_image(path, method='enhanced'):
     """
-    Beta preprocessing - starting conservative, matching production
+    Preprocessing - starting conservative, matching production
     
     Args:
         path: Image file path
@@ -357,7 +355,7 @@ def preprocess_image_beta(path, method='enhanced'):
         img = Image.fromarray(img_array)
         return img
 
-def extract_text_beta(image_path: str, method='enhanced') -> dict:
+def extract_text(image_path: str, method='optimal') -> dict:
     """
     Extract text from image using optimized Tesseract configuration
     
@@ -372,7 +370,7 @@ def extract_text_beta(image_path: str, method='enhanced') -> dict:
     
     try:
         # Preprocess image
-        preprocessing_result = preprocess_image_beta(image_path, method=method)
+        preprocessing_result = preprocess_image(image_path, method=method)
         
         # Handle adaptive mode returning tuple (img, quality_metrics)
         quality_metrics = None
@@ -443,8 +441,27 @@ def extract_text_beta(image_path: str, method='enhanced') -> dict:
         
         processing_time = int((time.time() - start_time) * 1000)
         
+        # Apply text corrections to improve OCR output with progress indicators
+        from backend.text_correction import apply_text_corrections
+        from backend.decimal_correction import apply_decimal_corrections
+        
+        print(f"[OCR] Initial extraction confidence: {avg_confidence:.2f}")
+        
+        # Apply text corrections with feedback
+        raw_text = text or ""
+        corrected_intermediate = apply_text_corrections(raw_text)
+        print(f"[OCR] Raw OCR length: {len(raw_text)} chars")
+        print(f"[OCR] After text corrections: {len(corrected_intermediate)} chars")
+        
+        final_corrected_text = apply_decimal_corrections(corrected_intermediate)
+        print(f"[OCR] After decimal corrections: {len(final_corrected_text)} chars")
+        
+        if len(raw_text) > 0:
+            print(f"[OCR] Text correction rate: {(len(final_corrected_text) - len(raw_text)) / len(raw_text) * 100:.1f}%")
+        
         result = {
-            'text': text or "",
+            'text': final_corrected_text,
+            'raw_text': raw_text,
             'confidence': round(avg_confidence, 2),
             'preprocessing_method': method,
             'processing_time_ms': processing_time
@@ -474,11 +491,81 @@ def extract_text_beta(image_path: str, method='enhanced') -> dict:
             'processing_time_ms': processing_time
         }
 
-# Backward compatibility function
-def extract_text(image_path: str) -> str:
+def extract_numbers_focused(image_path: str) -> dict:
     """
-    Simple extraction for backward compatibility
-    Returns just the text string
+    Specialized extraction focused on numeric fields with enhanced preprocessing
+    Uses numeric-optimized Tesseract configuration for better number recognition
     """
-    result = extract_text_beta(image_path, method='enhanced')
-    return result['text']
+    start_time = time.time()
+    
+    try:
+        # Preprocess with enhanced settings for numbers
+        img = Image.open(image_path)
+        
+        # Upscale for better number recognition
+        if img.width < 1500:
+            scale_factor = 2.5
+            new_size = (int(img.width * scale_factor), int(img.height * scale_factor))
+            img = img.resize(new_size, Image.Resampling.LANCZOS)
+            print(f"[NUMERIC] Upscaled image for number extraction")
+        
+        # Convert to grayscale and enhance contrast for numbers
+        img = ImageOps.grayscale(img)
+        img_array = np.array(img)
+        
+        # Strong contrast enhancement for numbers
+        clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
+        enhanced = clahe.apply(img_array)
+        
+        # Otsu thresholding optimized for numbers
+        _, binary = cv2.threshold(enhanced, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        
+        # Morphological operations to clean up numbers
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2,2))
+        binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+        
+        img = Image.fromarray(binary)
+        
+        # Use numeric-focused whitelist
+        from backend.dynamic_whitelist import DynamicWhitelist
+        numeric_config = DynamicWhitelist.build_tesseract_config(
+            whitelist_type='number', 
+            psm=6, 
+            oem=1
+        )
+        numeric_config += ' -c preserve_interword_spaces=1'
+        
+        print(f"[NUMERIC] Using optimized numeric configuration")
+        
+        # Extract text with numeric focus
+        data = pytesseract.image_to_data(img, lang="eng", config=numeric_config, output_type=pytesseract.Output.DICT)
+        text = pytesseract.image_to_string(img, lang="eng", config=numeric_config)
+        
+        # Apply text corrections
+        from backend.text_correction import apply_text_corrections
+        corrected_text = apply_text_corrections(text or "")
+        
+        # Calculate confidence
+        confidences = [int(conf) for conf in data['conf'] if int(conf) > 0]
+        avg_confidence = sum(confidences) / len(confidences) if confidences else 0
+        
+        processing_time = int((time.time() - start_time) * 1000)
+        
+        return {
+            'text': corrected_text,
+            'raw_text': text or "",
+            'confidence': round(avg_confidence, 2),
+            'preprocessing_method': 'numeric_focused',
+            'processing_time_ms': processing_time
+        }
+        
+    except Exception as e:
+        processing_time = int((time.time() - start_time) * 1000)
+        print(f"[ERROR] Numeric extraction failed: {e}")
+        return {
+            'text': f"[NUMERIC ERROR] {e}",
+            'raw_text': f"[NUMERIC ERROR] {e}",
+            'confidence': 0,
+            'preprocessing_method': 'numeric_focused',
+            'processing_time_ms': processing_time
+        }

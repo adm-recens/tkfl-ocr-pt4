@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from backend.services.voucher_service import VoucherService
 from backend.services.batch_service import BatchService
 from backend.services.supplier_service import SupplierService
+from backend.services.ml_feedback_service import MLFeedbackService
 import json
 import os
 
@@ -77,13 +78,13 @@ def uploaded_file(filename):
 @main_bp.route("/receipts", methods=["GET"])
 def view_receipts():
     try:
-        page = request.args.get('page', 1, type=int)
-        result = VoucherService.get_all_vouchers(page=page)
+        # Get all vouchers without pagination (will be handled by DataTables)
+        result = VoucherService.get_all_vouchers(page=1, page_size=10000)
         
         # Format data for display
         for voucher in result['vouchers']:
             voucher['created_at_display'] = voucher['created_at'].strftime('%Y-%m-%d %H:%M:%S') if voucher['created_at'] else 'N/A'
-            voucher['grand_total_display'] = f"${voucher['net_total']:.2f}" if voucher['net_total'] is not None else 'N/A'
+            voucher['grand_total_display'] = f"₹{voucher['net_total']:.2f}" if voucher['net_total'] is not None else 'N/A'
             voucher['voucher_date_display'] = voucher['voucher_date'] if voucher['voucher_date'] else 'N/A'
 
         return render_template(
@@ -190,8 +191,47 @@ def validate_voucher_page(voucher_id):
                 "net_total": float(voucher['net_total']) if voucher.get('net_total') is not None else None,
             }
             
-        items_data = [dict(item) for item in db_items] if db_items else parsed_json_data.get('items', [])
-        deductions_data = [dict(ded) for ded in db_deductions] if db_deductions else parsed_json_data.get('deductions', [])
+        # Prefer parsed_json items (have complete OCR data), fallback to DB items (user corrections)
+        if parsed_json_data.get('items') and len(parsed_json_data.get('items', [])) > 0:
+            items_data = parsed_json_data.get('items', [])
+            # Ensure all numeric fields are properly converted for JSON serialization
+            for item in items_data:
+                if 'unit_price' in item and item['unit_price'] is not None:
+                    item['unit_price'] = float(item['unit_price'])
+                if 'quantity' in item and item['quantity'] is not None:
+                    item['quantity'] = float(item['quantity'])
+                if 'line_amount' in item and item['line_amount'] is not None:
+                    item['line_amount'] = float(item['line_amount'])
+            current_app.logger.info(f"[VALIDATE] Using {len(items_data)} parsed_json items")
+        elif db_items and len(db_items) > 0:
+            items_data = [dict(item) for item in db_items]
+            # Ensure all numeric fields are properly converted
+            for item in items_data:
+                if 'unit_price' in item and item['unit_price'] is not None:
+                    item['unit_price'] = float(item['unit_price'])
+                if 'quantity' in item and item['quantity'] is not None:
+                    item['quantity'] = float(item['quantity'])
+                if 'line_amount' in item and item['line_amount'] is not None:
+                    item['line_amount'] = float(item['line_amount'])
+            current_app.logger.info(f"[VALIDATE] Using {len(items_data)} DB items")
+        else:
+            items_data = []
+            current_app.logger.warning(f"[VALIDATE] No items found for voucher {voucher_id}")
+            
+        if parsed_json_data.get('deductions') and len(parsed_json_data.get('deductions', [])) > 0:
+            deductions_data = parsed_json_data.get('deductions', [])
+            # Ensure amount is properly converted
+            for ded in deductions_data:
+                if 'amount' in ded and ded['amount'] is not None:
+                    ded['amount'] = float(ded['amount'])
+        elif db_deductions and len(db_deductions) > 0:
+            deductions_data = [dict(ded) for ded in db_deductions]
+            # Ensure amount is properly converted
+            for ded in deductions_data:
+                if 'amount' in ded and ded['amount'] is not None:
+                    ded['amount'] = float(ded['amount'])
+        else:
+            deductions_data = []
 
         # Determine image URL based on OCR mode
         if voucher.get('ocr_mode') == 'roi_beta':
@@ -236,7 +276,14 @@ def view_voucher_json(voucher_id):
 
 @main_bp.route("/training", methods=["GET"])
 def training_page():
-    return render_template("training.html")
+    # Fetch real stats from the feedback service
+    stats = MLFeedbackService.get_dataset_stats()
+    
+    # Get ML training status
+    from backend.services.ml_training_service import MLTrainingService
+    ml_status = MLTrainingService.get_training_status()
+    
+    return render_template("training.html", stats=stats, ml_status=ml_status)
 
 @main_bp.route("/confirm_delete", methods=["GET"])
 def confirm_delete_all():

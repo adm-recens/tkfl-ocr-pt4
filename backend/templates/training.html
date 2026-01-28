@@ -3,61 +3,336 @@
 {% block title %}ML Training Hub{% endblock %}
 
 {% block content %}
-    <h1 class="text-3xl font-extrabold text-gray-900 mb-6">ML Model Training Hub</h1>
-    <p class="text-gray-600 mb-8">This page serves as the control center to utilize the human-validated data (from the **View Receipts** page) to retrain and fine-tune the core OCR and data extraction ML models (PyTorch/FastAPI).</p>
-    
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <!-- Feature 1: Training Roadmap -->
-        <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-2xl border border-indigo-300">
-            <h2 class="text-2xl font-bold text-indigo-700 mb-6">Training Roadmap (Future Feature)</h2>
-            <p class="text-gray-700 mb-4">The validated data is ready for model training, but the execution interface is under development. Here's what's coming:</p>
-            
-            <ul class="list-disc list-inside text-gray-700 text-base space-y-3 pl-4">
-                <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.618a8 8 0 11-11.236 0 8 8 0 0111.236 0z" /></svg>
-                    <span>**Data Preparation:** Automatic generation of annotated training data from validated receipts.</span>
-                </li>
-                <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37a1.724 1.724 0 002.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                    <span>**Configuration:** Define training parameters (epochs, learning rate) and target models.</span>
-                </li>
-                <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-                    <span>**API Execution:** Call to a dedicated FastAPI service for **asynchronous** model training.</span>
-                </li>
-                <li class="flex items-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6m3 3h8m-8 0a2 2 0 002 2h4a2 2 0 002-2m-8 0v-6m0 0h.01M17 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    <span>**Monitoring:** Dashboard for tracking training progress (loss, accuracy, time remaining).</span>
-                </li>
-            </ul>
+<h1 class="text-3xl font-extrabold text-gray-900 mb-6">ML Training Hub</h1>
+<p class="text-gray-600 mb-8">Train and improve ML models using validated corrections from reviewed vouchers.</p>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Feature 1: ML Corrections Training -->
+    <div class="lg:col-span-2 bg-white p-8 rounded-xl shadow-2xl border border-green-300">
+        <div class="flex items-center mb-6">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-green-600 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5.36-5.36l-.707-.707M5.636 5.636l.707.707" />
+            </svg>
+            <h2 class="text-2xl font-bold text-green-700">Train ML Models from Corrections</h2>
         </div>
         
-        <!-- Feature 2: Available Data Summary -->
-        <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-xl border border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800 mb-4">Training Data Status</h2>
-            <div class="space-y-4">
-                <div class="p-4 bg-green-50 rounded-lg">
-                    <p class="text-sm font-medium text-green-700">Validated Receipts:</p>
-                    <p class="text-2xl font-bold text-green-800">XX</p> <!-- Placeholder: Need to add logic to count this if possible -->
+        <div class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <h3 class="font-semibold text-green-900 mb-2">How it works:</h3>
+            <ol class="list-decimal list-inside text-green-800 text-sm space-y-1">
+                <li>System collects validated corrections from the review/validate pages</li>
+                <li>ML models learn OCR patterns and field extraction rules</li>
+                <li>Trained models are automatically applied to new vouchers</li>
+                <li>Quality improves over time as more corrections accumulate</li>
+            </ol>
+        </div>
+        
+        <div class="grid grid-cols-3 gap-4 mb-6">
+            <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <p class="text-sm font-medium text-blue-700">OCR Model Status:</p>
+                <p class="text-lg font-bold text-blue-900">
+                    {% if ml_status.ocr_model_available %}
+                        ✓ Active
+                    {% else %}
+                        ○ Not Trained
+                    {% endif %}
+                </p>
+                {% if ml_status.ocr_stats %}
+                    <p class="text-xs text-blue-700 mt-2">Patterns: {{ ml_status.ocr_stats.get('total_ocr_patterns', 0) }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="p-4 bg-purple-50 rounded-lg border border-purple-200">
+                <p class="text-sm font-medium text-purple-700">Parsing Model Status:</p>
+                <p class="text-lg font-bold text-purple-900">
+                    {% if ml_status.parsing_model_available %}
+                        ✓ Active
+                    {% else %}
+                        ○ Not Trained
+                    {% endif %}
+                </p>
+                {% if ml_status.parsing_stats %}
+                    <p class="text-xs text-purple-700 mt-2">Fields: {{ ml_status.parsing_stats.get('fields_trained', [])|length }}</p>
+                {% endif %}
+            </div>
+            
+            <div class="p-4 bg-orange-50 rounded-lg border border-orange-200">
+                <p class="text-sm font-medium text-orange-700">Smart Crop Model Status:</p>
+                <p class="text-lg font-bold text-orange-900">
+                    {% if ml_status.smart_crop_model_available %}
+                        ✓ Active
+                    {% else %}
+                        ○ Not Trained
+                    {% endif %}
+                </p>
+                {% if ml_status.smart_crop_stats %}
+                    <p class="text-xs text-orange-700 mt-2">Samples: {{ ml_status.smart_crop_stats.get('training_samples', 0) }}</p>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="space-y-4">
+            <div>
+                <label for="feedback-limit" class="block text-sm font-medium text-gray-700 mb-2">Training Data Limit (number of corrections to use):</label>
+                <input type="number" id="feedback-limit" value="5000" min="100" max="50000" step="100" 
+                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <p class="text-xs text-gray-500 mt-1">More corrections = longer training time but better accuracy. Includes OCR, Parsing, and Smart Crop models.</p>
+            </div>
+            
+            <button id="start-ml-training-btn"
+                class="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg text-lg font-semibold text-white bg-green-600 hover:bg-green-700 shadow-md transition-all">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+                <span>Start ML Training (All Models)</span>
+            </button>
+            
+            <div id="ml-training-status" class="hidden p-4 rounded-lg">
+                <div class="flex items-center mb-2">
+                    <svg id="ml-status-icon" class="h-5 w-5 mr-2 animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                    <p id="ml-status-text" class="font-medium"></p>
                 </div>
-                <div class="p-4 bg-yellow-50 rounded-lg">
-                    <p class="text-sm font-medium text-yellow-700">Pending Review:</p>
-                    <p class="text-2xl font-bold text-yellow-800">YY</p> <!-- Placeholder -->
+                <div id="ml-progress-bar" class="w-full h-2 bg-gray-200 rounded-full overflow-hidden hidden">
+                    <div class="h-full bg-green-600 transition-all duration-300" style="width: 0%"></div>
                 </div>
-                <div class="p-4 bg-blue-50 rounded-lg">
-                    <p class="text-sm font-medium text-blue-700">Total Datapoints:</p>
-                    <p class="text-2xl font-bold text-blue-800">ZZ</p> <!-- Placeholder -->
+                <p id="ml-status-details" class="text-sm text-gray-600 mt-2"></p>
+                <div id="ml-training-results" class="hidden mt-4 pt-4 border-t border-gray-300">
+                    <h4 class="font-semibold text-gray-800 mb-2">Training Results:</h4>
+                    <div class="space-y-2 text-sm">
+                        <div>
+                            <span class="font-medium text-gray-700">OCR Model:</span>
+                            <span id="ocr-result" class="text-gray-600"></span>
+                        </div>
+                        <div>
+                            <span class="font-medium text-gray-700">Parsing Model:</span>
+                            <span id="parsing-result" class="text-gray-600"></span>
+                        </div>
+                        <div>
+                            <span class="font-medium text-gray-700">Smart Crop Model:</span>
+                            <span id="crop-result" class="text-gray-600"></span>
+                        </div>
+                        <div>
+                            <span class="font-medium text-gray-700">Corrections Used:</span>
+                            <span id="corrections-used" class="text-gray-600"></span>
+                        </div>
+                        <div>
+                            <span class="font-medium text-gray-700">New Patterns Learned:</span>
+                            <span id="patterns-learned" class="text-gray-600"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning History Section -->
+                <div id="learning-history-section" class="hidden mt-6 pt-6 border-t border-gray-300">
+                    <h4 class="font-semibold text-gray-800 mb-3">Learning History</h4>
+                    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm">
+                        <div class="grid grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <p class="text-xs text-blue-700 font-medium">Total Training Sessions</p>
+                                <p class="text-lg font-bold text-blue-900" id="total-sessions">0</p>
+                            </div>
+                            <div>
+                                <p class="text-xs text-blue-700 font-medium">Total Corrections Learned</p>
+                                <p class="text-lg font-bold text-blue-900" id="total-learned">0</p>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-xs text-blue-700 font-medium mb-2">Fields Trained</p>
+                            <div id="fields-trained" class="text-sm text-blue-900"></div>
+                        </div>
+                        <button onclick="showLearningDetails()" class="mt-3 text-xs text-blue-600 hover:text-blue-800 font-medium">
+                            View Detailed Learning Report →
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-    
-    <div class="mt-10 max-w-lg mx-auto">
-        <button disabled class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg text-lg font-semibold text-white bg-gray-400 cursor-not-allowed shadow-md">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-3" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l3 3a1 1 0 001.414-1.414L11 9.586V6z" clip-rule="evenodd" />
-            </svg>
-            Start Training Run (Coming Soon)
-        </button>
+
+    <!-- Feature 2: Training Data Status -->
+    <div class="lg:col-span-1 bg-white p-6 rounded-xl shadow-xl border border-gray-200">
+        <h2 class="text-xl font-bold text-gray-800 mb-4">Dataset Summary</h2>
+        <div class="space-y-4">
+            <div class="p-4 bg-green-50 rounded-lg">
+                <p class="text-sm font-medium text-green-700">Crop Samples:</p>
+                <p class="text-2xl font-bold text-green-800">{{ stats.total_images|default(0) }}</p>
+            </div>
+            <div class="p-4 bg-yellow-50 rounded-lg">
+                <p class="text-sm font-medium text-yellow-700">OCR/Parsing Corrections:</p>
+                <p class="text-2xl font-bold text-yellow-800">{{ stats.total_corrections|default(0) }}</p>
+            </div>
+            <div class="p-4 bg-blue-50 rounded-lg">
+                <p class="text-sm font-medium text-blue-700">Last Updated:</p>
+                <p class="text-sm font-bold text-blue-800">{{ stats.last_updated|default('Never') }}</p>
+            </div>
+        </div>
+        
+        <div class="mt-6 pt-6 border-t border-gray-200">
+            <h3 class="text-sm font-semibold text-gray-700 mb-3">Quick Actions</h3>
+            <button onclick="window.location.href='/validate'" 
+                class="w-full px-3 py-2 text-sm font-medium text-indigo-600 bg-indigo-50 rounded-lg hover:bg-indigo-100 mb-2 transition-colors">
+                Review Data
+            </button>
+            <button onclick="location.reload()" 
+                class="w-full px-3 py-2 text-sm font-medium text-gray-600 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+                Refresh Status
+            </button>
+        </div>
     </div>
+</div>
+
+<script>
+    document.getElementById('start-ml-training-btn').addEventListener('click', async () => {
+        const btn = document.getElementById('start-ml-training-btn');
+        const statusDiv = document.getElementById('ml-training-status');
+        const statusText = document.getElementById('ml-status-text');
+        const statusDetails = document.getElementById('ml-status-details');
+        const progressBar = document.getElementById('ml-progress-bar');
+        const feedbackLimit = parseInt(document.getElementById('feedback-limit').value);
+        
+        btn.disabled = true;
+        btn.classList.add('opacity-50', 'cursor-not-allowed');
+        statusDiv.classList.remove('hidden');
+        statusDiv.classList.add('bg-blue-50', 'border', 'border-blue-200');
+        statusText.textContent = 'Starting training...';
+        statusDetails.textContent = `Using ${feedbackLimit} corrections for training`;
+        
+        try {
+            const response = await fetch('/api/training/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ feedback_limit: feedbackLimit })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                const jobId = data.job_id;
+                statusText.textContent = 'Training in progress...';
+                statusDetails.textContent = `Job ID: ${jobId}`;
+                progressBar.classList.remove('hidden');
+                
+                // Poll for status updates
+                const pollInterval = setInterval(async () => {
+                    try {
+                        const statusResponse = await fetch(`/api/training/status/${jobId}`);
+                        const statusData = await statusResponse.json();
+                        
+                        if (statusData.status === 'completed') {
+                            clearInterval(pollInterval);
+                            statusDiv.classList.remove('bg-blue-50', 'border-blue-200');
+                            statusDiv.classList.add('bg-green-50', 'border-green-200');
+                            statusText.textContent = '✓ Training completed successfully!';
+                            
+                            // Display training results for all models
+                            const result = statusData.result || {};
+                            let resultsHtml = `<strong>Training Results:</strong><br>`;
+                            resultsHtml += `Total Corrections Used: ${result.total_samples || 0}<br>`;
+                            resultsHtml += `Training Time: ${(result.training_time || 0).toFixed(1)}s<br><br>`;
+                            
+                            // OCR Model results
+                            resultsHtml += `<strong>OCR Model:</strong><br>`;
+                            resultsHtml += `Patterns Learned: ${result.ocr_model_stats?.total_ocr_patterns || 0}<br>`;
+                            
+                            // Parsing Model results
+                            resultsHtml += `<strong>Parsing Model:</strong><br>`;
+                            resultsHtml += `Fields Trained: ${result.parsing_model_stats?.fields?.length || 0}<br>`;
+                            
+                            // Smart Crop Model results (NEW)
+                            if (result.smart_crop_stats) {
+                                resultsHtml += `<strong>Smart Crop Model:</strong><br>`;
+                                resultsHtml += `Crop Samples Trained: ${result.smart_crop_stats.training_samples || 0}<br>`;
+                                resultsHtml += `Patterns Learned: ${result.smart_crop_stats.patterns_learned || 0}<br>`;
+                            }
+                            
+                            statusDetails.innerHTML = resultsHtml;
+                            progressBar.firstElementChild.style.width = '100%';
+                            btn.disabled = false;
+                            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        } else if (statusData.status === 'failed') {
+                            clearInterval(pollInterval);
+                            statusDiv.classList.remove('bg-blue-50', 'border-blue-200');
+                            statusDiv.classList.add('bg-red-50', 'border-red-200');
+                            statusText.textContent = '✗ Training failed';
+                            statusDetails.textContent = statusData.error || 'Unknown error';
+                            btn.disabled = false;
+                            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                        } else {
+                            // Update progress
+                            const progress = statusData.progress || 0;
+                            progressBar.firstElementChild.style.width = progress + '%';
+                            statusDetails.textContent = `Job ID: ${jobId} | Progress: ${progress}%`;
+                        }
+                    } catch (e) {
+                        console.error('Status check error:', e);
+                    }
+                }, 2000);
+            } else {
+                statusDiv.classList.remove('bg-blue-50', 'border-blue-200');
+                statusDiv.classList.add('bg-red-50', 'border-red-200');
+                statusText.textContent = '✗ Failed to start training';
+                statusDetails.textContent = data.error || 'Unknown error';
+                btn.disabled = false;
+                btn.classList.remove('opacity-50', 'cursor-not-allowed');
+            }
+        } catch (e) {
+            console.error(e);
+            statusDiv.classList.remove('bg-blue-50', 'border-blue-200');
+            statusDiv.classList.add('bg-red-50', 'border-red-200');
+            statusText.textContent = '✗ Network error';
+            statusDetails.textContent = 'Could not reach training service';
+            btn.disabled = false;
+            btn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+    });
+
+    // Load and display learning history
+    async function loadLearningHistory() {
+        try {
+            const response = await fetch('/api/learning/summary');
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                const summary = data.summary;
+                document.getElementById('total-sessions').textContent = summary.total_training_sessions || 0;
+                document.getElementById('total-learned').textContent = summary.total_corrections_learned || 0;
+                
+                const fieldsDiv = document.getElementById('fields-trained');
+                const fields = summary.fields_trained || [];
+                if (fields.length > 0) {
+                    fieldsDiv.textContent = fields.join(', ');
+                } else {
+                    fieldsDiv.textContent = 'None yet';
+                }
+                
+                document.getElementById('learning-history-section').classList.remove('hidden');
+            }
+        } catch (e) {
+            console.error('Error loading learning history:', e);
+        }
+    }
+
+    function showLearningDetails() {
+        window.location.href = '/api/learning/page';
+    }
+
+    // Load learning history on page load
+    document.addEventListener('DOMContentLoaded', loadLearningHistory);
+
+    // Also update training results with learning info
+    async function displayTrainingResults(result) {
+        if (result.corrections_used_count !== undefined) {
+            document.getElementById('corrections-used').textContent = result.corrections_used_count;
+        }
+        if (result.new_patterns && result.new_patterns.length > 0) {
+            const patternsText = result.new_patterns.map(p => `${p.field} (${p.patterns})`).join(', ');
+            document.getElementById('patterns-learned').textContent = patternsText;
+        }
+        
+        // Reload learning history after training
+        await new Promise(resolve => setTimeout(resolve, 500));
+        loadLearningHistory();
+    }
+</script>
 {% endblock %}

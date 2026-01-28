@@ -34,6 +34,7 @@ class SmartReceiptDetector:
     def detect_receipt(self, image_path: str) -> Dict:
         """
         Main detection pipeline - tries multiple strategies
+        **NOW INCLUDES LEARNED CORRECTIONS FROM ML TRAINING!**
         
         Returns:
             {
@@ -43,7 +44,9 @@ class SmartReceiptDetector:
                 'confidence': float (0-1),
                 'method': str ('edge_detection', 'contour', 'failed'),
                 'needs_manual_review': bool,
-                'preview_path': str (saved preview image)
+                'preview_path': str (saved preview image),
+                'learned_corrections_applied': bool,
+                'original_bbox': [x, y, w, h] (before corrections)
             }
         """
         try:
@@ -57,12 +60,16 @@ class SmartReceiptDetector:
             # Strategy 1: Edge Detection (Best for clean backgrounds)
             result = self._edge_detection_method(image)
             if result['confidence'] >= self.MEDIUM_CONFIDENCE:
+                # CRITICAL: Apply learned corrections before returning!
+                result = self._apply_learned_corrections(result)
                 result['preview_path'] = self._save_preview(image, result, image_path)
                 return result
             
             # Strategy 2: Contour Detection (Fallback for noisy backgrounds)
             result = self._contour_method(image)
             if result['confidence'] >= self.MEDIUM_CONFIDENCE:
+                # CRITICAL: Apply learned corrections before returning!
+                result = self._apply_learned_corrections(result)
                 result['preview_path'] = self._save_preview(image, result, image_path)
                 return result
             
@@ -206,6 +213,57 @@ class SmartReceiptDetector:
             
         except Exception as e:
             return self._failed_result(f"Contour method failed: {e}")
+    
+    
+    def _apply_learned_corrections(self, detection_result: Dict) -> Dict:
+        """
+        **CRITICAL**: Apply ML-learned corrections to the auto-detected crop.
+        
+        This is where smart crop actually LEARNS and improves over time!
+        The trained model knows how users typically adjust auto-detected crops.
+        """
+        try:
+            from backend.services.smart_crop_training_service import SmartCropTrainingService
+            
+            # Get the auto-detected bbox
+            bbox = detection_result.get('bbox', [])
+            if not bbox or len(bbox) < 4:
+                return detection_result
+            
+            auto_crop = {
+                'x': bbox[0],
+                'y': bbox[1],
+                'width': bbox[2],
+                'height': bbox[3]
+            }
+            
+            # Apply learned corrections
+            correction_result = SmartCropTrainingService.apply_learned_corrections_to_auto_detect(auto_crop)
+            
+            if correction_result.get('improved', False):
+                # Update bbox with corrected values
+                corrected = correction_result.get('corrected_crop', {})
+                detection_result['original_bbox'] = bbox  # Keep original for reference
+                detection_result['bbox'] = [
+                    corrected.get('x', bbox[0]),
+                    corrected.get('y', bbox[1]),
+                    corrected.get('width', bbox[2]),
+                    corrected.get('height', bbox[3])
+                ]
+                detection_result['learned_corrections_applied'] = True
+                detection_result['correction_confidence'] = correction_result.get('confidence', 0)
+                detection_result['training_samples_used'] = correction_result.get('training_samples', 0)
+                
+                print(f"[SMART-CROP] ✨ Applied learned corrections: {correction_result.get('applied_corrections_summary', '')}")
+            else:
+                detection_result['learned_corrections_applied'] = False
+            
+            return detection_result
+        
+        except Exception as e:
+            print(f"[SMART-CROP] Error applying learned corrections: {e}")
+            detection_result['learned_corrections_applied'] = False
+            return detection_result
     
     def _calculate_confidence(self, cropped: np.ndarray, area_ratio: float, method: str) -> float:
         """

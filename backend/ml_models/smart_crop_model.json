@@ -1,0 +1,49 @@
+{
+  "version": "2.0",
+  "trained_at": "2026-01-28T13:22:32.054440",
+  "total_examples": 49,
+  "patterns": [
+    {
+      "pattern_type": "correction_deltas",
+      "description": "Learned corrections to apply to auto-detected crops",
+      "mean_x_delta": 0.2400630797773695,
+      "mean_y_delta": 71.68936734693878,
+      "mean_w_delta": -34.96408163265306,
+      "mean_h_delta": 366.74626530612244,
+      "std_x_delta": 7.115272882137709,
+      "std_y_delta": 112.23506777982794,
+      "std_w_delta": 79.51160482412378,
+      "std_h_delta": 728.181631496125,
+      "note": "Apply these deltas to auto-detected crops: x+0, y+72, w+-35, h+367"
+    },
+    {
+      "pattern_type": "expected_crop_size",
+      "avg_width": 785.3420408163265,
+      "avg_height": 1037.583,
+      "avg_x": 1.158430426716145,
+      "avg_y": 189.48528571428568,
+      "width_std": 42.38781313016182,
+      "height_std": 189.06946256692788,
+      "aspect_ratio": 0.7568956322687693
+    }
+  ],
+  "learned_corrections": {
+    "x_adjustment": 0,
+    "y_adjustment": 72,
+    "width_adjustment": -35,
+    "height_adjustment": 367
+  },
+  "avg_crop_size": {
+    "width": 785.3420408163265,
+    "height": 1037.583,
+    "aspect_ratio": 0.7568956322687693
+  },
+  "crop_variations": {
+    "width_std": 42.38781313016182,
+    "height_std": 189.06946256692788,
+    "x_delta_std": 7.115272882137709,
+    "y_delta_std": 112.23506777982794,
+    "w_delta_std": 79.51160482412378,
+    "h_delta_std": 728.181631496125
+  }
+}

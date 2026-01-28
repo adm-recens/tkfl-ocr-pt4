@@ -17,7 +17,7 @@
         </div>
 
         <!-- Right Column: Extracted Data + Controls -->
-        <div class="space-y-6">
+        <div class="space-y-6 overflow-y-auto" style="max-height: 85vh;">
 
             <!-- OCR Controls -->
             <div class="bg-white p-5 rounded-xl shadow-lg border border-indigo-200">
@@ -190,11 +190,21 @@
             itemsBody.innerHTML = '<tr><td colspan="4" class="px-3 py-2 text-center text-gray-400">No items extracted</td></tr>';
         } else {
             items.forEach(item => {
+                // Try unit_price first, fallback to price, then rate field
+                const priceValue = item.unit_price !== null && item.unit_price !== undefined ? 
+                    item.unit_price : 
+                    (item.price !== null && item.price !== undefined ? item.price : 
+                     (item.rate !== null && item.rate !== undefined ? item.rate : null));
+                
+                const qty = item.quantity !== null && item.quantity !== undefined ? item.quantity : '-';
+                const price = priceValue !== null && priceValue !== undefined ? parseFloat(priceValue).toFixed(2) : '-';
+                const amount = item.line_amount !== null && item.line_amount !== undefined ? parseFloat(item.line_amount).toFixed(2) : '-';
+                
                 const row = `<tr>
                     <td class="px-3 py-2 text-gray-900">${item.item_name || 'Item'}</td>
-                    <td class="px-3 py-2 text-gray-900 text-right">${item.quantity !== null && item.quantity !== undefined ? item.quantity : '-'}</td>
-                    <td class="px-3 py-2 text-gray-900 text-right">${item.unit_price !== null && item.unit_price !== undefined ? item.unit_price.toFixed(2) : '-'}</td>
-                    <td class="px-3 py-2 text-gray-900 text-right font-semibold">${item.line_amount !== null && item.line_amount !== undefined ? item.line_amount.toFixed(2) : '-'}</td>
+                    <td class="px-3 py-2 text-gray-900 text-right">${qty}</td>
+                    <td class="px-3 py-2 text-gray-900 text-right">${price}</td>
+                    <td class="px-3 py-2 text-gray-900 text-right font-semibold">${amount}</td>
                 </tr>`;
                 itemsBody.innerHTML += row;
             });
@@ -212,9 +222,10 @@
             deductionsBody.innerHTML = '<tr><td colspan="2" class="px-3 py-2 text-center text-gray-400">No deductions extracted</td></tr>';
         } else {
             deductions.forEach(ded => {
+                const amount = ded.amount !== null && ded.amount !== undefined ? parseFloat(ded.amount).toFixed(2) : '-';
                 const row = `<tr>
                     <td class="px-3 py-2 text-gray-900">${ded.deduction_type || 'Other'}</td>
-                    <td class="px-3 py-2 text-gray-900 text-right font-semibold">${ded.amount !== null && ded.amount !== undefined ? ded.amount.toFixed(2) : '-'}</td>
+                    <td class="px-3 py-2 text-gray-900 text-right font-semibold">${amount}</td>
                 </tr>`;
                 deductionsBody.innerHTML += row;
             });

@@ -37,18 +37,18 @@ def parse_header_region(text):
             if len(ln) > 4 and not re.search(r"(Date|Voucher|Supp|Phone|GST|Inv|No\.|:)", ln, re.IGNORECASE):
                 # Check for business keywords or simply being the first few lines and uppercase-ish
                 if (ln.isupper() or 
-                    re.search(r"(Store|Traders|Bros|Company|Ltd|Enterprises|Sons|Agent|Agency|Services)", ln, re.IGNORECASE)):
+                    re.search(r"(Bros|Traders|Company|Ltd|Enterprises|Sons|Agent|Agency|Services)", ln, re.IGNORECASE)):
                      data['vendor_details'] = ln
 
         # Voucher number
         if data['voucher_number'] is None:
-            vn = re.search(r"(?:Voucher|Invoice|Bill|Sl)\s*(?:No|Number|#)?\s*[:\-\.]?\s*[#]?\s*(\d+)", ln, re.IGNORECASE)
+            vn = re.search(r"(?:Voucher)\s*(?:Number|No|#)?\s*[:\-\.]?\s*[#]?\s*(\d+)", ln, re.IGNORECASE)
             if vn:
                 data['voucher_number'] = vn.group(1)
         
         # Voucher date
         if data['voucher_date'] is None:
-            dt = re.search(r"(?:Date|Dated|Dt)?\s*[:\-\.]?\s*(\d{1,2}[-/\.]\d{1,2}[-/\.]\d{2,4}|\d{4}[-/\.]\d{1,2}[-/\.]\d{1,2})", ln, re.IGNORECASE)
+            dt = re.search(r"(?:Voucher)\s*(?:Date|Dated|Dt)?\s*[:\-\.]?\s*(\d{1,2}[-/\.]\d{1,2}[-/\.]\d{2,4}|\d{4}[-/\.]\d{1,2}[-/\.]\d{1,2})", ln, re.IGNORECASE)
             if dt:
                 data['voucher_date'] = try_parse_date(dt.group(1))
         
@@ -58,8 +58,8 @@ def parse_header_region(text):
             if re.search(r"(?:M/s|Mr\.|Mrs\.|Shri|Sri)\b", ln, re.IGNORECASE):
                 data['supplier_name'] = ln.strip()
             # Explicit label
-            elif re.search(r"(?:SUPP|Supplier|Purchaser)\s*(?:NAME)?\s*[:\-\s]\s*(.+)", ln, re.IGNORECASE):
-                sn = re.search(r"(?:SUPP|Supplier|Purchaser)\s*(?:NAME)?\s*[:\-\s]\s*(.+)", ln, re.IGNORECASE)
+            elif re.search(r"(?:Supp|SUPP)\s*(?:Name|NAME)?\s*[:\-\s]\s*(.+)", ln, re.IGNORECASE):
+                sn = re.search(r"(?:Supp|SUPP)\s*(?:Name|NAME)?\s*[:\-\s]\s*(.+)", ln, re.IGNORECASE)
                 if sn:
                     val = sn.group(1).strip()
                     # Determine if this captured the vendor name part by mistake (like "LEMON PURCHASER")
@@ -85,17 +85,15 @@ def parse_items_region(text):
         if re.search(r"^(Qty|Price|Amount|Item|Name|Total|Particulars)", ln, re.IGNORECASE):
             continue
         
-        # Find all numbers in the line
-        numbers = re.findall(r"(\d{1,6}(?:\.\d{1,2})?)", ln)
+        # Find all numbers in the line (allow commas or dots as decimal sep)
+        number_tokens = re.findall(r"([\d,]+(?:[\.,]\d{1,2})?)", ln)
         
-        if not numbers:
+        if not number_tokens:
             continue
             
-        # Try to interpret the last number as line amount
-        try:
-            line_amount = float(numbers[-1])
-            if line_amount <= 0: continue
-        except:
+        # Try to interpret the last number as line amount (allow dividing by 100 if dot missing)
+        line_amount = _parse_num_token(number_tokens[-1], allow_divide_by_100=True)
+        if line_amount is None or line_amount <= 0:
             continue
             
         unit_price = None
@@ -103,20 +101,21 @@ def parse_items_region(text):
         item_name = "Item"
         
         # Heuristic: If we have at least 2 numbers, 2nd to last might be price or qty
-        if len(numbers) >= 2:
+        if len(number_tokens) >= 2:
             try:
                 # Assuming simple format: [Name] [Qty] [Price] [Amount]
                 # If 3 numbers: Qty, Price, Amount
-                if len(numbers) >= 3:
-                    quantity = float(numbers[-3])
-                    unit_price = float(numbers[-2])
+                if len(number_tokens) >= 3:
+                    # Qty is often integer - do not apply divide-by-100 heuristic
+                    quantity = _parse_num_token(number_tokens[-3], allow_divide_by_100=False)
+                    unit_price = _parse_num_token(number_tokens[-2], allow_divide_by_100=True)
                 # If 2 numbers: Price, Amount (Qty assumed 1) OR Qty, Amount (Price inferred)
-                elif len(numbers) == 2:
-                    val = float(numbers[-2])
+                elif len(number_tokens) == 2:
+                    val = _parse_num_token(number_tokens[-2], allow_divide_by_100=True)
                     # Guess if it's price or qty based on division
-                    if abs(val * line_amount - line_amount) < 0.01: # Likely Qty=1
+                    if val is not None and abs(val * line_amount - line_amount) < 0.01: # Likely Qty=1
                          unit_price = val
-                    elif abs((line_amount / val) % 1) < 0.01: # Divides cleanly, maybe quantity
+                    elif val is not None and quantity is None and val != 0 and abs((line_amount / val) % 1) < 0.01: # Divides cleanly, maybe quantity
                          quantity = val
                          unit_price = line_amount / quantity
                     else:
@@ -145,6 +144,55 @@ def parse_items_region(text):
     
     return items
 
+def _normalize_num_str(s, allow_divide_by_100=False):
+    """Normalize numeric OCR tokens into a standard float string.
+    Handles commas as decimal separators, thousand separators, and common OCR artifacts.
+    If allow_divide_by_100 is True and the token has no decimal point and is long (>=4),
+    assume the last two digits are decimals (e.g. '5720' -> '57.20').
+    """
+    if not s:
+        return None
+    s = s.strip().replace(' ', '')
+    # Replace common OCR dot-like characters
+    s = re.sub(r'[·•‚]', '.', s)
+    # If only commas and no dots, decide whether comma is decimal sep
+    if ',' in s and '.' not in s:
+        if re.search(r",\d{1,2}$", s):
+            s = s.replace(',', '.')
+        else:
+            s = s.replace(',', '')
+    # If both comma and dot present, remove commas (assume thousand separators)
+    if ',' in s and '.' in s:
+        s = s.replace(',', '')
+    # Now if still no dot and heuristic allowed, try inserting decimal before last 2 digits
+    if allow_divide_by_100 and '.' not in s and re.fullmatch(r'\d{4,}', s):
+        s = s[:-2] + '.' + s[-2:]
+    return s
+
+
+def _parse_num_token(token, allow_divide_by_100=False):
+    t = _normalize_num_str(token, allow_divide_by_100=allow_divide_by_100)
+    if not t:
+        return None
+    try:
+        return float(t)
+    except:
+        return None
+
+
+def _clean_deduction_label(lbl):
+    """Clean OCR noise in labels and strip trailing percentage or small numeric tokens that belong to label not amount.
+    Examples: 'Comm?4.00' -> 'Comm' ; 'Commission 4%' -> 'Commission'
+    """
+    if not lbl:
+        return lbl
+    # Remove stray punctuation (keep dot so decimals remain intact for removal)
+    lbl = re.sub(r'[\?\(\)\[\]]', ' ', lbl)
+    # Remove one or more trailing numeric tokens or percentages (e.g. '4.00', '4 %', '4')
+    lbl = re.sub(r"(?:\s+\d+(?:[\.,]\d+)?%?)+\s*$", '', lbl).strip()
+    return lbl
+
+
 def parse_deductions_region(text):
     """
     Parse deductions region.
@@ -153,32 +201,37 @@ def parse_deductions_region(text):
     clean_text = clean_ocr_text(text)
     lines = [ln.strip() for ln in clean_text.splitlines() if ln.strip()]
     
-    keywords = r"(Less|Comm|Damages?|Unloading|Labor|Hamali|Cash|Tax|VAT|Discount|Fee|Charge|Adv)"
+    keywords = r"(Comm|Less|Damages?|Unloading|L/F|And|Cash|)"
     
     for ln in lines:
-        # Check for Label + Amount
-        # "Less Commission: 50.00"
-        match = re.search(rf"({keywords}.*?)\s*[:\-\s]\s*(\d+(?:\.\d{{2}})?)$", ln, re.IGNORECASE)
+        # Try to find a trailing amount (allow comma or dot as decimal separator)
+        pattern = rf"({keywords}.*?)\s*[:\-\s]\s*([\d,]+(?:[\.,]\d{{1,2}})?)$"
+        match = re.search(pattern, ln, re.IGNORECASE)
         if match:
-            deductions.append({
-                "deduction_type": match.group(1).strip(),
-                "amount": float(match.group(2))
-            })
+            lbl = _clean_deduction_label(match.group(1).strip())
+            # Because 'keywords' contains its own capture group, the amount is in group 3
+            amt = _parse_num_token(match.group(3), allow_divide_by_100=True)
+            if amt is not None:
+                deductions.append({
+                    "deduction_type": lbl,
+                    "amount": amt
+                })
             continue
+        else:
+            # Debug: (temporary) show why some lines may not match during tests
+            # print(f"[DEBUG parse_deductions_region] no match for line: '{ln}' with pattern: {pattern}")
+            pass
             
-        # Or Just "Commission 500"
+        # Or Just "Commission 500" (last token numeric)
         parts = ln.rsplit(None, 1)
         if len(parts) == 2:
-            try:
-                amt = float(parts[1])
-                lbl = parts[0]
-                if re.search(keywords, lbl, re.IGNORECASE):
-                    deductions.append({
-                        "deduction_type": lbl.strip(),
-                        "amount": amt
-                    })
-            except:
-                pass
+            amt = _parse_num_token(parts[1], allow_divide_by_100=True)
+            lbl = _clean_deduction_label(parts[0])
+            if amt is not None and re.search(keywords, lbl, re.IGNORECASE):
+                deductions.append({
+                    "deduction_type": lbl.strip(),
+                    "amount": amt
+                })
                 
     return deductions
 
@@ -197,23 +250,23 @@ def parse_totals_region(text):
     
     for ln in lines:
         # Net Total / Grand Total
-        if re.search(r"(Net|Grand|Payable|Bill)\s*(?:Total|Amt|Amount)?", ln, re.IGNORECASE):
-            # Extract last number
-            nums = re.findall(r"(\d+(?:\.\d{1,2})?)", ln)
+        if re.search(r"(Grand|Net|Payable|Bill)\s*(?:Total|Amt|Amount)?", ln, re.IGNORECASE):
+            # Extract last number (allow comma/dot decimals)
+            nums = re.findall(r"([\d,]+(?:[\.,]\d{1,2})?)", ln)
             if nums:
-                totals['net_total'] = float(nums[-1])
+                totals['net_total'] = _parse_num_token(nums[-1], allow_divide_by_100=True)
         
         # Gross Total
         elif re.search(r"(Gross|Total)", ln, re.IGNORECASE) and not re.search(r"(Net|Grand|Deduc)", ln, re.IGNORECASE):
-             nums = re.findall(r"(\d+(?:\.\d{1,2})?)", ln)
+             nums = re.findall(r"([\d,]+(?:[\.,]\d{1,2})?)", ln)
              if nums:
-                totals['gross_total'] = float(nums[-1])
+                totals['gross_total'] = _parse_num_token(nums[-1], allow_divide_by_100=True)
                 
         # Total Deductions
         elif re.search(r"(Deduction|Less)", ln, re.IGNORECASE):
-             nums = re.findall(r"(\d+(?:\.\d{1,2})?)", ln)
+             nums = re.findall(r"([\d,]+(?:[\.,]\d{1,2})?)", ln)
              if nums:
-                totals['total_deductions'] = float(nums[-1])
+                totals['total_deductions'] = _parse_num_token(nums[-1], allow_divide_by_100=True)
 
     return totals
 

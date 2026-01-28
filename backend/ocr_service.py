@@ -1,8 +1,8 @@
 """
-Beta OCR Service - Enhanced OCR with Tesseract Optimization
-Based on production ocr_service.py with improvements for better accuracy
+Production OCR Service - Enhanced OCR with Tesseract Optimization
+Optimized for receipt processing with adaptive preprocessing
 """
-print(f"[DEBUG] Loaded ocr_service_beta.py from: {__file__}, module: {__name__}")
+print(f"[DEBUG] Loaded ocr_service.py from: {__file__}, module: {__name__}")
 
 from PIL import Image, ImageOps, ImageFilter, ImageEnhance
 import pytesseract
@@ -82,7 +82,7 @@ def enhance_image_quality(image):
     
     return result
 
-def preprocess_image_beta(path, method='enhanced'):
+def preprocess_image(path, method='enhanced'):
     """
     Beta preprocessing - starting conservative, matching production
     
@@ -357,7 +357,7 @@ def preprocess_image_beta(path, method='enhanced'):
         img = Image.fromarray(img_array)
         return img
 
-def extract_text(image_path: str, method='optimal') -> dict:
+def extract_text(image_path: str, method='enhanced') -> dict:
     """
     Extract text from image using optimized Tesseract configuration
     
@@ -372,7 +372,7 @@ def extract_text(image_path: str, method='optimal') -> dict:
     
     try:
         # Preprocess image
-        preprocessing_result = preprocess_image_beta(image_path, method=method)
+        preprocessing_result = preprocess_image(image_path, method=method)
         
         # Handle adaptive mode returning tuple (img, quality_metrics)
         quality_metrics = None
@@ -388,39 +388,17 @@ def extract_text(image_path: str, method='optimal') -> dict:
         custom_config = ''
         
         if method == 'optimal':
-            # PSM AUTO-SELECTION (Phase 3 Complete)
-            # Try PSM 4 (Columnar) first - often best for receipts
-            # Then try PSM 6 (Block) if confidence is low or just to compare
+            # OPTIMIZED: Single-pass PSM 4 for receipts (50% faster)
+            # Receipts are columnar documents - PSM 4 consistently outperforms PSM 6
+            # Previous logs show PSM 4 wins: 85.3% vs 58.8%, 82.2% vs 69.3%
             
-            # Pass 1: PSM 4 (Single column of variable sizes)
-            print(f"[OPTIMAL] Running Pass 1 (PSM 4 - Columnar)...")
+            print(f"[OPTIMAL] Using optimized single-pass PSM 4 (Columnar)")
             config_psm4 = DynamicWhitelist.build_tesseract_config(whitelist_type='general', psm=4, oem=1)
             config_psm4 += ' -c preserve_interword_spaces=1'
             
-            data_psm4 = pytesseract.image_to_data(img, lang="eng", config=config_psm4, output_type=pytesseract.Output.DICT)
-            confidences_psm4 = [int(conf) for conf in data_psm4['conf'] if int(conf) > 0]
-            avg_conf_psm4 = sum(confidences_psm4) / len(confidences_psm4) if confidences_psm4 else 0
-            
-            # Pass 2: PSM 6 (Uniform block of text)
-            print(f"[OPTIMAL] Running Pass 2 (PSM 6 - Block)...")
-            config_psm6 = DynamicWhitelist.build_tesseract_config(whitelist_type='general', psm=6, oem=1)
-            config_psm6 += ' -c preserve_interword_spaces=1'
-            
-            data_psm6 = pytesseract.image_to_data(img, lang="eng", config=config_psm6, output_type=pytesseract.Output.DICT)
-            confidences_psm6 = [int(conf) for conf in data_psm6['conf'] if int(conf) > 0]
-            avg_conf_psm6 = sum(confidences_psm6) / len(confidences_psm6) if confidences_psm6 else 0
-            
-            # Compare and select winner
-            if avg_conf_psm4 >= avg_conf_psm6:
-                print(f"[OPTIMAL] Selected PSM 4 (Columnar) - Confidence: {avg_conf_psm4:.1f}% vs {avg_conf_psm6:.1f}%")
-                data = data_psm4
-                custom_config = config_psm4
-                text = pytesseract.image_to_string(img, lang="eng", config=config_psm4)
-            else:
-                print(f"[OPTIMAL] Selected PSM 6 (Block) - Confidence: {avg_conf_psm6:.1f}% vs {avg_conf_psm4:.1f}%")
-                data = data_psm6
-                custom_config = config_psm6
-                text = pytesseract.image_to_string(img, lang="eng", config=config_psm6)
+            data = pytesseract.image_to_data(img, lang="eng", config=config_psm4, output_type=pytesseract.Output.DICT)
+            text = pytesseract.image_to_string(img, lang="eng", config=config_psm4)
+            custom_config = config_psm4
             
         else:
             # Standard single-pass for other modes
@@ -437,14 +415,32 @@ def extract_text(image_path: str, method='optimal') -> dict:
             data = pytesseract.image_to_data(img, lang="eng", config=custom_config, output_type=pytesseract.Output.DICT)
             text = pytesseract.image_to_string(img, lang="eng", config=custom_config)
         
-        # Calculate average confidence from selected data
+# Calculate average confidence from selected data
         confidences = [int(conf) for conf in data['conf'] if int(conf) > 0]
         avg_confidence = sum(confidences) / len(confidences) if confidences else 0
         
         processing_time = int((time.time() - start_time) * 1000)
         
+        # Apply text corrections to improve OCR output with progress indicators
+        from backend.text_correction import apply_text_corrections
+        from backend.decimal_correction import apply_decimal_corrections
+        
+        print(f"[OCR] Starting OCR extraction...")
+        print(f"[OCR] Using image: {image_path}")
+        
+        # Apply text corrections with feedback
+        raw_text = text or ""
+        corrected_intermediate = apply_text_corrections(raw_text)
+        print(f"[OCR] Raw OCR length: {len(raw_text)} chars")
+        print(f"[OCR] After text corrections: {len(corrected_intermediate)} chars")
+        
+        final_corrected_text = apply_decimal_corrections(corrected_intermediate)
+        print(f"[OCR] After decimal corrections: {len(final_corrected_text)} chars")
+        print(f"[OCR] Text correction rate: {(len(final_corrected_text) - len(raw_text)) / len(raw_text) * 100 if raw_text else 0:.1f}%")
+        
         result = {
-            'text': text or "",
+            'text': final_corrected_text,
+            'raw_text': raw_text,
             'confidence': round(avg_confidence, 2),
             'preprocessing_method': method,
             'processing_time_ms': processing_time
@@ -474,4 +470,84 @@ def extract_text(image_path: str, method='optimal') -> dict:
             'processing_time_ms': processing_time
         }
 
+def extract_numbers_focused(image_path: str) -> dict:
+    """
+    Specialized extraction focused on numeric fields with enhanced preprocessing
+    Uses numeric-optimized Tesseract configuration for better number recognition
+    """
+    start_time = time.time()
+    
+    try:
+        # Preprocess with enhanced settings for numbers
+        img = Image.open(image_path)
+        
+        # Upscale for better number recognition
+        if img.width < 1500:
+            scale_factor = 2.5
+            new_size = (int(img.width * scale_factor), int(img.height * scale_factor))
+            img = img.resize(new_size, Image.Resampling.LANCZOS)
+            print(f"[NUMERIC] Upscaled image for number extraction")
+        
+        # Convert to grayscale and enhance contrast for numbers
+        img = ImageOps.grayscale(img)
+        img_array = np.array(img)
+        
+        # Strong contrast enhancement for numbers
+        clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8,8))
+        enhanced = clahe.apply(img_array)
+        
+        # Otsu thresholding optimized for numbers
+        _, binary = cv2.threshold(enhanced, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        
+        # Morphological operations to clean up numbers
+        kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (2,2))
+        binary = cv2.morphologyEx(binary, cv2.MORPH_CLOSE, kernel)
+        
+        img = Image.fromarray(binary)
+        
+        # Use numeric-focused whitelist
+        from backend.dynamic_whitelist import DynamicWhitelist
+        numeric_config = DynamicWhitelist.build_tesseract_config(
+            whitelist_type='number', 
+            psm=6, 
+            oem=1
+        )
+        numeric_config += ' -c preserve_interword_spaces=1'
+        
+        print(f"[NUMERIC] Using optimized numeric configuration")
+        
+        # Extract text with numeric focus
+        data = pytesseract.image_to_data(img, lang="eng", config=numeric_config, output_type=pytesseract.Output.DICT)
+        text = pytesseract.image_to_string(img, lang="eng", config=numeric_config)
+        
+        # Apply text corrections
+        from backend.text_correction import apply_text_corrections
+        corrected_text = apply_text_corrections(text or "")
+        
+        # Calculate confidence
+        confidences = [int(conf) for conf in data['conf'] if int(conf) > 0]
+        avg_confidence = sum(confidences) / len(confidences) if confidences else 0
+        
+        processing_time = int((time.time() - start_time) * 1000)
+        
+        return {
+            'text': corrected_text,
+            'raw_text': text or "",
+            'confidence': round(avg_confidence, 2),
+            'preprocessing_method': 'numeric_focused',
+            'processing_time_ms': processing_time
+        }
+        
+    except Exception as e:
+        processing_time = int((time.time() - start_time) * 1000)
+        print(f"[ERROR] Numeric extraction failed: {e}")
+        return {
+            'text': f"[NUMERIC ERROR] {e}",
+            'raw_text': f"[NUMERIC ERROR] {e}",
+            'confidence': 0,
+            'preprocessing_method': 'numeric_focused',
+            'processing_time_ms': processing_time
+        }
+
+# Backward compatibility function
 

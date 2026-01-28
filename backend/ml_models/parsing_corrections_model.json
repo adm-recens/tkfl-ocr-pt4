@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "trained_at": "2026-01-28T13:22:32.032677",
+  "total_samples": 3,
+  "parsing_corrections": {
+    "voucher_number": {
+      "040": [
+        "62",
+        "89"
+      ],
+      "080": [
+        "81"
+      ]
+    }
+  },
+  "field_stats": {
+    "voucher_number": {
+      "040": {
+        "62": 1,
+        "89": 1
+      },
+      "080": {
+        "81": 1
+      }
+    }
+  }
+}

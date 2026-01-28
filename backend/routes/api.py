@@ -147,6 +147,35 @@ def save_validated_data(voucher_id):
             'net_total': net_total
         }
         
+        # Get original voucher data for ML feedback
+        original_voucher = VoucherService.get_voucher_by_id(voucher_id)
+        if original_voucher:
+            original_parsed = original_voucher.get('parsed_json')
+            if isinstance(original_parsed, str):
+                original_parsed = json.loads(original_parsed)
+            
+            # Record ML feedback for corrections
+            try:
+                from backend.services.ml_training_service import MLTrainingService
+                
+                if original_parsed and 'master' in original_parsed:
+                    orig_master = original_parsed['master']
+                    
+                    # Record supplier name correction if changed
+                    if orig_master.get('supplier_name') != supplier_name:
+                        current_app.logger.debug(f"[ML-Feedback] Supplier correction: {orig_master.get('supplier_name')} -> {supplier_name}")
+                    
+                    # Record date correction if changed
+                    if orig_master.get('voucher_date') != voucher_date:
+                        current_app.logger.debug(f"[ML-Feedback] Date correction: {orig_master.get('voucher_date')} -> {voucher_date}")
+                    
+                    # Record voucher number correction if changed
+                    if orig_master.get('voucher_number') != voucher_number:
+                        current_app.logger.debug(f"[ML-Feedback] Voucher number correction: {orig_master.get('voucher_number')} -> {voucher_number}")
+                        
+            except Exception as ml_err:
+                current_app.logger.warning(f"[ML-Feedback] Error recording feedback: {ml_err}")
+        
         # Save via Service
         VoucherService.save_validated_voucher(voucher_id, master_data, validated_items, validated_deductions)
         
@@ -166,25 +195,66 @@ def save_validated_data(voucher_id):
 
 @api_bp.route("/delete_all", methods=["POST"])
 def delete_all_data():
-    """Deletes all records and files."""
+    """
+    Deletes ALL data including:
+    - Database vouchers
+    - Uploaded files
+    - ML models (OCR, Parsing, Smart Crop)
+    - ML feedback data (crop annotations, corrections)
+    - Training datasets
+    - Everything - complete reset!
+    """
     try:
+        # 1. Delete database vouchers
         VoucherService.delete_all_vouchers()
+        print("[RESET] Deleted all vouchers from database")
 
-        # Delete files
-        folder = current_app.config["UPLOAD_FOLDER"]
-        for filename in os.listdir(folder):
-            file_path = os.path.join(folder, filename)
-            try:
-                if os.path.isfile(file_path):
-                    os.unlink(file_path)
-                elif os.path.isdir(file_path):
-                    shutil.rmtree(file_path)
-            except Exception as e:
-                current_app.logger.warning(f"Failed to delete {file_path}: {e}")
-        
-        flash("All data reset successfully.", "success")
+        # 2. Delete uploaded files
+        folder = current_app.config.get("UPLOAD_FOLDER", "uploads")
+        if os.path.exists(folder):
+            for filename in os.listdir(folder):
+                file_path = os.path.join(folder, filename)
+                try:
+                    if os.path.isfile(file_path):
+                        os.unlink(file_path)
+                    elif os.path.isdir(file_path):
+                        shutil.rmtree(file_path)
+                except Exception as e:
+                    current_app.logger.warning(f"Failed to delete {file_path}: {e}")
+        print("[RESET] Deleted all uploaded files")
+
+        # 3. Delete ML Models
+        models_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "ml_models")
+        if os.path.exists(models_dir):
+            for filename in os.listdir(models_dir):
+                file_path = os.path.join(models_dir, filename)
+                try:
+                    if os.path.isfile(file_path):
+                        os.unlink(file_path)
+                        print(f"[RESET] Deleted model: {filename}")
+                except Exception as e:
+                    current_app.logger.warning(f"Failed to delete model {file_path}: {e}")
+        print("[RESET] Deleted all ML models (OCR, Parsing, Smart Crop)")
+
+        # 4. Delete ML Dataset (feedback, images, corrections)
+        dataset_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "ml_dataset")
+        if os.path.exists(dataset_dir):
+            shutil.rmtree(dataset_dir)
+            print("[RESET] Deleted entire ML dataset directory")
+        print("[RESET] Deleted all feedback data and training images")
+
+        # 5. Create empty ML directories for future use
+        os.makedirs(models_dir, exist_ok=True)
+        os.makedirs(dataset_dir, exist_ok=True)
+        os.makedirs(os.path.join(dataset_dir, "feedback"), exist_ok=True)
+        os.makedirs(os.path.join(dataset_dir, "images"), exist_ok=True)
+        print("[RESET] Created fresh ML directories")
+
+        current_app.logger.info("Complete data reset: database, files, ML models, and feedback all cleared")
+        flash("✅ Complete reset: Database, files, ML models, and training data all deleted. Ready to start fresh!", "success")
+    
     except Exception as e:
         current_app.logger.error(f"Error resetting data: {e}")
-        flash(f"Error resetting data: {e}", "error")
+        flash(f"❌ Error resetting data: {e}", "error")
         
     return redirect(url_for("main.index"))

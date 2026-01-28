@@ -4,7 +4,7 @@ import re
 from datetime import datetime
 
 # --- Regex Patterns ---
-RE_SUPPLIER_PREFIX = re.compile(r"(?:Supp|SUPP)\s*(?:Name|NAME|Nam[3e])?\s*[:\-\s]\s*(.+)", re.IGNORECASE)
+RE_SUPPLIER_PREFIX = re.compile(r"(?:Supp|SUPP)\s*(?:Name|NAME|Nam[3e])?\s*[:\-\s]\s+(.+)", re.IGNORECASE)
 
 # --- Helper Function for Safe Float Conversion ---
 def safe_float_conversion(value):
@@ -66,8 +66,8 @@ def parse_receipt_text(ocr_text: str) -> dict:
 
     # --- Regex Patterns ---
     
-    # Supplier pattern
-    RE_SUPPLIER_PREFIX = re.compile(r"(?:Supp|SUPP)\s*(?:Name|NAME|Nam[3e])?\s*[:\-\s]\s*(.+)", re.IGNORECASE)
+    # Supplier pattern (SHOULD BE REMOVED - using global one from line 7 instead)
+    # RE_SUPPLIER_PREFIX = re.compile(r"(?:Supp|SUPP)\s*(?:Name|NAME|Nam[3e])?\s*[:\-\s]\s*(.+)", re.IGNORECASE)
     
     # Item Pattern 1: Name (text) + Qty (num) + Price (num) + Amount (num)
     item_pattern_named = re.compile(
@@ -104,7 +104,7 @@ def parse_receipt_text(ocr_text: str) -> dict:
 
 # 2. Supplier Name
         if data["supplier_name"] is None:
-            # Try exact match first
+            # Try exact match first with "Supp Name: VALUE" pattern
             sn = RE_SUPPLIER_PREFIX.search(ln)
             if sn:
                 supplier_raw = sn.group(1).strip()
@@ -113,10 +113,24 @@ def parse_receipt_text(ocr_text: str) -> dict:
                 if supplier_raw and len(supplier_raw) >= 1:
                     data["supplier_name"] = supplier_raw
             else:
-                # Handle standalone supplier names (like "TK")
-                if len(ln.strip()) >= 2 and len(ln.strip()) <= 10 and not re.search(r'\d', ln):
-                    # Likely a supplier name
-                    data["supplier_name"] = ln.strip()
+                # Check if line is just "Supp Name" (without value)
+                # The supplier name might be on the PREVIOUS line or NEXT line
+                if re.search(r"^(?:Supp|SUPP)\s*(?:Name|NAME|Nam[3e])?\s*$", ln, re.IGNORECASE):
+                    # First try PREVIOUS line (i-1) - more common in OCR
+                    if i > 0:
+                        prev_ln = lines[i - 1].strip()
+                        # Previous line should be supplier name (not empty, reasonable length, not a label/number)
+                        if prev_ln and len(prev_ln) >= 2 and len(prev_ln) <= 100:
+                            if not re.search(r"^(?:Total|Qty|Price|Amount|Date|Voucher|Phone)", prev_ln, re.IGNORECASE):
+                                data["supplier_name"] = prev_ln
+                    
+                    # If not found in previous line, try NEXT line
+                    if data["supplier_name"] is None and i + 1 < len(lines):
+                        next_ln = lines[i + 1].strip()
+                        # Next line should be supplier name (not empty, reasonable length, not a label/number)
+                        if next_ln and len(next_ln) >= 2 and len(next_ln) <= 100:
+                            if not re.search(r"^(?:Total|Qty|Price|Amount|Supp|Date|Voucher)", next_ln, re.IGNORECASE):
+                                data["supplier_name"] = next_ln
 
 # 3. Voucher Number
         if data["voucher_number"] is None:

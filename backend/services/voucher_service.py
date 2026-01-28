@@ -141,7 +141,20 @@ class VoucherService:
         conn = get_connection()
         cur = conn.cursor()
         
-        # Construct final parsed json
+        # Get the original parsed_json first (for ML learning)
+        cur.execute(
+            "SELECT parsed_json, parsed_json_original FROM vouchers_master WHERE id = %s",
+            (voucher_id,)
+        )
+        result = cur.fetchone()
+        original_parsed_json = result['parsed_json_original'] if result else None
+        current_parsed_json = result['parsed_json'] if result else None
+        
+        # If we don't have original yet, use current as original (first time saving)
+        if not original_parsed_json and current_parsed_json:
+            original_parsed_json = current_parsed_json
+        
+        # Construct final parsed json with corrections
         final_parsed_json = {
             'master': master_data,
             'items': items,
@@ -157,7 +170,8 @@ class VoucherService:
                 gross_total = %s,
                 total_deductions = %s,
                 net_total = %s,
-                parsed_json = %s, 
+                parsed_json = %s,
+                parsed_json_original = %s,
                 validation_status = 'VALIDATED'
             WHERE id = %s
         """, (
@@ -168,6 +182,7 @@ class VoucherService:
             master_data.get('total_deductions'),
             master_data.get('net_total'),
             json.dumps(final_parsed_json, ensure_ascii=False),
+            json.dumps(original_parsed_json, ensure_ascii=False) if original_parsed_json else None,
             voucher_id
         ))
         
@@ -183,6 +198,10 @@ class VoucherService:
     def delete_all_vouchers():
         conn = get_connection()
         cur = conn.cursor()
+        
+        # Delete production data first (to satisfy FK constraints)
+        cur.execute("DELETE FROM receipts")
+        cur.execute("DELETE FROM suppliers")
         
         # Delete all tables (beta tables were migrated to production)
         cur.execute("DELETE FROM voucher_items")

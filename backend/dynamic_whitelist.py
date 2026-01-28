@@ -12,8 +12,8 @@ class DynamicWhitelist:
     DIGITS = "0123456789"
     UPPERCASE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     LOWERCASE = "abcdefghijklmnopqrstuvwxyz"
-    PUNCTUATION = ".,;:!?"
-    COMMON_SYMBOLS = "()-/&"
+    PUNCTUATION = ".,;:!?-/"
+    COMMON_SYMBOLS = "()&"
     CURRENCY = "₹$€£¥"
     SPACE = " "
     
@@ -22,6 +22,7 @@ class DynamicWhitelist:
         """
         Whitelist for numeric fields (amounts, dates, voucher numbers)
         Includes: digits, decimal point, comma, dash, slash
+        Excludes: letters that are commonly confused with digits
         """
         return cls.DIGITS + ".,/-" + cls.SPACE
     
@@ -30,6 +31,7 @@ class DynamicWhitelist:
         """
         Whitelist for text fields (names, addresses)
         Includes: letters, common punctuation, space
+        Excludes: digits to avoid confusion in text fields
         """
         return cls.UPPERCASE + cls.LOWERCASE + cls.PUNCTUATION + cls.COMMON_SYMBOLS + cls.SPACE
     
@@ -38,14 +40,17 @@ class DynamicWhitelist:
         """
         Whitelist for mixed content (general text with numbers)
         Includes: letters, digits, punctuation, common symbols
+        Excludes: rarely used characters that cause confusion
         """
-        return cls.UPPERCASE + cls.LOWERCASE + cls.DIGITS + cls.PUNCTUATION + cls.COMMON_SYMBOLS + cls.SPACE
+        return (cls.UPPERCASE + cls.LOWERCASE + cls.DIGITS + 
+                cls.PUNCTUATION + cls.COMMON_SYMBOLS + cls.SPACE)
     
     @classmethod
     def get_currency_amounts(cls) -> str:
         """
         Whitelist for currency amounts
         Includes: digits, decimal, comma, currency symbols
+        Excludes: letters commonly confused with digits (O, I, L, S, etc.)
         """
         return cls.DIGITS + ".,/" + cls.CURRENCY + cls.SPACE
     
@@ -62,9 +67,18 @@ class DynamicWhitelist:
         """
         Whitelist for general receipt content
         Includes: everything commonly found on receipts
+        Excludes: rarely used characters that cause OCR confusion
         """
-        return (cls.UPPERCASE + cls.LOWERCASE + cls.DIGITS + 
-                cls.PUNCTUATION + cls.COMMON_SYMBOLS + cls.CURRENCY + cls.SPACE)
+        # Exclude characters that commonly confuse OCR: ~`|[]{}<>
+        excluded = "~`|[]{}<>"
+        allowed = (cls.UPPERCASE + cls.LOWERCASE + cls.DIGITS + 
+                  cls.PUNCTUATION + cls.COMMON_SYMBOLS + cls.CURRENCY + cls.SPACE)
+        
+        # Remove excluded characters
+        for char in excluded:
+            allowed = allowed.replace(char, '')
+        
+        return allowed
     
     @classmethod
     def get_for_field_type(cls, field_type: str) -> str:

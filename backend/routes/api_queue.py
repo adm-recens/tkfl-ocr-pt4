@@ -13,6 +13,7 @@ import uuid
 from datetime import datetime
 from backend.services.batch_service import BatchService
 from backend.services.production_sync_service import ProductionSyncService
+from backend.services.ml_feedback_service import MLFeedbackService
 import hashlib
 
 def calculate_file_hash(filepath):
@@ -23,10 +24,10 @@ def calculate_file_hash(filepath):
             hash_md5.update(chunk)
     return hash_md5.hexdigest()
 
-api_queue_bp = Blueprint('api_queue', __name__)
-
 import json
 from backend.services.batch_service import BatchService
+from backend.smart_crop import SmartReceiptDetector
+from backend.services.ml_feedback_service import MLFeedbackService
 
 api_queue_bp = Blueprint('api_queue', __name__)
 
@@ -129,6 +130,24 @@ def create_queue():
             except Exception as e:
                 print(f"[ERROR] Failed to save file metadata: {e}")
             
+            # Run Smart Crop Detection
+            auto_crop_info = None
+            try:
+                detector = SmartReceiptDetector()
+                crop_result = detector.detect_receipt(filepath)
+                
+                if crop_result['success']:
+                    auto_crop_info = {
+                        'bbox': crop_result['bbox'],
+                        'confidence': crop_result['confidence'],
+                        'method': crop_result['method']
+                    }
+                    print(f"[SMART-CROP] Detected receipt in {filename} with confidence {crop_result['confidence']:.2f}")
+                else:
+                    print(f"[SMART-CROP] Detection failed for {filename}: {crop_result.get('error')}")
+            except Exception as e:
+                print(f"[SMART-CROP] Error: {e}")
+
             saved_files.append({
                 'original_filename': filename,
                 'original_path': filepath,
@@ -136,7 +155,8 @@ def create_queue():
                 'ocr_result': None,
                 'parsed_data': None,
                 'validated_data': None,
-                'status': 'pending'  # pending, processing, validated, skipped
+                'status': 'pending',  # pending, processing, validated, skipped
+                'auto_crop_info': auto_crop_info
             })
             print(f"[DEBUG] Saved file: {filename} to {filepath}")
         else:
@@ -385,7 +405,8 @@ def get_current_receipt(queue_id):
             'filename': current_file['original_filename'],
             'original_path': current_file['original_path'],
             'cropped_path': current_file.get('cropped_path'),
-            'status': current_file['status']
+            'status': current_file['status'],
+            'auto_crop_info': current_file.get('auto_crop_info')
         },
         'progress': {
             'current': current_index + 1,
@@ -419,6 +440,31 @@ def save_crop(queue_id):
     cropped_filename = f"{queue_id}_cropped_{current_index}.jpg"
     cropped_path = os.path.join(upload_folder, cropped_filename)
     cropped_file.save(cropped_path)
+    
+    # ML Feedback Loop: Save user's crop validation
+    try:
+        user_crop_data = request.form.get('crop_data') # JSON string
+        if user_crop_data:
+            crop_json = json.loads(user_crop_data)
+            original_path = queue['files'][current_index]['original_path']
+            
+            # CRITICAL: Also pass auto-detected crop for learning deltas!
+            auto_crop_info = queue['files'][current_index].get('auto_crop_info')
+            auto_crop_data = None
+            if auto_crop_info:
+                bbox = auto_crop_info.get('bbox', [])
+                if bbox and len(bbox) >= 4:
+                    auto_crop_data = {
+                        'x': bbox[0],
+                        'y': bbox[1],
+                        'width': bbox[2],
+                        'height': bbox[3]
+                    }
+            
+            # Save feedback with auto-crop for learning corrections!
+            MLFeedbackService.save_crop_feedback(original_path, crop_json, auto_crop_data)
+    except Exception as e:
+        print(f"[ML-FEEDBACK] Error processing feedback: {e}")
     
     # Update queue
     queue['files'][current_index]['cropped_path'] = cropped_path
@@ -700,6 +746,39 @@ def save_batch(queue_id):
                     # If we get here, this voucher is good
                     cur.execute("RELEASE SAVEPOINT sp_save_voucher")
                     saved_count += 1
+                    
+                    # ✨ Capture ML Feedback: Compare original OCR with user corrections
+                    try:
+                        original_ocr_data = file_info.get('ocr_result', {})
+                        original_parsed = original_ocr_data.get('parsed_data', {})
+                        
+                        # Check if user made corrections (validated_data differs from original)
+                        if original_parsed and data:
+                            # Extract original OCR text for ML training
+                            raw_ocr_text = original_ocr_data.get('text', '')
+                            
+                            # Store correction feedback for ML training
+                            correction_entry = {
+                                'voucher_id': master_id,
+                                'original_parsed': original_parsed,
+                                'user_corrected': data,
+                                'raw_ocr_text': raw_ocr_text,
+                                'timestamp': datetime.now().isoformat(),
+                                'source': 'batch_validation'  # Distinguish from /validate page corrections
+                            }
+                            
+                            # Save feedback to ML system
+                            MLFeedbackService.save_batch_validation_feedback(
+                                voucher_id=master_id,
+                                original_data=original_parsed,
+                                corrected_data=data,
+                                raw_ocr_text=raw_ocr_text,
+                                source_file=file_info['original_path']
+                            )
+                            
+                            current_app.logger.info(f"[ML-FEEDBACK] Batch correction feedback saved for voucher {master_id}")
+                    except Exception as e:
+                        current_app.logger.warning(f"[ML-FEEDBACK] Could not capture feedback for voucher {master_id}: {e}")
                     
                     # Update Lifecycle Metadata
                     try:
