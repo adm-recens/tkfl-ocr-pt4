@@ -13,14 +13,14 @@ from backend import create_app
 if __name__ == "__main__":
     app = create_app()
     print("\n" + "="*60)
-    print("🚀 OCR Application Starting...")
+    print("OCR Application Starting...")
     print("="*60)
-    print("\n📍 Access the application at: http://localhost:5000")
-    print("\n✅ New Features Active:")
+    print("\nAccess the application at: http://localhost:5000")
+    print("\nNew Features Active:")
     print("   - Optimal OCR Mode (92%+ confidence)")
     print("   - Enhanced Parser with Auto-Correction")
     print("   - Validation Warnings & Alerts")
-    print("\n⏹️  Press Ctrl+C to stop the server\n")
+    print("\nPress Ctrl+C to stop the server\n")
     print("="*60 + "\n")
     
     app.run(debug=True, host='0.0.0.0', port=5000)

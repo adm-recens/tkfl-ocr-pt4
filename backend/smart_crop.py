@@ -254,14 +254,16 @@ class SmartReceiptDetector:
                 detection_result['correction_confidence'] = correction_result.get('confidence', 0)
                 detection_result['training_samples_used'] = correction_result.get('training_samples', 0)
                 
-                print(f"[SMART-CROP] ✨ Applied learned corrections: {correction_result.get('applied_corrections_summary', '')}")
+                import logging
+                logging.getLogger('ml').info(f"[SMART-CROP] ✨ Applied learned corrections: {correction_result.get('applied_corrections_summary', '')}")
             else:
                 detection_result['learned_corrections_applied'] = False
             
             return detection_result
         
         except Exception as e:
-            print(f"[SMART-CROP] Error applying learned corrections: {e}")
+            import logging
+            logging.getLogger('ml').exception(f"[SMART-CROP] Error applying learned corrections: {e}")
             detection_result['learned_corrections_applied'] = False
             return detection_result
     
@@ -380,7 +382,8 @@ class SmartReceiptDetector:
             return preview_path
             
         except Exception as e:
-            print(f"[WARNING] Preview save failed: {e}")
+            import logging
+            logging.getLogger('ml').warning(f"[SMART-CROP] Preview save failed: {e}")
             return ""
     
     def _failed_result(self, reason: str) -> Dict:

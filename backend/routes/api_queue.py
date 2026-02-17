@@ -7,6 +7,7 @@ from flask import Blueprint, request, jsonify, current_app, session
 from werkzeug.utils import secure_filename
 from backend.ocr_service import extract_text
 from backend.parser import parse_receipt_text
+from backend.quality_focused_extractor import extract_with_quality
 from backend.db import get_connection
 import os
 import uuid
@@ -27,7 +28,10 @@ def calculate_file_hash(filepath):
 import json
 from backend.services.batch_service import BatchService
 from backend.smart_crop import SmartReceiptDetector
+from backend.services.batch_service import BatchService
+from backend.smart_crop import SmartReceiptDetector
 from backend.services.ml_feedback_service import MLFeedbackService
+from backend.services.ml_training_service import MLTrainingService
 
 api_queue_bp = Blueprint('api_queue', __name__)
 
@@ -255,8 +259,33 @@ def process_batch_ocr(queue_id):
                     raw_text = ocr_result.get('text', '') if isinstance(ocr_result, dict) else str(ocr_result)
                     confidence = ocr_result.get('confidence', 0) if isinstance(ocr_result, dict) else 0
                     
-                    parsed_data = parse_receipt_text(raw_text)
+                    # QUALITY-FOCUSED EXTRACTION ENGINE (tries multiple strategies, validates rigorously)
+                    print(f"[BATCH-THREAD] Running quality-focused extraction for {file_info['original_filename']}")
+                    extraction_result = extract_with_quality(raw_text)
                     
+                    # Convert to standard format (WITHOUT quality_report - not JSON serializable)
+                    parsed_data = {
+                        'master': {
+                            'voucher_number': extraction_result['fields']['voucher_number'].value,
+                            'voucher_date': extraction_result['fields']['voucher_date'].value,
+                            'supplier_name': extraction_result['fields']['supplier_name'].value,
+                            'gross_total': extraction_result['fields']['gross_total'].value,
+                            'net_total': extraction_result['fields']['net_total'].value,
+                        },
+                        'items': extraction_result.get('items', []),
+                        'deductions': extraction_result.get('deductions', [])
+                    }
+                    
+                    print(f"[BATCH-THREAD] Extraction confidence: {extraction_result['overall_confidence']}%")
+                    print(f"[BATCH-THREAD] Requires review: {extraction_result['requires_review']}")
+                    
+                    # ✨ Apply ML Learned Corrections
+                    try:
+                        parsed_data = MLTrainingService.apply_learned_corrections(parsed_data, raw_text)
+                        print(f"[BATCH-THREAD] Applied ML corrections for {file_info['original_filename']}")
+                    except Exception as ml_e:
+                        print(f"[BATCH-THREAD] ML correction failed: {ml_e}")
+
                     file_info['ocr_result'] = {
                         'text': raw_text,
                         'confidence': confidence
@@ -296,6 +325,47 @@ def process_batch_ocr(queue_id):
         'message': 'Batch processing started',
         'async': True
     }), 202
+
+@api_queue_bp.route('/<queue_id>/reprocess', methods=['POST'])
+def reprocess_batch(queue_id):
+    """
+    Reset non-validated files in a queue to 'pending' state
+    so they can be re-processed (e.g. after code fixes)
+    """
+    if queue_id not in queue_store:
+        return jsonify({'success': False, 'message': 'Queue not found'}), 404
+    
+    queue = queue_store[queue_id]
+    
+    # Reset status
+    count = 0
+    for f in queue['files']:
+        # Reset everything that isn't finalized
+        if f['status'] != 'validated': 
+            f['status'] = 'pending'
+            # Keep crop if exists, but clear results
+            f['ocr_result'] = None 
+            f['parsed_data'] = None
+            count += 1
+            
+    # Reset queue state
+    queue['phase'] = 'crop' # Will let them review crops or click Process again
+    queue['current_index'] = 0
+    
+    # Recalculate completed/skipped just in case
+    queue['completed'] = sum(1 for f in queue['files'] if f['status'] == 'validated')
+    queue['skipped'] = sum(1 for f in queue['files'] if f['status'] == 'skipped') # Actually we probably want to re-process skipped too?
+    # Let's keep skipped as skipped unless user wants full reset? 
+    # Usually re-process means "try logic again", checking skipped might be useful.
+    # For now, let's strictly reset "processed but not validated".
+    
+    save_queue_store(queue_store)
+    
+    return jsonify({
+        'success': True, 
+        'message': f'Batch reset for reprocessing. {count} files ready.',
+        'reset_count': count
+    })
 
 @api_queue_bp.route('/<queue_id>/current', methods=['GET'])
 def get_current_receipt(queue_id):
@@ -547,9 +617,15 @@ def run_ocr(queue_id):
         print(f"[OCR] Confidence: {confidence}, Text length: {len(raw_text)}")
         print(f"[OCR] Running parser...")
         
-        # Parse
         parsed_data = parse_receipt_text(raw_text)
         print(f"[OCR] Parser complete")
+        
+        # ✨ Apply ML Learned Corrections
+        try:
+            parsed_data = MLTrainingService.apply_learned_corrections(parsed_data, raw_text)
+            print(f"[OCR] Applied ML corrections")
+        except Exception as ml_e:
+            print(f"[OCR] ML correction failed: {ml_e}")
         
         # Store results
         queue['files'][current_index]['ocr_result'] = {

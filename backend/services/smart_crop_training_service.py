@@ -6,9 +6,13 @@ Trains crop detection models from user-corrected crop boundaries
 import os
 import json
 import numpy as np
+import logging
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 from backend.services.ml_feedback_service import MLFeedbackService
+
+# Initialize ML logger
+ml_logger = logging.getLogger('ml')
 
 
 class SmartCropTrainingService:
@@ -78,39 +82,47 @@ class SmartCropTrainingService:
             annotations_file = MLFeedbackService.ANNOTATIONS_FILE
             training_examples = []
             
+            skipped_no_auto = 0
+            skipped_invalid = 0
             if os.path.exists(annotations_file):
                 with open(annotations_file, 'r') as f:
                     for line in f:
                         try:
                             record = json.loads(line)
-                            
+
                             # CRITICAL: Need BOTH auto-detected and user crops!
                             auto_crop = record.get('auto_crop', {})
                             user_crop = record.get('user_crop', {})
-                            
+
                             # Skip if missing auto-detected crop (can't learn delta!)
                             if not auto_crop or not user_crop:
+                                skipped_no_auto += 1
                                 continue
-                            
+
                             # Extract crop coordinates
                             auto_x = auto_crop.get('x', 0)
                             auto_y = auto_crop.get('y', 0)
                             auto_w = auto_crop.get('width', 0)
                             auto_h = auto_crop.get('height', 0)
-                            
+
                             user_x = user_crop.get('x', 0)
                             user_y = user_crop.get('y', 0)
                             user_w = user_crop.get('width', 0)
                             user_h = user_crop.get('height', 0)
-                            
+
+                            # Filter out obviously-bad auto_crop entries (tiny sizes)
+                            if auto_w < 20 or auto_h < 20 or user_w < 20 or user_h < 20:
+                                skipped_invalid += 1
+                                continue
+
                             # Calculate delta (correction)
                             delta_x = user_x - auto_x
                             delta_y = user_y - auto_y
                             delta_w = user_w - auto_w
                             delta_h = user_h - auto_h
-                            
+
                             delta_magnitude = abs(delta_x) + abs(delta_y) + abs(delta_w) + abs(delta_h)
-                            
+
                             example = {
                                 'image_id': record.get('id'),
                                 'auto_crop': {
@@ -134,14 +146,14 @@ class SmartCropTrainingService:
                                 'delta_magnitude': delta_magnitude,
                                 'timestamp': record.get('timestamp')
                             }
-                            
+
                             training_examples.append(example)
-                            
+
                             if limit and len(training_examples) >= limit:
                                 break
-                        
+
                         except Exception as e:
-                            print(f"[SMART-CROP-TRAINING] Error parsing annotation: {e}")
+                            ml_logger.exception(f"[SMART-CROP-TRAINING] Error parsing annotation: {e}")
                             continue
             
             # Calculate average deltas
@@ -160,11 +172,13 @@ class SmartCropTrainingService:
                 'avg_y_delta': float(avg_y_delta),
                 'avg_w_delta': float(avg_w_delta),
                 'avg_h_delta': float(avg_h_delta),
+                'skipped_no_auto': int(locals().get('skipped_no_auto', 0)),
+                'skipped_invalid_auto': int(locals().get('skipped_invalid', 0)),
                 'message': f'Collected {len(training_examples)} crop training examples with deltas'
             }
             
         except Exception as e:
-            print(f"[SMART-CROP-TRAINING] Error collecting training data: {e}")
+            ml_logger.exception(f"[SMART-CROP-TRAINING] Error collecting training data: {e}")
             return {
                 'training_examples': [],
                 'total_examples': 0,
@@ -256,7 +270,7 @@ class SmartCropTrainingService:
             }
             
         except Exception as e:
-            print(f"[SMART-CROP-TRAINING] Training failed: {e}")
+            ml_logger.exception(f"[SMART-CROP-TRAINING] Training failed: {e}")
             return {
                 'status': 'failed',
                 'message': str(e),
@@ -395,7 +409,7 @@ class SmartCropTrainingService:
             }
         
         except Exception as e:
-            print(f"[SMART-CROP-TRAINING] Error getting status: {e}")
+            ml_logger.exception(f"[SMART-CROP-TRAINING] Error getting status: {e}")
             return {
                 'model_available': False,
                 'error': str(e)
@@ -414,7 +428,7 @@ class SmartCropTrainingService:
                 with open(cls.SMART_CROP_MODEL, 'r') as f:
                     return json.load(f)
         except Exception as e:
-            print(f"[SMART-CROP-TRAINING] Error loading model: {e}")
+            ml_logger.exception(f"[SMART-CROP-TRAINING] Error loading model: {e}")
         
         return None
     
@@ -510,7 +524,7 @@ class SmartCropTrainingService:
             }
         
         except Exception as e:
-            print(f"[SMART-CROP-TRAINING] Error applying corrections: {e}")
+            ml_logger.exception(f"[SMART-CROP-TRAINING] Error applying corrections: {e}")
             return {
                 'corrected_crop': auto_crop,
                 'applied_corrections': {'x': 0, 'y': 0, 'width': 0, 'height': 0},
@@ -575,7 +589,7 @@ class SmartCropTrainingService:
             }
         
         except Exception as e:
-            print(f"[SMART-CROP-TRAINING] Error applying suggestions: {e}")
+            ml_logger.exception(f"[SMART-CROP-TRAINING] Error applying suggestions: {e}")
             return {
                 'original_crop': auto_detected_crop,
                 'suggested_crop': auto_detected_crop,

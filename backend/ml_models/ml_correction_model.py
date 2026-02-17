@@ -9,6 +9,7 @@ This module contains:
 import json
 import os
 from datetime import datetime
+import re
 from collections import defaultdict
 import statistics
 
@@ -174,6 +175,11 @@ class ParsingCorrectionModel:
         self.model_version = self.MODEL_VERSION
         self.parsing_corrections = {}  # {field: {auto_value: [user_values]}}
         self.field_stats = {}  # {field: {auto: {corrected: count}}}
+        
+        # New: Anchor Learning
+        # {supplier_name: {field_name: {anchor_text: count}}}
+        self.learned_anchors = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
+        
         self.last_trained = None
         self.total_samples = 0
         self._model_dir = os.path.normpath(os.path.abspath(os.path.join(os.path.dirname(__file__))))
@@ -264,15 +270,137 @@ class ParsingCorrectionModel:
             'fields': list(self.parsing_corrections.keys())
         }
     
+    def learn_anchor(self, field_name: str, raw_ocr: str, corrected_value: str, supplier_name: str):
+        """
+        Learn the textual anchor (label) preceding a corrected value.
+        Used for adaptive parsing.
+        """
+        if not all([field_name, raw_ocr, corrected_value, supplier_name]):
+            return
+
+        # Find what text comes immediately before the corrected_value
+        anchor = self._find_anchor_in_text(raw_ocr, corrected_value)
+        if anchor:
+            # Store anchor for this supplier & field
+            # Use supplier hash or name as key
+            supplier_key = supplier_name.strip().upper()
+            self.learned_anchors[supplier_key][field_name][anchor] += 1
+            self.last_trained = datetime.now()
+
+    def _find_anchor_in_text(self, text: str, target_value: str) -> str:
+        """
+        Finds the 2-4 words immediately preceding the target_value in text.
+        Returns the anchor string or None.
+        """
+        if not target_value or not text:
+            return None
+            
+        # Generate candidates (handle Date format differences)
+        candidates = [target_value]
+        # Check if target is ISO date (YYYY-MM-DD)
+        if re.match(r'^\d{4}-\d{2}-\d{2}$', target_value):
+            try:
+                dt_obj = datetime.strptime(target_value, "%Y-%m-%d")
+                candidates.extend([
+                    dt_obj.strftime("%d/%m/%Y"), # 04/01/2026
+                    dt_obj.strftime("%d-%m-%Y"), # 04-01-2026
+                    dt_obj.strftime("%d.%m.%Y"), # 04.01.2026
+                    dt_obj.strftime("%Y/%m/%d"), # 2026/01/04
+                    dt_obj.strftime("%d-%b-%Y"), # 04-Jan-2026
+                ])
+            except ValueError:
+                pass
+        
+        for val in candidates:
+            try:
+                # Escape target for regex
+                escaped_target = re.escape(val)
+                
+                # Look for: (Anchor Group) + (Optional Whitespace/Separators) + Target
+                # Capture up to 30 chars before the target
+                pattern = re.compile(r"(.{2,30}?)\s*[:=-]?\s*" + escaped_target, re.IGNORECASE | re.DOTALL)
+                
+                matches = list(pattern.finditer(text))
+                if matches:
+                            # Take the last match (often the most immediate one if duplicates exist)
+                    match = matches[-1]
+                    anchor_candidate = match.group(1).strip()
+                    
+                    # Cleanup: Take last 3-4 words max to avoid capturing whole paragraphs
+                    words = anchor_candidate.split()
+                    if len(words) > 4:
+                        anchor_candidate = " ".join(words[-4:])
+                    
+                    # Cleanup: Remove trailing separators
+                    anchor_candidate = re.sub(r"[\s:=-]+$", "", anchor_candidate).strip()
+                    
+                    if len(anchor_candidate) > 2:
+                        return anchor_candidate
+            except Exception:
+                continue
+                
+        return None
+
+    def find_value_by_anchor(self, field_name: str, raw_ocr: str, supplier_name: str) -> dict:
+        """
+        Scan raw OCR for values using learned anchors for this supplier.
+        """
+        if not supplier_name:
+            return None
+        
+        supplier_key = supplier_name.strip().upper()
+        if supplier_key not in self.learned_anchors:
+            return None
+            
+        anchors = self.learned_anchors[supplier_key].get(field_name, {})
+        if not anchors:
+            return None
+            
+        # Sort anchors by frequency (most common first)
+        sorted_anchors = sorted(anchors.items(), key=lambda x: x[1], reverse=True)
+        
+        for anchor_text, count in sorted_anchors:
+            if count < 1: continue # Ignore noise
+            
+            try:
+                # Regex: Anchor + Separators + (Capture Value)
+                # Value: Non-newline chars until end of line or long space
+                escaped_anchor = re.escape(anchor_text)
+                pattern = re.compile(escaped_anchor + r"\s*[:=-]?\s*([^\n]+)", re.IGNORECASE)
+                
+                match = pattern.search(raw_ocr)
+                if match:
+                    value = match.group(1).strip()
+                    # Basic cleanup
+                    value = re.sub(r"\s{2,}.*", "", value) # Stop at double space
+                    return {
+                        'value': value,
+                        'confidence': 0.8 + (min(count, 10) / 50.0), # Higher count = higher confidence
+                        'anchor': anchor_text
+                    }
+            except Exception:
+                continue
+                
+        return None
+
     def save_model(self, filename: str = 'parsing_corrections_model.json'):
         """Save model to JSON file"""
         try:
             filepath = os.path.join(self._model_dir, filename)
+            
+            # Convert nested defaultdicts to standard dicts for JSON
+            learned_anchors_dict = {}
+            for supp, fields in self.learned_anchors.items():
+                learned_anchors_dict[supp] = {}
+                for fld, anchors in fields.items():
+                    learned_anchors_dict[supp][fld] = dict(anchors)
+
             model_data = {
                 'version': self.model_version,
                 'trained_at': self.last_trained.isoformat() if self.last_trained else None,
                 'total_samples': self.total_samples,
                 'parsing_corrections': self.parsing_corrections,
+                'learned_anchors': learned_anchors_dict,
                 'field_stats': {
                     field: {auto: dict(corrections) for auto, corrections in stats.items()}
                     for field, stats in self.field_stats.items()
@@ -304,6 +432,14 @@ class ParsingCorrectionModel:
             self.total_samples = model_data.get('total_samples', 0)
             self.parsing_corrections = model_data.get('parsing_corrections', {})
             
+            # Restore learned anchors
+            anchors_data = model_data.get('learned_anchors', {})
+            self.learned_anchors = defaultdict(lambda: defaultdict(lambda: defaultdict(int)))
+            for supp, fields in anchors_data.items():
+                for fld, anchors in fields.items():
+                    for anchor, count in anchors.items():
+                        self.learned_anchors[supp][fld][anchor] = count
+
             # Restore field_stats
             self.field_stats = {}
             for field, stats_dict in model_data.get('field_stats', {}).items():

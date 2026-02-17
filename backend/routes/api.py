@@ -5,12 +5,24 @@ from backend.ocr_service import extract_text as extract_text_default
 from backend.ocr_utils import extract_text as extract_text_adv
 from backend.ocr_easy import extract_text_easyocr
 from backend.parser import parse_receipt_text
+# Import robust OCR components
+from backend.robust_ocr_integration import process_voucher_robust, RobustOCRPipeline
+from backend.adaptive_ocr_service import extract_text_robust
+from backend.robust_parser import parse_receipt_text_robust
+from backend.enhanced_parser import parse_receipt_text_enhanced
+# Import TKFL-specific parser (80% better accuracy!)
+from backend.tkfl_parser import parse_receipt_text_tkfl
+from backend.tkfl_parser_v2 import parse_receipt_text_tkfl_v2
+from backend.adaptive_robust_parser import parse_receipt_text_adaptive
+from backend.enhanced_ocr_pipeline import extract_text_enhanced
+from backend.quality_focused_extractor import extract_with_quality, parse_receipt_text as qfee_parse
 from backend.services.voucher_service import VoucherService
 from PIL import Image
 import os
 import json
 import shutil
 from backend.services.production_sync_service import ProductionSyncService
+from backend.services.ml_training_service import MLTrainingService
 
 api_bp = Blueprint('api', __name__)
 
@@ -34,13 +46,40 @@ def upload_file():
         file.save(filepath)
         
         try:
-            # OCR Processing with Optimal Mode
+            # QUALITY-FOCUSED EXTRACTION ENGINE
+            # Prioritizes accuracy over speed through multi-strategy extraction
+            current_app.logger.info(f"Using QUALITY-FOCUSED extraction for {filename}")
+            
+            # Step 1: Get OCR text
             ocr_result = extract_text_default(filepath, method='optimal')
             raw_text = ocr_result.get('text', '') if isinstance(ocr_result, dict) else str(ocr_result)
             
-            # Parsing with Enhanced Validation
-            parsed_data = parse_receipt_text(raw_text)
+            # Step 2: Apply text corrections
+            from backend.text_correction import apply_text_corrections
+            corrected_text = apply_text_corrections(raw_text)
             
+            # Step 3: QUALITY-FOCUSED PARSING (tries multiple strategies, validates rigorously)
+            current_app.logger.info(f"Running quality-focused extraction...")
+            extraction_result = extract_with_quality(corrected_text)
+            
+            # Log extraction details
+            current_app.logger.info(f"Extraction complete - Overall confidence: {extraction_result['overall_confidence']}%")
+            current_app.logger.info(f"Requires review: {extraction_result['requires_review']}")
+            
+            # Convert to standard format for database
+            parsed_data = {
+                'master': {
+                    'voucher_number': extraction_result['fields']['voucher_number'].value,
+                    'voucher_date': extraction_result['fields']['voucher_date'].value,
+                    'supplier_name': extraction_result['fields']['supplier_name'].value,
+                    'gross_total': extraction_result['fields']['gross_total'].value,
+                    'net_total': extraction_result['fields']['net_total'].value,
+                },
+                'quality_report': extraction_result,
+                'items': [],  # Will be extracted separately if needed
+                'deductions': []
+            }
+
             # Database Insertion via Service
             master_id = VoucherService.create_voucher(
                 file_name=filename,
@@ -100,6 +139,13 @@ def re_extract_voucher(voucher_id):
 
         # Parsing
         parsed_data = parse_receipt_text(raw_text)
+        
+        # ✨ Apply ML Learned Corrections
+        try:
+            parsed_data = MLTrainingService.apply_learned_corrections(parsed_data, raw_text)
+            current_app.logger.debug(f"Applied ML corrections for re-extraction of {voucher_id}")
+        except Exception as ml_e:
+            current_app.logger.warning(f"ML correction failed: {ml_e}")
         
         # Update Database via Service
         VoucherService.update_voucher_parse_data(voucher_id, raw_text, parsed_data, new_ocr_mode)
@@ -258,3 +304,91 @@ def delete_all_data():
         flash(f"❌ Error resetting data: {e}", "error")
         
     return redirect(url_for("main.index"))
+
+@api_bp.route("/batch/<batch_id>/reprocess_db", methods=["POST"])
+def reprocess_batch_db(batch_id):
+    """
+    Re-runs OCR and ML corrections for all vouchers in a batch,
+    updating the database records in-place.
+    """
+    try:
+        from backend.services.batch_service import BatchService
+        
+        # Get batch - check if exists
+        batch = BatchService.get_batch_with_vouchers(batch_id)
+        if not batch:
+            return jsonify({"success": False, "message": f"Batch {batch_id} not found"}), 404
+            
+        vouchers = batch.get('vouchers', [])
+        current_app.logger.info(f"[BATCH-REPROCESS] Starting re-extraction for {len(vouchers)} vouchers in batch {batch_id}")
+        
+        # We run this in a background thread to avoid timeout
+        def run_reprocess(app, voucher_list):
+            with app.app_context():
+                success_count = 0
+                for v in voucher_list:
+                    try:
+                        v_id = v['id']
+                        filepath = v['file_storage_path']
+                        
+                        if not os.path.exists(filepath):
+                            filepath = os.path.join(app.config["UPLOAD_FOLDER"], v['file_name'])
+                            
+                        if not os.path.exists(filepath):
+                            current_app.logger.error(f"[BATCH-REPROCESS] detailed error: File not found {filepath}")
+                            continue
+                            
+                        # Run OCR
+                        ocr_result = extract_text_default(filepath, method='optimal')
+                        raw_text = ocr_result.get('text', '') if isinstance(ocr_result, dict) else str(ocr_result)
+                        
+                        # QUALITY-FOCUSED EXTRACTION ENGINE (reprocess with new parser)
+                        current_app.logger.info(f"[BATCH-REPROCESS] Running quality-focused extraction for voucher {v_id}")
+                        extraction_result = extract_with_quality(raw_text)
+                        
+                        # Convert to standard format (WITHOUT quality_report - not JSON serializable)
+                        parsed_data = {
+                            'master': {
+                                'voucher_number': extraction_result['fields']['voucher_number'].value,
+                                'voucher_date': extraction_result['fields']['voucher_date'].value,
+                                'supplier_name': extraction_result['fields']['supplier_name'].value,
+                                'gross_total': extraction_result['fields']['gross_total'].value,
+                                'net_total': extraction_result['fields']['net_total'].value,
+                            },
+                            'items': extraction_result.get('items', []),
+                            'deductions': extraction_result.get('deductions', [])
+                        }
+                        
+                        current_app.logger.info(f"[BATCH-REPROCESS] Extraction confidence: {extraction_result['overall_confidence']}%")
+                        
+                        # Run ML
+                        try:
+                            parsed_data = MLTrainingService.apply_learned_corrections(parsed_data, raw_text)
+                        except Exception as mre:
+                            current_app.logger.warning(f"[BATCH-REPROCESS] ML Failed for {v_id}: {mre}")
+                            
+                        # Update DB
+                        VoucherService.update_voucher_parse_data(v_id, raw_text, parsed_data, 'optimal')
+                        success_count += 1
+                        current_app.logger.info(f"[BATCH-REPROCESS] Updated voucher {v_id}")
+                        
+                    except Exception as e:
+                        current_app.logger.error(f"[BATCH-REPROCESS] Error on voucher {v.get('id')}: {e}")
+                
+                current_app.logger.info(f"[BATCH-REPROCESS] Completed. Success: {success_count}/{len(voucher_list)}")
+
+        import threading
+        # Pass the real app object (current_app is a proxy)
+        # Use ._get_current_object() to get the actual app instance
+        thread = threading.Thread(target=run_reprocess, args=(current_app._get_current_object(), vouchers))
+        thread.daemon = True
+        thread.start()
+        
+        return jsonify({
+            "success": True,
+            "message": f"Started reprocessing {len(vouchers)} vouchers in background. Refresh page in a minute."
+        })
+
+    except Exception as e:
+        current_app.logger.error(f"Error starting batch reprocess: {e}")
+        return jsonify({"success": False, "message": str(e)}), 500

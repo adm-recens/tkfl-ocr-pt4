@@ -1,49 +1,49 @@
 {
   "version": "2.0",
-  "trained_at": "2026-01-28T13:22:32.054440",
-  "total_examples": 49,
+  "trained_at": "2026-02-06T17:12:07.036854",
+  "total_examples": 101,
   "patterns": [
     {
       "pattern_type": "correction_deltas",
       "description": "Learned corrections to apply to auto-detected crops",
-      "mean_x_delta": 0.2400630797773695,
-      "mean_y_delta": 71.68936734693878,
-      "mean_w_delta": -34.96408163265306,
-      "mean_h_delta": 366.74626530612244,
-      "std_x_delta": 7.115272882137709,
-      "std_y_delta": 112.23506777982794,
-      "std_w_delta": 79.51160482412378,
-      "std_h_delta": 728.181631496125,
-      "note": "Apply these deltas to auto-detected crops: x+0, y+72, w+-35, h+367"
+      "mean_x_delta": 0.46425832583258836,
+      "mean_y_delta": 184.0489108910891,
+      "mean_w_delta": -55.11552475247526,
+      "mean_h_delta": -200.52257425742576,
+      "std_x_delta": 10.963737203814384,
+      "std_y_delta": 139.94866397787456,
+      "std_w_delta": 63.50824271263855,
+      "std_h_delta": 845.0192884164882,
+      "note": "Apply these deltas to auto-detected crops: x+0, y+184, w+-55, h+-201"
     },
     {
       "pattern_type": "expected_crop_size",
-      "avg_width": 785.3420408163265,
-      "avg_height": 1037.583,
-      "avg_x": 1.158430426716145,
-      "avg_y": 189.48528571428568,
-      "width_std": 42.38781313016182,
-      "height_std": 189.06946256692788,
-      "aspect_ratio": 0.7568956322687693
+      "avg_width": 786.4686336633664,
+      "avg_height": 884.7843564356435,
+      "avg_x": 1.711783078307836,
+      "avg_y": 290.7617821782178,
+      "width_std": 52.01611676282284,
+      "height_std": 208.3200524644799,
+      "aspect_ratio": 0.8888817121853936
     }
   ],
   "learned_corrections": {
     "x_adjustment": 0,
-    "y_adjustment": 72,
-    "width_adjustment": -35,
-    "height_adjustment": 367
+    "y_adjustment": 184,
+    "width_adjustment": -55,
+    "height_adjustment": -201
   },
   "avg_crop_size": {
-    "width": 785.3420408163265,
-    "height": 1037.583,
-    "aspect_ratio": 0.7568956322687693
+    "width": 786.4686336633664,
+    "height": 884.7843564356435,
+    "aspect_ratio": 0.8888817121853936
   },
   "crop_variations": {
-    "width_std": 42.38781313016182,
-    "height_std": 189.06946256692788,
-    "x_delta_std": 7.115272882137709,
-    "y_delta_std": 112.23506777982794,
-    "w_delta_std": 79.51160482412378,
-    "h_delta_std": 728.181631496125
+    "width_std": 52.01611676282284,
+    "height_std": 208.3200524644799,
+    "x_delta_std": 10.963737203814384,
+    "y_delta_std": 139.94866397787456,
+    "w_delta_std": 63.50824271263855,
+    "h_delta_std": 845.0192884164882
   }
 }

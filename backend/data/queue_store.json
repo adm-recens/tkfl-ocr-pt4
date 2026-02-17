@@ -3340,5 +3340,85 @@
         "completed": 0,
         "skipped": 0,
         "created_at": "2026-01-27T13:26:26.111108"
+    },
+    "7e301916-3ca5-4dd4-bfb7-cf3c679f91da": {
+        "queue_id": "7e301916-3ca5-4dd4-bfb7-cf3c679f91da",
+        "batch_id": "d3c1a125-d677-4d21-b7a2-69851df5f3a2",
+        "files": [
+            {
+                "original_filename": "006ec791-87fb-4998-93d3-ff7630453cdd.jpeg",
+                "original_path": "c:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt5\\uploads\\7e301916-3ca5-4dd4-bfb7-cf3c679f91da_006ec791-87fb-4998-93d3-ff7630453cdd.jpeg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending",
+                "auto_crop_info": null
+            },
+            {
+                "original_filename": "0e50bb07-2e1b-4115-9eb5-5f53b9e318ab.jpeg",
+                "original_path": "c:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt5\\uploads\\7e301916-3ca5-4dd4-bfb7-cf3c679f91da_0e50bb07-2e1b-4115-9eb5-5f53b9e318ab.jpeg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending",
+                "auto_crop_info": {
+                    "bbox": [
+                        0,
+                        80,
+                        860,
+                        772
+                    ],
+                    "confidence": 0.85,
+                    "method": "contour_detection"
+                }
+            },
+            {
+                "original_filename": "0e9551f3-b718-48a0-aa86-fd81f1203c55.jpeg",
+                "original_path": "c:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt5\\uploads\\7e301916-3ca5-4dd4-bfb7-cf3c679f91da_0e9551f3-b718-48a0-aa86-fd81f1203c55.jpeg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending",
+                "auto_crop_info": {
+                    "bbox": [
+                        0,
+                        80,
+                        860,
+                        1568
+                    ],
+                    "confidence": 0.75,
+                    "method": "contour_detection"
+                }
+            },
+            {
+                "original_filename": "0ff3b541-6452-43f8-a6d3-f2eca85f0896.jpeg",
+                "original_path": "c:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt5\\uploads\\7e301916-3ca5-4dd4-bfb7-cf3c679f91da_0ff3b541-6452-43f8-a6d3-f2eca85f0896.jpeg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending",
+                "auto_crop_info": null
+            },
+            {
+                "original_filename": "13bc7827-3dd8-4074-b405-d3b0b41b5212.jpeg",
+                "original_path": "c:\\Users\\ramst\\Documents\\apps\\tkfl_ocr\\pt5\\uploads\\7e301916-3ca5-4dd4-bfb7-cf3c679f91da_13bc7827-3dd8-4074-b405-d3b0b41b5212.jpeg",
+                "cropped_path": null,
+                "ocr_result": null,
+                "parsed_data": null,
+                "validated_data": null,
+                "status": "pending",
+                "auto_crop_info": null
+            }
+        ],
+        "current_index": 0,
+        "phase": "crop",
+        "total": 5,
+        "completed": 0,
+        "skipped": 0,
+        "created_at": "2026-02-02T13:52:36.775824"
     }
 }

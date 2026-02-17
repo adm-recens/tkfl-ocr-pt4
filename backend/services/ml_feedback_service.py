@@ -2,6 +2,11 @@ import os
 import json
 import shutil
 import uuid
+import cv2
+import logging
+
+# ML logger (configured by backend.logger.configure_logging)
+ml_logger = logging.getLogger('ml')
 from datetime import datetime
 
 class MLFeedbackService:
@@ -43,8 +48,18 @@ class MLFeedbackService:
             cls._ensure_dirs()
             
             if not os.path.exists(original_image_path):
-                print(f"[ML-FEEDBACK] Error: Source image not found at {original_image_path}")
+                ml_logger.error(f"[ML-FEEDBACK] Error: Source image not found at {original_image_path}")
                 return False
+
+            # Read image to capture original dimensions (helps training and metadata)
+            try:
+                img = cv2.imread(original_image_path)
+                if img is not None:
+                    original_h, original_w = img.shape[:2]
+                else:
+                    original_w = original_h = 0
+            except Exception:
+                original_w = original_h = 0
 
             # Generate unique ID for this training example
             example_id = str(uuid.uuid4())
@@ -58,7 +73,34 @@ class MLFeedbackService:
             # Copy original image (we want the FULL image to train the detector)
             shutil.copy2(original_image_path, target_image_path)
             
-            # Create annotation record
+            # Normalize / validate crop_data
+            required_keys = ['x', 'y', 'width', 'height']
+            for k in required_keys:
+                if k not in crop_data:
+                    ml_logger.error(f"[ML-FEEDBACK] Error: crop_data missing required key '{k}'")
+                    return False
+
+            # If auto_crop_data not provided, attempt to run detector to obtain it
+            if not auto_crop_data:
+                try:
+                    from backend.smart_crop import SmartReceiptDetector
+                    detector = SmartReceiptDetector()
+                    det_res = detector.detect_receipt(original_image_path)
+                    if det_res and det_res.get('success') and det_res.get('bbox'):
+                        bbox = det_res.get('bbox')
+                        auto_crop_data = {
+                            'x': bbox[0],
+                            'y': bbox[1],
+                            'width': bbox[2],
+                            'height': bbox[3],
+                            'confidence': det_res.get('confidence'),
+                            'method': det_res.get('method')
+                        }
+                        ml_logger.info(f"[ML-FEEDBACK] Auto-detected crop for {example_id} with confidence {det_res.get('confidence')}")
+                except Exception as e:
+                    ml_logger.warning(f"[ML-FEEDBACK] Auto-detection failed while saving feedback: {e}")
+
+            # Create annotation record with real image dimensions
             record = {
                 "id": example_id,
                 "timestamp": datetime.now().isoformat(),
@@ -68,21 +110,24 @@ class MLFeedbackService:
                 "auto_crop": auto_crop_data if auto_crop_data else {},  # What auto-detect found (for learning delta!)
                 "metadata": {
                     "source": "user_correction",
-                    "original_width": 0, # Could retrieve if needed
-                    "original_height": 0,
-                    "has_auto_crop": auto_crop_data is not None  # Track if we have delta data
+                    "original_width": original_w,
+                    "original_height": original_h,
+                    "has_auto_crop": bool(auto_crop_data)
                 }
             }
+
+            if not auto_crop_data:
+                ml_logger.warning(f"[ML-FEEDBACK] save_crop_feedback called without auto_crop_data for {example_id} - deltas cannot be learned for this example")
 
             # Append to JSONL file
             with open(cls.ANNOTATIONS_FILE, "a") as f:
                 f.write(json.dumps(record) + "\n")
                 
-            print(f"[ML-FEEDBACK] Saved training example {example_id} (auto_crop: {auto_crop_data is not None})")
+                ml_logger.info(f"[ML-FEEDBACK] Saved training example {example_id} (auto_crop: {auto_crop_data is not None})")
             return True
             
         except Exception as e:
-            print(f"[ML-FEEDBACK] Error saving feedback: {e}")
+            ml_logger.exception(f"[ML-FEEDBACK] Error saving feedback: {e}")
             return False
 
     @classmethod
@@ -165,11 +210,11 @@ class MLFeedbackService:
             with open(cls.BATCH_CORRECTIONS_FILE, 'a') as f:
                 f.write(json.dumps(record) + '\n')
             
-            print(f"[ML-FEEDBACK] Batch validation feedback saved: voucher_id={voucher_id}, corrections={len(corrections)} fields")
+            ml_logger.info(f"[ML-FEEDBACK] Batch validation feedback saved: voucher_id={voucher_id}, corrections={len(corrections)} fields")
             return True
             
         except Exception as e:
-            print(f"[ML-FEEDBACK] Error saving batch validation feedback: {e}")
+            ml_logger.exception(f"[ML-FEEDBACK] Error saving batch validation feedback: {e}")
             return False
 
     @classmethod
@@ -222,11 +267,11 @@ class MLFeedbackService:
             with open(cls.REGULAR_CORRECTIONS_FILE, 'a') as f:
                 f.write(json.dumps(record) + '\n')
             
-            print(f"[ML-FEEDBACK] Regular validation feedback saved: voucher_id={voucher_id}, corrections={len(corrections)} fields")
+            ml_logger.info(f"[ML-FEEDBACK] Regular validation feedback saved: voucher_id={voucher_id}, corrections={len(corrections)} fields")
             return True
             
         except Exception as e:
-            print(f"[ML-FEEDBACK] Error saving regular validation feedback: {e}")
+            ml_logger.exception(f"[ML-FEEDBACK] Error saving regular validation feedback: {e}")
             return False
 
     @classmethod
@@ -275,7 +320,7 @@ class MLFeedbackService:
             return corrections
             
         except Exception as e:
-            print(f"[ML-FEEDBACK] Error getting corrections: {e}")
+            ml_logger.exception(f"[ML-FEEDBACK] Error getting corrections: {e}")
             return {'error': str(e)}
 
     @classmethod
@@ -331,5 +376,46 @@ class MLFeedbackService:
             
             return stats
         except Exception as e:
-            print(f"[ML-FEEDBACK] Error getting stats: {e}")
+            ml_logger.exception(f"[ML-FEEDBACK] Error getting stats: {e}")
+            return {'error': str(e)}
+
+    @classmethod
+    def scan_annotations_stats(cls) -> dict:
+        """
+        Scan `annotations.jsonl` and report counts of records with/without auto_crop
+        and with suspicious auto_crop sizes. Useful to decide cleaning/filters.
+        """
+        try:
+            stats = {
+                'total_annotations': 0,
+                'has_auto_crop': 0,
+                'missing_auto_crop': 0,
+                'small_auto_crop': 0,
+                'examples': []
+            }
+
+            if not os.path.exists(cls.ANNOTATIONS_FILE):
+                return stats
+
+            with open(cls.ANNOTATIONS_FILE, 'r') as f:
+                for i, line in enumerate(f):
+                    stats['total_annotations'] += 1
+                    try:
+                        record = json.loads(line)
+                    except Exception:
+                        continue
+
+                    auto = record.get('auto_crop', {})
+                    if auto and isinstance(auto, dict) and auto.get('width', 0) and auto.get('height', 0):
+                        stats['has_auto_crop'] += 1
+                        if auto.get('width', 0) < 20 or auto.get('height', 0) < 20:
+                            stats['small_auto_crop'] += 1
+                            if len(stats['examples']) < 5:
+                                stats['examples'].append({'id': record.get('id'), 'auto_crop': auto})
+                    else:
+                        stats['missing_auto_crop'] += 1
+
+            return stats
+        except Exception as e:
+            ml_logger.exception(f"[ML-FEEDBACK] Error scanning annotations: {e}")
             return {'error': str(e)}
