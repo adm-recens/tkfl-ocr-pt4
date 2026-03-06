@@ -1,80 +1,108 @@
-# AI Context Document: VoucherOCR Platform
+# AI Context Document: VoucherOCR Platform (Full Application)
 
-**Instruction for AI Models:** *When starting a new session or task on this repository, you MUST read this document thoroughly to understand the system architecture, the purpose of each component, and the strict rules for development.*
+**Instruction for AI Models:** *When starting a new session or task on this repository, you MUST read this document thoroughly to understand the ENTIRE system architecture, the purpose of each component, the data flows, and the strict rules for development.*
 
 ## 1. Description and Purpose
-VoucherOCR is a complex optical character recognition and ML-powered parsing system tailored for extracting structured financial data from highly irregular supplier receipts (such as those from local Indian suppliers). It includes automatic receipt cropping, regex-based initial parsing, and an active Machine Learning feedback loop that trains on human corrections.
+VoucherOCR is a comprehensive, end-to-end optical character recognition (OCR) and Machine Learning-powered data extraction application. Its primary goal is to process highly irregular supplier receipts and invoices (such as those from local Indian markets) and extract structured financial data (Dates, Totals, Deductions, Supplier Names). 
+
+The platform supports bulk image processing, automated "smart cropping" to remove background noise, a deep regex-based parser, a Human-in-the-Loop validation UI, and an active Machine Learning feedback loop that trains on human corrections.
 
 ---
 
-## 2. Core Architecture & Pipeline
-
-The system is built on a **Python Flask backend** and a **Vanilla JS / TailwindCSS frontend**.
-
-### Data Processing Pipeline (The Critical Flow):
-When an image is uploaded, it passes through the following highly specific sequence:
-
-1. **Smart Crop Detection (`backend.smart_crop`):** OpenCV detects the actual receipt boundary against dark backgrounds and crops it, enhancing OCR readability.
-2. **Text Extraction Pipeline (`backend.ocr_service`):** The image is fed to Tesseract.
-3. **ML Phase 1 - Character Level Correction (`backend.services.ml_training_service.apply_ocr_character_corrections`):** Before *any* parsing begins, the ML model looks at the raw OCR text and applies high-confidence character swaps (e.g., swapping `O` for `0` or `1` for `l`) learned from past user validation.
-4. **Base Parsing (`backend.tkfl_parser_v2.TKFLReceiptParserV2`):** The cleanly swapped text is processed by a massive suite of regular expressions that look for common date formats, totals, and deduction fields.
-5. **ML Phase 2 - Fuzzy Anchor Overrides (`backend.ml_models.ml_correction_model` & `ml_training_service`):** The ML engine overrides the Base Parser. If a user previously corrected an extraction on a supplier's receipt, the system remembers the *anchor text* near the corrected value (using `SequenceMatcher` for fuzzy matching to defeat OCR typos). High-confidence ML predictions *always* overwrite the regex extraction.
+## 2. Technology Stack
+- **Backend:** Python 3.9+, Flask (Routing, API).
+- **Frontend:** HTML5, Vanilla JavaScript (ES6+), Server-Side Templating (Jinja2), TailwindCSS (Styling).
+- **Core Processing:** Tesseract OCR (Text Extraction), OpenCV (Image Manipulation & Contours).
+- **Database:** SQLite3 (Built-in, raw SQL data access combined with light service objects).
 
 ---
 
-## 3. UI Navigation & Page Routes
+## 3. Core Architecture & Modules
 
-The frontend consists of specialized pages mapping to distinct steps in the user workflow.
-**All UI templates reside in `backend/templates/`.**
+The backend is cleanly separated into Models/Core Logic, Services, and Route Handlers.
 
-| URL Route | Template | Purpose & Workflow |
+### A. Core Processing Engine
+- `backend/smart_crop.py`: Uses CV2 Edge/Contour detection to find the actual paper receipt within an image and crops out dark backgrounds.
+- `backend/ocr_service.py`: Interfaces with Tesseract to extract raw text and layout block data from the cropped image.
+- `backend/tkfl_parser_v2.py`: The "Base Parser." A massive suite of regular expressions that looks for common date formats, totals, and specific industry deduction fields (e.g., "Unloading", "Commission").
+
+### B. The Machine Learning Layer
+The ML system does *not* use deep neural networks (like PyTorch/TensorFlow). Instead, it uses intelligent, algorithm-driven template matching and statistical analysis that actively learns from user corrections.
+- **`ml_correction_model.py`:** 
+  1. **Character Matrix:** Learns consistent OCR mistakes (e.g., reading `O` as `0`) based on string diffs.
+  2. **Fuzzy Anchor Engine:** Memorizes the spatial relationship between labels and values (e.g. knowing "Net Total" is found 2 lines below "Subtotal") using `difflib.SequenceMatcher` to defeat spelling typos.
+- **`ml_training_service.py` & `enhanced_ml_training.py`:** Handles the heavy lifting of gathering validation data, applying OCR character corrections *before* parsing, and applying high-confidence fuzzy anchor overrides *after* parsing.
+- **`smart_crop_training_service.py`:** An independent model that looks at how humans adjusted crop bounding boxes and adjusts the mathematical thresholds in `smart_crop.py` for future images.
+- **`learning_history_tracker.py` & `ml_feedback_service.py`:** Tracks statistical improvements, saving validation snapshots to prove accuracy gains over time.
+
+### C. Services Layer (`backend/services/`)
+Handles all database operations and business logic execution.
+- `batch_service.py`: Manages upload "Batches" (groups of receipts processed together).
+- `voucher_service.py` / `voucher_service_beta.py`: Handles individual receipt records (Vouchers), including saving the `original_json` (parser guess) vs `corrected_json` (human truth).
+- `supplier_service.py`: Manages the supplier database tables.
+- `production_sync_service.py`: Handles exporting finalized, validated data out of the system.
+
+---
+
+## 4. Frontend UI & Workflows (`backend/templates/`)
+
+The application is SPA-like but utilizes multi-page routing. All views use `base.html` for layout.
+
+| UI Component | Template | User Workflow |
 | :--- | :--- | :--- |
-| `/` | `index.html` | Dashboard showing total stats and system health. |
-| `/queue` | `queue_processor.html` | Batch upland handler. Allows uploading multiple images, previews the smart-cropped bounds, and submits them to the `process-batch-v2` API. |
-| `/validate` | `validate.html` | The Human-in-the-Loop review screen. Displays receipts in a data-table where users correct OCR mistakes inline. Committing changes here saves data to the DB as `original_json` vs `corrected_json` (crucial data for the ML engine). |
-| `/suppliers` | `suppliers.html` | Management of supplier aliases and specific parsing rules or IDs. |
-| `/training` | `training.html` | **The Machine Learning Control Panel.** Contains two split sections: one to trigger the Text Parsing Model training (character swaps & fuzzy anchors) and one to trigger the Smart Crop Model training. |
+| **Dashboard** | `index.html` | The landing page. Shows key metrics (total processed, ML health, recent batches). |
+| **Queue Upload** | `queue_upload.html` | Drag-and-drop interface to upload multiple `.jpg`/`.png` images. |
+| **Queue Processor** | `queue_processor.html` | The core processing UI. Shows previews of Smart Crop bounds, allows manual crop adjustment, and triggers the massive backend processing loop via WebSockets/Polling. |
+| **Validation** | `validate.html` | The most critical human-in-the-loop screen. Displays parsed data alongside the image snippet. Users correct wrong data here. Saving commits the "Truth" for ML. |
+| **Review** | `review.html` | Similar to Validate, but for read-only or finalized states. |
+| **Batch Management**| `batch_list.html`, `batch_summary.html` | List views of uploaded batches and their current processing status. |
+| **Voucher Vault** | `view_receipts.html` | A searchable table of every individual receipt processed in the system. |
+| **Supplier Mgmt** | `suppliers.html`, `supplier_detail.html` | UI to manage known suppliers and aliases. |
+| **Training Hub** | `training.html` | Split UI to independently trigger ML computations for **Text Parsing** and **Smart Crop**. |
+| **Learning Logs** | `learning_history.html` | Visual timeline of what the ML engine has learned. |
 
 ---
 
-## 4. API Routes Database
+## 5. API Routing (`backend/routes/`)
 
-**All backend implementations live in `backend/routes/`.**
-
-- **Main Extraction (`api.py`):**
-  - `POST /api/process-batch-v2`: Receives multiple image files, runs the cropping and OCR parser multi-threaded, and returns the parsed JSON payload. Does *not* save them to the DB as finalized yet.
-- **Queue & Status (`api_queue.py`):**
-  - Manages asynchronous status updates for long-running batches.
-- **Validation (`api_validation.py`):**
-  - `GET /api/validation/receipts`: Fetches pending database items.
-  - `POST /api/validation/commit`: This is where a user's final manual review is saved. This route writes the difference between the parser's guess and the user's truth, providing the exact diffs needed for the ML training phase.
-- **Machine Learning (`api_training.py`):**
-  - `POST /api/training/start`: Triggers the training of the Text Parsing Engine (anchors & chars).
-  - `POST /api/training/smart-crop/start`: Triggers the training of the Smart Crop model.
-  - `GET /api/training/status/<id>` & `GET /api/training/smart-crop/status`: Polls job progress.
+- **`main.py`:** Serves all the HTML templates above. Handles auth/session rendering if applicable.
+- **`api.py`:** Core extraction triggers (e.g., `POST /api/process-batch-v2`).
+- **`api_queue.py`:** Polling endpoints for the long-running queue processor UI.
+- **`api_training.py`:** Triggers the background worker threads for ML training (`POST /api/training/start`, `/api/training/smart-crop/start`).
+- **`learning.py`:** Exposes the history and statistics of ML effectiveness.
 
 ---
 
-## 5. Active ML Rules & Instructions for AI Models
+## 6. Database Entities (SQLite `database.db`)
 
-When developing on this application, strictly adhere to the following rules based on past system improvements:
+Key tables the system relies on:
+- `vouchers_master` / `beta_vouchers`: The core receipt records. Stores image paths, `original_json`, `corrected_json`, and validation status.
+- `batches`: Metadata about a group upload.
+- `suppliers`: Supplier ID mapping.
+- `ml_learning_history`: Time-series logs of improvement runs.
+- `ml_models/` (Directory): Stores JSON representations of the learned rules (not in SQLite, but critical data tier).
+
+---
+
+## 7. Active Instructions for AI Models
+
+When developing on this application, strictly adhere to the following rules:
 
 1. **NO Hardcoded Overrides for Specific Suppliers:**
-   Do *not* write Python code like `if "NARSIMA" in text: parse_date_this_way()`. 
-   **Why:** We stripped all hardcoded supplier logic out. If a supplier has a weird layout, the user must correct it in the UI once, and the **Fuzzy Anchor Engine** (`ml_correction_model.py`) will automatically learn that layout. Do not bypass the ML engine with code hacks.
+   Do *not* write Python code like `if "NARSIMA" in text: parse_date()`. 
+   **Why:** We stripped all hardcoded supplier logic out. If a supplier has a weird layout, the user must correct it in the `validate.html` UI once, and the **Fuzzy Anchor Engine** will learn that layout organically. Do not bypass the ML engine with code hacks.
    
-2. **Never Tightly Couple the ML Models:**
-   The Smart Crop algorithm and the Text Parsing algorithm must remain strictly separated. Do not merge their endpoints or training cycles.
+2. **Maintain Separation of Concerns:**
+   The Smart Crop algorithm and the Text Parsing algorithm must remain strictly separated. Do not merge their endpoints or UI training cycles. 
 
-3. **Database Usage (`database.db`):**
-   The application uses SQLite3. Do not attempt to establish heavy ORMs unless specifically requested by the user. Most database operations are managed via raw SQL or lightweight helpers in `backend/services/`.
+3. **Frontend Rules:**
+   Use TailwindCSS exclusively. Achieve modern, clean designs (`rounded-xl`, soft shadows, vibrant indicators). Use Vanilla JS `fetch()` for API calls. Do not introduce React, Vue, jQuery, or custom CSS files unless absolute necessary for a complex animation.
 
-4. **Testing Context:**
-   Always run testing utility scripts from the `scripts/` or `tests/` directories using `python -m tests.test_parser` or similar relative contexts if modifying core parsing rules. Ensure `verify_parser.py` passes immediately following any adjustment to `TKFLReceiptParserV2`.
+4. **Database Rules:**
+   Do not introduce heavy ORMs like SQLAlchemy unless requested. We are using raw SQL `sqlite3` execution logic wrapped in service classes (e.g., `voucher_service.py`) for speed and simplicity. 
 
-5. **Style Guidelines:**
-   - Visuals: Use TailwindCSS exclusively for styling on frontend HTML files. Achieve modern, clean designs with subtle borders and shadows (e.g., `rounded-xl`, `shadow-lg`, Tailwind base colors). Do not write raw CSS files unless adding complex animations.
-   - Frontend Logic: Use Vanilla JavaScript and standard `fetch()` API for client-side routing. No heavy frameworks (React/Vue) exist in this project.
+5. **Testing & QA Context:**
+   Always run testing utility scripts from the `scripts/` or `tests/` directories using `python -m tests.test_parser` or similar module constructs. Ensure `verify_parser.py` passes immediately following any adjustment to `TKFLReceiptParserV2`.
 
 ### When to Modify `AI_CONTEXT.md`
 If you, as an AI, fundamentally alter the architecture, create a new pipeline stage, or add a major endpoint, you **must** update this `AI_CONTEXT.md` document to ensure future sessions possess the correct structural map.
