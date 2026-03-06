@@ -13,7 +13,7 @@ The platform supports bulk image processing, automated "smart cropping" to remov
 - **Backend:** Python 3.9+, Flask (Routing, API).
 - **Frontend:** HTML5, Vanilla JavaScript (ES6+), Server-Side Templating (Jinja2), TailwindCSS (Styling).
 - **Core Processing:** Tesseract OCR (Text Extraction), OpenCV (Image Manipulation & Contours).
-- **Database:** SQLite3 (Built-in, raw SQL data access combined with light service objects).
+- **Database:** PostgreSQL (with raw SQL data access combined with light service objects via connection pooling).
 
 ---
 
@@ -73,7 +73,7 @@ The application is SPA-like but utilizes multi-page routing. All views use `base
 
 ---
 
-## 6. Database Entities (SQLite `database.db`)
+## 6. Database Entities (PostgreSQL)
 
 Key tables the system relies on:
 - `vouchers_master` / `beta_vouchers`: The core receipt records. Stores image paths, `original_json`, `corrected_json`, and validation status.
@@ -99,7 +99,7 @@ When developing on this application, strictly adhere to the following rules:
    Use TailwindCSS exclusively. Achieve modern, clean designs (`rounded-xl`, soft shadows, vibrant indicators). Use Vanilla JS `fetch()` for API calls. Do not introduce React, Vue, jQuery, or custom CSS files unless absolute necessary for a complex animation.
 
 4. **Database Rules:**
-   Do not introduce heavy ORMs like SQLAlchemy unless requested. We are using raw SQL `sqlite3` execution logic wrapped in service classes (e.g., `voucher_service.py`) for speed and simplicity. 
+   Do not introduce heavy ORMs like SQLAlchemy unless requested. We are using raw SQL execution logic wrapped in service classes (e.g., `voucher_service.py`) leveraging `psycopg2` (or similar PostgreSQL adapters) for speed and simplicity. 
 
 5. **Testing & QA Context:**
    Always run testing utility scripts from the `scripts/` or `tests/` directories using `python -m tests.test_parser` or similar module constructs. Ensure `verify_parser.py` passes immediately following any adjustment to `TKFLReceiptParserV2`.

@@ -37,7 +37,7 @@ The project is built around a lightweight **Python/Flask backend** and a fast, m
 - Python 3.9+
 - Tesseract OCR engine installed and added to your system PATH
 - OpenCV
-- SQLite (built-in with Python)
+- PostgreSQL Database
 
 ### Setup
 
@@ -53,7 +53,7 @@ The project is built around a lightweight **Python/Flask backend** and a fast, m
    ```
 
 3. **Initialize the Database:**
-   The SQLite database (`database.db`) will be automatically initialized with the required schema on the first run.
+   Ensure your PostgreSQL instance is running. Create a database (e.g., `tkfl_ocr`) and set the `DATABASE_URL` environment variable appropriately in `.env`. The application handles table generation.
 
 4. **Environment Variables:**
    Ensure the application has access to Tesseract. If it's not in your system path, you may need to configure `pytesseract.pytesseract.tesseract_cmd` directly in `backend/ocr_service.py`.
@@ -93,7 +93,6 @@ tkfl_ocr/pt5/
 ├── docs/                     # Detailed architectural plans and historical analysis logs
 ├── scripts/                  # Helpful standalone scripts for deep debugging and database checking
 ├── tests/                    # Unit tests ensuring core parsing logic doesn't regress
-├── database.db               # SQLite master operational database
 └── uploads/                  # Temporary storage for raw and cropped images
 ```
 
