@@ -1,48 +1,32 @@
 {
   "version": "1.0",
-  "trained_at": "2026-02-06T17:12:06.987163",
-  "total_samples": 54,
+  "trained_at": "2026-03-06T16:40:55.356787",
+  "total_samples": 43,
   "parsing_corrections": {
+    "supplier_name": {
+      "BERR": [
+        "BMRR"
+      ],
+      "SsI": [
+        "SSI"
+      ],
+      "JESWVANTH": [
+        "JESWANTH"
+      ]
+    },
     "voucher_number": {
-      "077012026": [
-        "143"
-      ],
-      "07701": [
-        "140",
-        "142",
-        "132"
-      ],
-      "0770172026": [
-        "148",
-        "144",
-        "156",
-        "135",
-        "133",
-        "155",
-        "137",
-        "153",
-        "147"
-      ],
       "0670172026": [
-        "187",
-        "174"
-      ],
-      "0570172026": [
-        "130",
-        "141",
-        "147",
-        "138",
-        "152",
-        "148",
-        "158"
+        "174",
+        "187"
       ],
       "2026": [
-        "145",
-        "142",
+        "143",
         "137",
         "156",
         "154",
-        "143",
+        "145",
+        "142",
+        "94",
         "93",
         "97",
         "102",
@@ -51,8 +35,16 @@
         "88",
         "107",
         "89",
-        "94",
         "100"
+      ],
+      "0570172026": [
+        "141",
+        "138",
+        "152",
+        "147",
+        "148",
+        "130",
+        "158"
       ],
       "701": [
         "144"
@@ -68,10 +60,10 @@
         "62",
         "84",
         "80",
-        "89",
         "69",
         "68",
-        "65"
+        "65",
+        "89"
       ],
       "060": [
         "79"
@@ -85,193 +77,136 @@
       "00024": [
         "67"
       ]
-    },
-    "supplier_name": {
-      "JESWVANTH": [
-        "JESWANTH"
-      ]
     }
   },
   "learned_anchors": {
-    "KARTHIK/V": {
-      "supplier_name": {
-        "te VoucherNumber077012026\nlane": 1
+    "DSH": {
+      "deduction_Unloading": {
+        "For Damages 30.00 Un1oading": 1
       },
-      "voucher_number": {
-        "wyNunmber": 1
-      },
-      "deduction_Commission": {
-        "1 4 560.00 Comm?4.00": 1
-      },
-      "deduction_Less for Damage": {
-        "n1oading 32.00\n6.00\n1/FAndCash": 1
-      },
-      "deduction_UnLoading": {
-        "1essForDanages 28.00\nUn1oading": 1
-      },
-      "deduction_Other": {
-        "rDanages 28.00\nUn1oading 32.00": 1
-      },
-      "deduction_L/F and Cash": {
-        "n1oading 32.00\n6.00\n1/FAndCash": 1
-      }
-    },
-    "GNN": {
-      "supplier_name": {
-        "er157\nsherDate 07/01/2026\nNane": 1
-      },
-      "voucher_number": {
-        "sherNunber": 1
+      "deduction_L/F Cash": {
+        "n1oading 16.00\n6.00\n1/FAndCash": 1
       },
       "deduction_Commission": {
-        "al ? 1220.00 Comm?4.00": 1
+        "l 2 600.00 Comm?4.00": 1
       },
-      "deduction_Less for Damage": {
-        "Comm?4.00 48.80\n1essForDanages": 1
-      },
-      "deduction_UnLoading": {
-        "1essForDanages 61.00\nUn1oading": 1
+      "deduction_Less for Damages": {
+        "24.00 1ess For Damages": 1
       },
       "deduction_Other": {
-        "rDanages 61.00\nUn1oading 56.00": 1
-      },
-      "deduction_L/F and Cash": {
-        "1oading 56.00\n12.00\n1/FAndCash": 1
+        ".00": 1
       }
     },
-    "VANITHA/D": {
+    "ASY": {
       "supplier_name": {
-        "r145\ncherDate 07/01/2026\npNane": 1,
-        "-Nunber77\n-Date 03/01/2026\nme": 1
+        "erNuaber93\nerDate 12/01/2026": 1
       },
-      "voucher_number": {
-        "cherNuaber": 1,
-        "99, 9949393.00 9397.86\n-Nunber": 1
+      "deduction_Unloading": {
+        "1essForDanages 72.00\nUn1oading": 1
       },
-      "deduction_Less for Damage": {
-        "mm7?4.008 89.60\n1essForDamages": 1
+      "deduction_L/F Cash": {
+        "4800.00 14.00 VF AndCash": 1
       },
-      "deduction_Commission": {
-        "tal 11 2240.00 Comm7?4.008": 1
+      "deduction_Less for Damages": {
+        "omm7?4.00 57.60\n1essForDanages": 1
       },
-      "deduction_UnLoading": {
-        "essForDamages 112.00\nUn1oading": 1
+      "deduction_Commission @4%": {
+        "l 6 1440.00 Comm7?4.00": 1
       },
       "deduction_Other": {
-        ".00\n1/FAndCash 1": 1,
-        "ssForDamages Solu\nUn1oading eo": 1
-      },
-      "deduction_L/F and Cash": {
-        "1oading 88.00\n22.00\n1/FAndCash": 1
+        "anages 72.00\nUn1oading 4800.00": 1
       }
     },
-    "DPH": {
+    "BERR": {
+      "deduction_Unloading": {
+        "For Damages 31.00 Un1oading": 1
+      },
+      "deduction_L/F Cash": {
+        "Un1oading 16.00\n.00\n1YFAndCash": 1
+      },
+      "deduction_Less for Damages": {
+        "24.80 1ess For Damages": 1
+      },
+      "deduction_Commission @4%": {
+        "al 2 620.00 Comn?4.008": 1
+      },
+      "deduction_Other": {
+        "Damages 31.00 Un1oading 1": 1
+      }
+    },
+    "SSI": {
       "supplier_name": {
-        "r07701/VoucherNumber2026\npNane": 1,
-        "ber184\nherDate 06/01/2026\nNane": 1,
-        "cherNumber0570172026\nSupp Name": 1,
+        "ber95\nherDate 12/01/2026\n.Nane": 1,
         "01/VoucherNumber2026\nSupp Name": 1,
-        "Nuaber -Date 03/01/2026 ne": 1
+        "her0ate 0370.00 1720.26 Nane": 1
       },
-      "voucher_number": {
-        "cherNuaber": 1,
-        "herNuaber": 1,
-        "9949.00 3337.86\nVoucherNunber": 1
+      "deduction_Unloading": {
+        "essFor Damages 65.50\nUn1oading": 1
       },
-      "deduction_Less for Damage": {
-        "omm?4.00 100.00\n1essForDamages": 1,
-        "m?400 236.00\n-) LessForDamages": 1,
-        "mm?4.00 6960.00\n1essForDamages": 1
-      },
-      "deduction_Commission": {
-        "tal 9 2500.00 Comm?4.00": 1,
-        "6 1420.00 me Comm?4.00": 1,
-        "11 S90000 () Comm?400": 1
-      },
-      "deduction_UnLoading": {
-        "eGeweeemeweaemseneee\nUn1oading": 1,
-        "For Damages 71.00 UnLoading": 1,
-        "rDamages 12550.00\n-j UnLoading": 1,
-        "orDamages 29500.00\n) UnLoading": 1,
-        "ssForDamages 8700.00\nUn1oading": 1
-      },
-      "deduction_Other": {
-        "emeweaemseneee\nUn1oading 72.00": 1,
-        "Damages 71.00\nUnLoading 48.00": 1,
-        "10040.00 ) LessForDamages 1": 1,
-        "2 90.00 180.00 bs)": 1
+      "deduction_Less for Damages": {
+        "?4.00x S2.40 1essFor Damages": 1
       },
       "deduction_L/F and Cash": {
-        "1oading 72.00\n25.00\n1YFAndCash": 1,
-        "3 S9.00O0 -3 L/FAndCash": 1
-      },
-      "deduction_Less For Damages": {
-        "56.80 Less For Damages": 1
-      },
-      "deduction_LFAndCash": {
-        "nLoading 48.00\n14.00\nLFAndCash": 1
-      }
-    },
-    "MS": {
-      "voucher_number": {
-        "cherNuaber": 1
-      },
-      "deduction_Less for Damage": {
-        "30.40 1ess For Damages": 1
-      },
-      "deduction_Commission": {
-        "tal 7 760.00 Comm7?4.00": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 38.00 Un1oading": 1
+        "1oading 32.00\n13.00\n1YFAndCash": 1,
+        "f-) L/F and Cash": 1,
+        "ading 4000.00\n20.00\n1/FAndCash": 1
       },
       "deduction_Other": {
-        ".00\n1/FAndCash": 1
+        "3.00": 1,
+        "(-) UnLoading 800.00 (-)": 1,
+        "mages 101.00\nUn1oading 4000.00": 1
       },
-      "deduction_L/F and Cash": {
-        "n1oading 56.00\n8.00\n1/FAndCash": 1
+      "deduction_Comm?4.00 -": {
+        "ForDamages 10.00\n(-) UnLoading": 1
+      },
+      "deduction_Less for Damage": {
+        "- 800.00 (-) LlessForDamages": 1,
+        "Comm?4.00 80.80\n1essFor0amages": 1
+      },
+      "deduction_UnLoading": {
+        "ForDamages 10.00\n(-) UnLoading": 1,
+        "essFor0amages 101.00\nUn1oading": 1
+      },
+      "voucher_number": {
+        "erNumber9949939786\nhexrNunber6": 1
+      },
+      "deduction_Commission": {
+        "vl S 2020.00 Comm?4.00": 1
       }
     },
     "DMRD": {
-      "supplier_name": {
-        "r146\ncherDate 07/01/2026\npNane": 1,
-        "01/VoucherNumber2026\nSupp Name": 1,
-        "ucherDate 04/01/2026\nSupp Name": 1,
-        "949.00 3337.86\nerNunber76\nNane": 1
-      },
       "voucher_number": {
-        "cherNuaber": 1,
         "herNunber": 1,
         "3337.86\neee\nween\nYoucherNumber": 1,
         "2139, 9949.00 3337.86\nerNunber": 1
       },
       "deduction_Commission": {
-        "tal 3 550.00 Comm?4.008": 1,
         "al 6 1300.00 Comm?4.00X": 1,
         "S 900.00 () Comm?4.008": 1
       },
       "deduction_Less for Damage": {
-        "omm?4.008 22.00\n1essForDanages": 1,
         "mm?4.00X 52.00\n1essForDanmages": 1
       },
       "deduction_UnLoading": {
-        "1essForDanages 27.50\nUn1oading": 1,
         "essForDanmages 65.00\nUn1oading": 1,
         "4 0.00 f-) UnLoading": 1,
         "rDamages 7500.00\n(-) UnLoading": 1,
         "For Damages 7?.00 Unloading": 1
       },
       "deduction_Other": {
-        "rDanages 27.50\nUn1oading 24.00": 1,
         "Danmages 65.00\nUn1oading 48.00": 1,
         "f-) UnLoading 4000.00 -)": 1,
         "amages 7?.00\nUnloading 4000.00": 1
       },
       "deduction_L/F and Cash": {
-        "n1oading 24.00\n6.00\n1/FAndCash": 1,
         "1oading 48.00\n13.00\n1/FAndCash": 1,
         "-) 900 co) LFAndCash": 1,
         "oading 4000.00\n15o0O\n1FAndCash": 1
+      },
+      "supplier_name": {
+        "01/VoucherNumber2026\nSupp Name": 1,
+        "ucherDate 04/01/2026\nSupp Name": 1,
+        "949.00 3337.86\nerNunber76\nNane": 1
       },
       "deduction_Comm?4.00": {
         "1500.00 (-) LFAndCash 3": 1
@@ -286,587 +221,49 @@
         "f-) 1500.00 (-) LFAndCash": 1
       }
     },
-    "JDRK": {
+    "UPM": {
       "supplier_name": {
-        "e VoucherNumber0770172026\nNane": 1,
-        "ber178\nnerDate 06/01/2026\nNane": 1,
-        "01/VoucherNumber2026\nSupp Name": 1
-      },
-      "deduction_Less for Damage": {
-        "28.80 1ess For Damages": 1,
-        "42.00 1ess For Damages": 1,
-        "00& 8000.00\nf-4 LessForDamages": 1
-      },
-      "deduction_Commission": {
-        "al 3 720.00 Comm9?4.00": 1,
-        "al 4 1050.00 Comm?4.00": 1,
-        "hs) 2000.00 () Comm?400&": 1,
-        "90.00 5 1910.00 Comm?4.00": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 36.00 Un1oading": 1,
-        "For Damages 52.50 Un1oading": 1,
-        "ForDamages 100.00\ncn UnLoading": 1,
-        "ssFor0anages 9550.00\nUn1oading": 1
-      },
-      "deduction_Other": {
-        "Damages 36.00\nUn1oading 24.00": 1,
-        "Damages 52.50\nUn1oading 32.00": 1,
-        "-, ; LYFAndCash 1": 1,
-        "ages 9550.00\nUn1oading 4000.00": 1
-      },
-      "deduction_L/F and Cash": {
-        "n1oading 24.00\n7.00\n1/FAndCash": 1,
-        "1oading 32.00\n11.00\n1/FAndCash": 1,
-        "-0O0 -, ; LYFAndCash": 1,
-        "oading 4000.00\n19.00\n1FAndCash": 1
-      },
-      "voucher_number": {
-        "eee\nherNunber": 1,
-        "ucherNumber99493335766\nrNuaber": 1
-      }
-    },
-    "GRD": {
-      "supplier_name": {
-        "DGDaelDcaEeeGuwaED n0DCEEDGEEP": 1,
-        "ber165\nherDate 06/01/2026\nNane": 1,
-        "01/VoucherNumber2026\nSupp Name": 1,
-        "Nurnber65\nrDate 03/01/2026\nane": 1
-      },
-      "voucher_number": {
-        "cherNuaber": 1,
-        "ucherNumber9949333786\nrNurnber": 1
-      },
-      "deduction_Less for Damage": {
-        ".00\nUn1oading": 1,
-        "Comm?4.00 64.00\n1essForDanages": 1,
-        "51.60 1ess For Damages": 1
-      },
-      "deduction_Commission": {
-        "tal ) 800.00 Comm?4.00": 1,
-        "Bl 5 1600.00 Comm?4.00": 1,
-        "300.00 3 1290.00 Comm?4.00": 1
-      },
-      "deduction_UnLoading": {
-        ".00\nUn1oading": 1,
-        "1essForDanages 80.00\nUn1oading": 1,
-        "For Damages 64.50 Un1oading": 1
-      },
-      "deduction_Other": {
-        "Damages 40.00\nUn1oading 40.00": 1,
-        "rDanages 80.00\nUn1oading 40.00": 1,
-        "Damages 64.50\nUn1oading 24.00": 1
-      },
-      "deduction_L/F and Cash": {
-        "n1oading 40.00\n8.00\n1/FAndCash": 1,
-        "1oading 40.00\n16.00\n1/FAndCash": 1,
-        "1oading 24.00\n13.00\n1YFAndCash": 1
-      },
-      "deduction_f-) Less For Damages": {
-        "f-) Less For Damages": 1
-      },
-      "deduction_i) UnLoading": {
-        "Damages 73.00 i) UnLoading": 1
-      },
-      "deduction_-) LYFAndCash": {
-        "7 1Sa0 -) LYFAndCash": 1
-      }
-    },
-    "NANDU/D": {
-      "supplier_name": {
-        "ate VoucherNumber0770172026\nne": 1,
-        "cherNumber0470172026\nSupp Name": 1,
-        "Number78 Date 03/01/2026 1e": 1
-      },
-      "voucher_number": {
-        "Nuanber": 1,
-        "9949.00 3337.86\nVoucherNuaber": 1,
-        "12139, 99493.00 3379.66\nNumber": 1
-      },
-      "deduction_Less for Damage": {
-        "4.00 1ess For Damages": 1,
-        "21.20 1ess For Damages": 1
-      },
-      "deduction_Commission": {
-        ".00X": 1,
-        "Amount 1 530.00 Comm?4.00&": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 5.00 Un1oading.": 1,
-        "1 0.00 (-) UnLoading": 1,
-        "For Damages 26.50 Un1oading": 1
-      },
-      "deduction_Other": {
-        ".00": 1,
-        "1ess For Damages 26.": 1
-      },
-      "deduction_L/F and Cash": {
-        "8.00 1.00 1YFAnd Cash": 1,
-        "Un1oading 800 saa 1/FAndCash": 1
-      },
-      "deduction_Comm?400": {
-        "1 300.00 (-) Comm?400": 1
-      },
-      "deduction_an)": {
-        "(-) UnLoading 800.00 an)": 1
-      },
-      "deduction_a) L/F and Cash": {
-        "04\nVoucherDate VoucherNumber04": 1
-      }
-    },
-    "SV": {
-      "supplier_name": {
-        "ate VoucherNumber0770172026\nme": 1
-      },
-      "voucher_number": {
-        "-Nunber": 1
-      },
-      "deduction_Commission": {
-        "60.00 4 960.00 Comm?4.00": 1
-      },
-      "deduction_Less for Damage": {
-        "omm?4.00 38.40\n1essFor Danages": 1
-      },
-      "deduction_UnLoading": {
-        "essFor Danages 48.00\nUn1oading": 1,
-        "rDamages 6900.00\n(-) UnLoading": 2
-      },
-      "deduction_Other": {
-        "Danages 48.00\nUn1oading 32.00": 1,
-        "(-) UnLoading 4000.00 i-)": 1
-      },
-      "deduction_L/F and Cash": {
-        "1oading 32.00\n10.00\n1/FAndCash": 1
-      },
-      "deduction_LessForDamages": {
-        "9?4.00 SS20\n(-) LessForDamages": 1,
-        "mm?400X5520\n(-) LessForDamages": 1
-      },
-      "deduction_f-)": {
-        "(-) UnLoading 32.00 f-)": 1
-      },
-      "deduction_- L/FAndCash": {
-        "f-) 1400.00 - L/FAndCash": 1
-      },
-      "deduction_L/FAndCash": {
-        "i-) 14.00 -) L/FAndCash": 1
-      }
-    },
-    "RAMULU/T": {
-      "supplier_name": {
-        "VoucherNumber0770172026\n7Nane": 1
-      },
-      "voucher_number": {
-        "scherNuaber": 1
-      },
-      "deduction_UnLoading": {
-        "essForDanages 32.00\n UnLoading": 1
-      },
-      "deduction_Commission": {
-        "tal ? 640.00 Comm?4.008": 1
-      },
-      "deduction_Less for Damage": {
-        "m?4.008 25.60\n) LessForDanages": 1
-      },
-      "deduction_Other": {
-        ".00": 1
-      },
-      "deduction_L/F and Cash": {
-        "ading 56.00\n 6.00\n L/YFAndCash": 1
-      }
-    },
-    "NRR": {
-      "supplier_name": {
-        "er154\nsherDate 07/01/2026\nNane": 1,
+        "unber196\naDate 06/01/2026\njane": 1,
         "cherNumber0570172026\nSupp Name": 1
       },
       "voucher_number": {
-        "sherNunber": 1
-      },
-      "deduction_Less for Damage": {
-        "omm7?4.00 91.60\n1essForDamages": 1
+        "srNunber": 1,
+        "nssnroererooeer\nVoucherNuraber": 1
       },
       "deduction_Commission": {
-        "al 11 2290.00 Comm7?4.00": 1
-      },
-      "deduction_UnLoading": {
-        "essForDamages 114.50\nUn1oading": 1,
-        "orDamages 100.00S0\n4 UnLoading": 1
-      },
-      "deduction_Other": {
-        "Damages 114.50\nUn1oading 88.00": 1,
-        ".00 480.00\nTotal 13": 1
-      },
-      "deduction_L/F and Cash": {
-        "1oading 88.00\n23.00\n1/FAndCash": 1,
-        "ne -0000a -; LFAndCash": 1
-      }
-    },
-    "JASHVANTH": {
-      "supplier_name": {
-        "srDate 0770.00 1720.26 Nane": 1,
-        "Nunber71 Date 03/01/2026 ne": 1
-      },
-      "voucher_number": {
-        "inmate\nsrNuaber": 1,
-        "9949.00 3337.86 a Nunber": 1
+        "2 100.00 200.00 Comm?4.00": 1,
+        "Supp Name UPM Comm?4.00": 1
       },
       "deduction_Less for Damage": {
-        "?4.00 24.80 1essFor Damages": 1
-      },
-      "deduction_Commission": {
-        "620.00 Comn e ?4.00": 1
+        "omm?4.00 110.00\n1essForDamages": 1
       },
       "deduction_UnLoading": {
-        "essFor Damages 31.00\nUn1oading": 1
-      },
-      "deduction_Other": {
-        "Damages 31.00\nUn1oading 24.00": 1,
-        "EefetesciressatcueeSheDSOED\n16": 1
+        "essForDamages 137.50\nUn1oading": 1,
+        "sForDamages 13250.00\nUnLoading": 1
       },
       "deduction_L/F and Cash": {
-        "n1oading 24.00\n6.00\n1/FAndCash": 1,
-        "JASHVANTH DDD ape L/FAndCash": 1
-      }
-    },
-    "MPN": {
-      "supplier_name": {
-        "rDate VoucherNumber0770172026": 1
-      },
-      "voucher_number": {
-        "rNunber": 1
-      },
-      "deduction_Commission": {
-        "120.00 2 120.00 Comm?4.008": 1
-      },
-      "deduction_Less for Damage": {
-        ".00\nUn1oading 1": 1
-      },
-      "deduction_UnLoading": {
-        "1essForDanages 6.00\nUn1oading": 1
+        "sForDamages 137.50\nUn1oading 1": 1
       },
       "deduction_Other": {
-        ".00": 1
-      },
-      "deduction_L/F and Cash": {
-        "1.00 1/F and Cash": 1
-      }
-    },
-    "JNMK": {
-      "supplier_name": {
-        "ber149\nherDate 07/01/2026\nNane": 1,
-        "! erDate 06/01/2026 Nane": 1,
-        "01/VoucherNumber2026\nSupp Name": 1,
-        "unber82\nar0ate 03/01/2026\njane": 1
-      },
-      "voucher_number": {
-        "herNunber": 1,
-        "erNuaber": 1,
-        "2139, 9949.00 3337.86\nsyNunber": 1
-      },
-      "deduction_Less for Damage": {
-        "m9?4.008 32.80\n1lessForDamages": 1,
-        "m?4.00X8 23.20\n1essFor Danages": 1,
-        "52.00 1ess For 0amages": 1
-      },
-      "deduction_Commission": {
-        "al 3 820.00 Comm9?4.008": 1,
-        "l 3 580.00 Comm?4.00X8": 1,
-        "550.00\n3 1300.00\nComm74008.00": 1
-      },
-      "deduction_UnLoading": {
-        "lessForDamages 41.00\nUn1oading": 1,
-        "essFor Danages 29.00\nUn1oading": 1,
-        "Phone.040": 1,
-        "For 0amages 65.00 Un1oading": 1
-      },
-      "deduction_Other": {
-        "rDamages 41.00\nUn1oading 24.00": 1,
-        "Danages 29.00\nUn1oading 24.00": 1,
-        "f-) UnLoading -400 -)": 1,
-        "0amages 65.00\nUn1oading 24.00": 1
-      },
-      "deduction_L/F and Cash": {
-        "n1oading 24.00\n8.00\n1/FAndCash": 1,
-        "n1oading 24.00\n6.00\n1/FAndCash": 1,
-        "-) 900 ) LFAndCash": 1,
-        "1oading 24.00\n13.00\n1/FAndCash": 1
-      },
-      "deduction_Less For Damages": {
-        "f-) Less For Damages": 1
-      }
-    },
-    "JPYK": {
-      "supplier_name": {
-        "r151, herDate 07/01/2026\n)Nane": 1,
-        "01/VoucherNumber2026\nSupp Name": 1,
-        "Nunber83\nw0ate 03/01/2026\njane": 1
-      },
-      "voucher_number": {
-        "hherNuaber": 1,
-        "rNuaber": 1,
-        "2 100.00 200.00\nVoucherNumber": 1
-      },
-      "deduction_Commission": {
-        "al 3 400.00 Comm?4.008": 1,
-        "90.00 3 530.00 Comm?4.00": 1,
-        "Damages 30.00 7) UnLoading": 1,
-        "1 3 1090.00 Comnm9?4.00": 1
-      },
-      "deduction_Less for Damage": {
-        "24.00 4.00 1/FAndCash 1": 1,
-        "Comm?4.00 21.20\n1essForDanages": 1,
-        "-) Less For Damages": 1,
-        "43.60 1ess For 0amages": 1
-      },
-      "deduction_UnLoading": {
-        "1essForDanages 20.00\nUn1oading": 1,
-        "1essForDanages 26.50\nUn1oading": 1,
-        "Damages 30.00 7) UnLoading": 1,
-        "For 0amages 54.50 Un1oading": 1
-      },
-      "deduction_Other": {
-        ".00": 1,
-        "0\nUn1oading 24.00": 1,
-        "200.00\nVoucherNumber97\nTotal 3": 1,
-        "0amages 54.50\nUn1oading 24.00": 1
-      },
-      "deduction_L/F and Cash": {
-        "n1oading 24.00\n4.00\n1/FAndCash": 1,
-        "n1oading 24.00\n5.00\n1/FAndCash": 1,
-        "UnLoading 24.00\n-) L/FAndCash": 1,
-        "1oading 24.00\n11.00\n1/FAndCash": 1
-      }
-    },
-    "KRISH/J": {
-      "voucher_number": {
-        "eherNuaber": 1,
-        "syNunber": 1
-      },
-      "deduction_LessForDarmages": {
-        "7?4.00X 19.60\n LessForDarmages": 1
-      },
-      "deduction_UnLoading": {
-        ".50\n UnLoading": 1,
-        "1essForDanages 27.00\nUn1oading": 1
-      },
-      "deduction_Other": {
-        "0\n UnLoading 24.00": 1,
-        "rDanages 27.00\nUn1oading 24.00": 1
-      },
-      "deduction_L/F and Cash": {
-        "Loading 24.00\n 5.00\n LFAndCash": 1,
-        "n1oading 24.00\n5.00\n1/FAndCash": 1
-      },
-      "deduction_Commission": {
-        "3 490.00 ) Comm7?4.00X": 1,
-        "1 3 540.00 Comm7?4.00": 1
-      },
-      "supplier_name": {
-        "ber183\nsxrDate 06/01/2026\nYane": 1
-      },
-      "deduction_Less for Damage": {
-        "omm7?4.00 21.60\n1essForDanages": 1
-      }
-    },
-    "AYODAIA/A": {
-      "voucher_number": {
-        "herNuaber": 1,
-        "erNunber": 1
-      },
-      "deduction_Less for Damage": {
-        "35.20 1ess For Damages": 1,
-        "m7?4.00X 115.20\n1essForDamages": 1
-      },
-      "deduction_Commission": {
-        "al 6 880.00 Comm7?4.00": 1,
-        "000.00\n 14 2880.00\nComm7?4.00X": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 44.00 Un1oading": 1,
-        "essForDamages 144.00\nUn1oading": 1
-      },
-      "deduction_Other": {
-        "Damages 44.00\nUn1oading 48.00": 1,
-        "amages 144.00\nUn1oading 112.00": 1,
-        "Price Amount Total 20": 1
-      },
-      "deduction_L/F and Cash": {
-        "n1oading 48.00\n9.00\n1/FAndCash": 1,
-        "1oading 112.00\n29.00\n1FAndCash": 1,
-        ") S1a0 -) 1YFAndCash": 1
-      },
-      "supplier_name": {
-        "e VoucherNumber0670172026\nVane": 1
-      },
-      "deduction_Less For Damages": {
-        "0 20480.00\n(-)3 1essForDamages": 1
-      },
-      "deduction_Un1oading": {
-        "orDamages 25600.00\nf Un1oading": 1
-      }
-    },
-    "VSY": {
-      "voucher_number": {
-        "xNunaber": 1,
-        "9949.00 3337.86\nVoucherNuaber": 1
-      },
-      "deduction_Less For Damages": {
-        "18.40 Less For Damages": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 23.00 UnLoading": 1,
-        "Damages 87.50 7 UnLoading": 1
-      },
-      "deduction_Other": {
-        ".00\nL/FAndCash 3": 1
+        "50\nUn1oading 128.00\n1/FAndCash": 1,
+        "es 13250.00\nUnLoading 12000.00": 1
       },
       "deduction_L/FAndCash": {
-        "nLoading 40.00\n5.00\nL/FAndCash": 1
-      },
-      "deduction_Commission": {
-        "L S 460.00 Comm?4.00": 1,
-        "8 17S0O0 i-) Comm?4.00&": 1
-      },
-      "supplier_name": {
-        "01/VoucherNumber2026\nSupp Name": 1
-      },
-      "deduction_Less for Damage": {
-        "i) Less For Damages": 1
-      }
-    },
-    "TK": {
-      "supplier_name": {
-        "r138\nsherDate 07/01/2026\npNane": 1
-      },
-      "voucher_number": {
-        "sherNuaber": 1
-      },
-      "deduction_Commission": {
-        "tal 6 1020.00 Comm7?4.00": 1
-      },
-      "deduction_Less for Damage": {
-        "omm7?4.00 40.80\n1essForDanages": 1
-      },
-      "deduction_UnLoading": {
-        "1essForDanages 51.00\nUn1oading": 1
-      },
-      "deduction_Other": {
-        "rDanages 51.00\nUn1oading 48.00": 1
-      },
-      "deduction_L/F and Cash": {
-        "1oading 48.00\n10.00\n1YFAndCash": 1
-      }
-    },
-    "AVR": {
-      "voucher_number": {
-        "rNunber": 1,
-        "seems\nherNunber": 1,
-        "Supp Name AVR YoucherNumber": 1
-      },
-      "deduction_Less for Damage": {
-        "79.60 1ess For Damages": 1,
-        "mm?4.00X 150.80\n1essForDanages": 1,
-        "400 30560.00\n-) LessForDamages": 1
-      },
-      "deduction_Commission": {
-        "160.00\n12 1990.00\nComm7?4.008": 1,
-        "al 15 3770.00 Comm?4.00X": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 99.50 Un1oading": 1,
-        "essForDanages 188.50\nUn1oading": 1,
-        "00.00\n(-)j UnLoading": 1,
-        "orDamages 38200.00\n- Unloading": 1
-      },
-      "deduction_Other": {
-        "Damages 99.50\nUn1oading 96.00": 1,
-        "anages 188.50\nUn1oading 120.00": 1,
-        "UnLoading 9600.00 f-) 3": 1,
-        "AVR YoucherNumber94 Total 16": 1
-      },
-      "deduction_L/F and Cash": {
-        "1oading 96.00\n20.00\n1/FAndCash": 1,
-        "oading 120.00\n38.00\n1/FAndCash": 1,
-        "f-) 339.00 f-) LFAndCash": 1
-      },
-      "supplier_name": {
-        "herDate 0670.00 1720.26\n)Nane": 1,
-        "cherNumber0570172026\nSupp Name": 1,
-        "01/VoucherNumber2026\nSupp Name": 1
-      },
-      "deduction_Comm?4.00": {
-        "12 3920.00 (-) Comm?4.00": 1
-      },
-      "deduction_LessForDamages": {
-        "4.00 156.80\n(-) LessForDamages": 1
-      }
-    },
-    "JVLK": {
-      "supplier_name": {
-        "r150\ncherDate 07/01/2026\npNane": 1,
-        "; rDate 06/01/2026 ane": 1,
-        "nber684, r0ate 03/01/2026\njane": 1
-      },
-      "voucher_number": {
-        "cherNuaber": 1,
-        "rNuaber": 1,
-        "ucherNumber9949333766\nyNunber6": 1
-      },
-      "deduction_LessForDanages": {
-        "omm?4.00X 29.20\nLessForDanages": 1,
-        "24.00 4.00 L/FAndCash 1": 1
-      },
-      "deduction_UnLoading": {
-        "LessForDanages 36.50\nUnLoading": 1,
-        "LessForDanages 20.00\nUnLoading": 1,
-        "Damages S8S0 a) UnLoading": 1,
-        "For 0amages 49.50 UnLoading": 1
-      },
-      "deduction_Other": {
-        "rDanages 36.50\nUnLoading 24.00": 1,
-        ".00": 1,
-        "00.00\n) LYFAndCash": 1,
-        "0amages 49.50\nUnLoading 24.00": 1
-      },
-      "deduction_L/FAndCash": {
-        "nLoading 24.00\n7.00\nL/FAndCash": 1,
-        "nLoading 24.00\n4.00\nL/FAndCash": 1,
-        "Loading 24.00\n10.00\nL/FAndCash": 1
-      },
-      "deduction_Commission": {
-        "tal 3 730.00 Comm?4.00X": 1,
-        "200.00 3 400.00 Comm7?4.00": 1,
-        "90.00 3 990.00 Conm?4.00": 1
-      },
-      "deduction_L/F and Cash": {
-        "0.00\n) LYFAndCash": 1
-      },
-      "deduction_Less For 0amages": {
-        "39.60 Less For 0amages": 1
+        "ding 12000.00\n27.00\nL/FAndCash": 1
       }
     },
     "SN": {
       "supplier_name": {
-        "e VoucherNumber0770172026\nNane": 1,
         "ber195\nherDate 06/01/2026\nNane": 1,
         "01/VoucherNumber2026\nSupp Name": 1,
         "unber72\nsrDate 03/01/2026\nJane": 1
       },
       "voucher_number": {
-        "herNumber": 1,
         "herNuraber": 1,
         "9949.00 3337.86\nVoucherNuraber": 1,
         "2139, 9949.00 3337.66\nsrNunber": 1
       },
-      "deduction_LessForDanages": {
-        "mm7?4.008 83.20\nLessForDanages": 1
-      },
-      "deduction_LFAndCash": {
-        "UnLoading S6.00\n1.00\nLFAndCash": 1
-      },
       "deduction_Commission": {
-        "7 2080.00 me Comm7?4.008": 1,
         "al 5 1840.00 Comm?4.00": 1,
         "8 4250.00 f-) Comm?4.00": 1,
         "L 7 4090.00 Comm7?4.00&": 1
@@ -903,111 +300,328 @@
         "Loading S6.00\n41.00\nL/FAndCash": 1
       }
     },
-    "TLS": {
+    "ANMY": {
+      "voucher_number": {
+        "peer\nverNuaber": 1,
+        "YoucherNumber": 1,
+        "9949.00 3337.86\nVoucherNuaber": 1,
+        "For 0amages 22.00 Un1oading": 1
+      },
+      "deduction_Commission": {
+        "vi 3 760.00 Comm7?4.00": 1,
+        "1 1 440.00 Comm9?4.00": 1
+      },
+      "deduction_Less for Damage": {
+        "30.40 1ess For Damages": 1,
+        "p-) Less For Damages": 1,
+        "17.60 1ess For 0amages": 1
+      },
+      "deduction_UnLoading": {
+        "For Damages 38.00 Un1oading": 1,
+        "ForDanages 25.00\n(-) UnLoading": 1,
+        "Damages 47.00 7) UnLoading": 1,
+        "For 0amages 22.00 Un1oading": 1
+      },
+      "deduction_Other": {
+        ".00\nUn1oading 24.00": 1,
+        "2000.00 (-) LessForDanages 2": 1,
+        "420.00 840.00 Total 3": 1,
+        "amages 22.00\nUn1oading 8000.00": 1
+      },
+      "deduction_L/F and Cash": {
+        "n1oading 24.00\n8.00\n1/FAndCash": 1,
+        "UnLoading 2400.00\n- LYFAndCash": 1,
+        "1oading 8000.00\n4.00\n1FAndCash": 1
+      },
       "supplier_name": {
-        "e VoucherNumber0770172026\nNane": 1,
+        "cherNumber0570172026\nSupp Name": 1,
         "01/VoucherNumber2026\nSupp Name": 1,
-        "ucherDate 04/01/2026\nSupp Name": 1,
-        "r\n3rNuaber63, xDate 03/01/2026": 1
+        "ber80\nsaxr0ate 03/01/2026\nJane": 1
+      },
+      "deduction_Comm?4.00": {
+        "3 500.00 (-) Comm?4.00": 1
+      },
+      "deduction_LessForDanages": {
+        ".00 2000.00\n(-) LessForDanages": 1
+      },
+      "deduction_L/FAndCash": {
+        "(-) 0.00 (-) L/FAndCash": 1
+      }
+    },
+    "JNMK": {
+      "supplier_name": {
+        "! erDate 06/01/2026 Nane": 1,
+        "01/VoucherNumber2026\nSupp Name": 1,
+        "unber82\nar0ate 03/01/2026\njane": 1
+      },
+      "voucher_number": {
+        "erNuaber": 1,
+        "2139, 9949.00 3337.86\nsyNunber": 1
+      },
+      "deduction_Commission": {
+        "l 3 580.00 Comm?4.00X8": 1,
+        "550.00\n3 1300.00\nComm74008.00": 1
+      },
+      "deduction_Less for Damage": {
+        "m?4.00X8 23.20\n1essFor Danages": 1,
+        "52.00 1ess For 0amages": 1
+      },
+      "deduction_UnLoading": {
+        "essFor Danages 29.00\nUn1oading": 1,
+        "Phone.040": 1,
+        "For 0amages 65.00 Un1oading": 1
+      },
+      "deduction_Other": {
+        "Danages 29.00\nUn1oading 24.00": 1,
+        "f-) UnLoading -400 -)": 1,
+        "0amages 65.00\nUn1oading 24.00": 1
+      },
+      "deduction_L/F and Cash": {
+        "n1oading 24.00\n6.00\n1/FAndCash": 1,
+        "-) 900 ) LFAndCash": 1,
+        "1oading 24.00\n13.00\n1/FAndCash": 1
+      },
+      "deduction_Less For Damages": {
+        "f-) Less For Damages": 1
+      }
+    },
+    "JVLK": {
+      "supplier_name": {
+        "; rDate 06/01/2026 ane": 1,
+        "nber684, r0ate 03/01/2026\njane": 1
+      },
+      "voucher_number": {
+        "rNuaber": 1,
+        "ucherNumber9949333766\nyNunber6": 1
+      },
+      "deduction_LessForDanages": {
+        "24.00 4.00 L/FAndCash 1": 1
+      },
+      "deduction_UnLoading": {
+        "LessForDanages 20.00\nUnLoading": 1,
+        "Damages S8S0 a) UnLoading": 1,
+        "For 0amages 49.50 UnLoading": 1
+      },
+      "deduction_Other": {
+        ".00": 1,
+        "00.00\n) LYFAndCash": 1,
+        "0amages 49.50\nUnLoading 24.00": 1
+      },
+      "deduction_L/FAndCash": {
+        "nLoading 24.00\n4.00\nL/FAndCash": 1,
+        "Loading 24.00\n10.00\nL/FAndCash": 1
+      },
+      "deduction_Commission": {
+        "200.00 3 400.00 Comm7?4.00": 1,
+        "90.00 3 990.00 Conm?4.00": 1
+      },
+      "deduction_L/F and Cash": {
+        "0.00\n) LYFAndCash": 1
+      },
+      "deduction_Less For 0amages": {
+        "39.60 Less For 0amages": 1
+      }
+    },
+    "KRISHNAIA/T": {
+      "supplier_name": {
+        "Nunber194\nDate 06/01/2026\nne": 1,
+        "01/VoucherNumber2026\nSuppNamne": 1,
+        "Number66\nrDate 03/01/2026\njane": 1
+      },
+      "voucher_number": {
+        "Nunber": 1,
+        "12139, 9949.00 3337.86\nxNumber": 1
+      },
+      "deduction_Commission": {
+        "200.00 6 1580.00 Comm7?4.00X": 1,
+        "2 300.00 (-) Comm?4.008": 1
+      },
+      "deduction_Less for Damage": {
+        "63.20 1ess For Damages": 1,
+        "1880.00 1ess For Damages": 1
+      },
+      "deduction_UnLoading": {
+        "For Damages 79.00 Un1oading": 1,
+        "1 0.00 (-) UnLoading": 1,
+        "1 470.00 Comm?4.00& 1": 1
+      },
+      "deduction_Other": {
+        "Damages 79.00\nUn1oading 48.00": 1,
+        "(-) UnLoading 1600.00 io)": 1,
+        "0\nUn1oading": 1
+      },
+      "deduction_L/F and Cash": {
+        "1oading 48.00\n16.00\n1/FAndCash": 1,
+        "io) 300 -) LFAndCash": 1,
+        "Un1oading 500\nSada\n1YFAndCash": 1
+      }
+    },
+    "PATHI/PB": {
+      "supplier_name": {
+        "Number176 Date 06/01/2026 ae": 1,
+        "ucherDate 04/01/2026\nSupp Name": 1
+      },
+      "voucher_number": {
+        "eRASEDeeD\nNumber": 1,
+        "9949.00 3337.86\nVoucher Nunber": 1
+      },
+      "deduction_Commission": {
+        "For Damages 10.00 Un1oading": 1
+      },
+      "deduction_Less for Damage": {
+        "8.00 1ess For Damages": 1
+      },
+      "deduction_UnLoading": {
+        "For Damages 10.00 Un1oading": 1,
+        "Damages 1S500 (-) UnLoading": 1
+      },
+      "deduction_Other": {
+        "Damages 10.00 Un1oading 8.00": 1,
+        "(-) UnLoading 800.00 (-)": 1
+      },
+      "deduction_L/F and Cash": {
+        "Un1oading 8.00\n2.00\n1/FAndCash": 1,
+        "(-) L/F and Cash": 1
+      },
+      "deduction_Comm?4.00X": {
+        "1 300.00 (-) Comm?4.00X": 1
+      }
+    },
+    "JDRK": {
+      "supplier_name": {
+        "ber178\nnerDate 06/01/2026\nNane": 1,
+        "01/VoucherNumber2026\nSupp Name": 1
+      },
+      "voucher_number": {
+        "eee\nherNunber": 1,
+        "ucherNumber99493335766\nrNuaber": 1
+      },
+      "deduction_Commission": {
+        "al 4 1050.00 Comm?4.00": 1,
+        "hs) 2000.00 () Comm?400&": 1,
+        "90.00 5 1910.00 Comm?4.00": 1
+      },
+      "deduction_Less for Damage": {
+        "42.00 1ess For Damages": 1,
+        "00& 8000.00\nf-4 LessForDamages": 1
+      },
+      "deduction_UnLoading": {
+        "For Damages 52.50 Un1oading": 1,
+        "ForDamages 100.00\ncn UnLoading": 1,
+        "ssFor0anages 9550.00\nUn1oading": 1
+      },
+      "deduction_Other": {
+        "Damages 52.50\nUn1oading 32.00": 1,
+        "-, ; LYFAndCash 1": 1,
+        "ages 9550.00\nUn1oading 4000.00": 1
+      },
+      "deduction_L/F and Cash": {
+        "1oading 32.00\n11.00\n1/FAndCash": 1,
+        "-0O0 -, ; LYFAndCash": 1,
+        "oading 4000.00\n19.00\n1FAndCash": 1
+      }
+    },
+    "AVR": {
+      "supplier_name": {
+        "herDate 0670.00 1720.26\n)Nane": 1,
+        "cherNumber0570172026\nSupp Name": 1,
+        "01/VoucherNumber2026\nSupp Name": 1
+      },
+      "voucher_number": {
+        "seems\nherNunber": 1,
+        "Supp Name AVR YoucherNumber": 1
+      },
+      "deduction_Commission": {
+        "al 15 3770.00 Comm?4.00X": 1
+      },
+      "deduction_Less for Damage": {
+        "mm?4.00X 150.80\n1essForDanages": 1,
+        "400 30560.00\n-) LessForDamages": 1
+      },
+      "deduction_UnLoading": {
+        "essForDanages 188.50\nUn1oading": 1,
+        "00.00\n(-)j UnLoading": 1,
+        "orDamages 38200.00\n- Unloading": 1
+      },
+      "deduction_Other": {
+        "anages 188.50\nUn1oading 120.00": 1,
+        "UnLoading 9600.00 f-) 3": 1,
+        "AVR YoucherNumber94 Total 16": 1
+      },
+      "deduction_L/F and Cash": {
+        "oading 120.00\n38.00\n1/FAndCash": 1,
+        "f-) 339.00 f-) LFAndCash": 1
+      },
+      "deduction_Comm?4.00": {
+        "12 3920.00 (-) Comm?4.00": 1
+      },
+      "deduction_LessForDamages": {
+        "4.00 156.80\n(-) LessForDamages": 1
+      }
+    },
+    "KLH": {
+      "supplier_name": {
+        "nber168\nerDate 06/01/2026\nNane": 1,
+        "01/VoucherNumber2026\nSupp Name": 2,
+        "xrDate 0370.00 1720.26 jane": 1
+      },
+      "deduction_Less For Damages": {
+        "12.00 Less For Damages": 1,
+        "S400 Less For Damages": 1
+      },
+      "deduction_UnLoading": {
+        "For Damages 15.00 UnLoading": 1,
+        "e: 040-24412139, 9949.00 3337.": 1,
+        "For Damages 67.50 YnLoading": 1
+      },
+      "deduction_Other": {
+        "Damages 15.00 UnLoading 8.00": 1,
+        "00.00\nom)": 1,
+        "Damages 67.50\nYnLoading 24-00": 1
+      },
+      "deduction_L/FAndCash": {
+        "UnLoading 8.00\n3.00\nL/FAndCash": 1
+      },
+      "deduction_Commission": {
+        "1 1 300.00 Comm?4.00": 1,
+        "1 300OO (-) Comm?4.00": 1
+      },
+      "voucher_number": {
+        "Supp Name KLH YoucherNumber": 1,
+        "2139, 99493.00 3397.86\nwNunber": 1
+      },
+      "deduction_L/F and Cash": {
+        "om) 3.00 -) L-FAndCash": 1
+      }
+    },
+    "VARALAXMI/P": {
+      "supplier_name": {
+        "nber172\nerDate 06/01/2026\nNane": 1,
+        "eee ber70 e 03/01/2026": 1
       },
       "voucher_number": {
         "erNunber": 1,
-        "9949.00 3337.86\nveer\n3rNuaber": 1
-      },
-      "deduction_Less For Damages": {
-        "48.40 Less For Damages": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 60.50 UnLoading": 1,
-        "Damages -loS0 7 UnLoading": 1,
-        "essFor Danages 66.00\nUnLoading": 1
-      },
-      "deduction_Other": {
-        "Damages 60.50\nUnLoading 48.00": 1,
-        "a) UnLoading 4300.00 -,": 1,
-        "Name TLS Total 11": 1,
-        "Danages 66.00\nUnLoading 24.00": 1
-      },
-      "deduction_L/FAndCash": {
-        "Loading 48.00\n12.00\nL/FAndCash": 1,
-        "Loading 24.00\n13.00\nL/FAndCash": 1
-      },
-      "deduction_Commission": {
-        "l 6 1210.00 Comm?4.00X": 1
-      },
-      "deduction_Less for Damage": {
-        "?400 7520.00\n-) lessForDamages": 1
-      },
-      "deduction_LessFor Danages": {
-        "nm7?4.00& S280\nLessFor Danages": 1
-      }
-    },
-    "BSR": {
-      "voucher_number": {
-        "rNuaber": 1,
-        "VoucherNunber": 1,
-        "1 340.00 340.00 2": 1
-      },
-      "deduction_Less for Damage": {
-        "6.00 1ess For Damages": 1
-      },
-      "deduction_Commission": {
-        "150.00 1 150.00 Comm?4.00": 1,
-        "340.00 2 880.00 Comm?4.00&": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 7.50 Un1oading": 1,
-        "Damages 35.00 (-) UnLoading": 1
-      },
-      "deduction_Other": {
-        "Damages 7.50 Un1oading 8.00": 1,
-        "(-) UnLoading 1600.00 (-)": 1,
-        "Damages 4400.00\nUnLoading leOa": 1
-      },
-      "deduction_L/F and Cash": {
-        "Un1oading 8.00\n2.00\n1/FAndCash": 1
-      },
-      "supplier_name": {
-        "ucherDate 05/01/2026\nSupp Name": 1,
-        "rNumber88\nrDate 03/01/2026\nare": 1
-      },
-      "deduction_Comm?4.00": {
-        "2 700.00 (-) Comm?4.00": 1
-      },
-      "deduction_Less For Damages": {
-        "(-) Less For Damages": 1
-      },
-      "deduction_f-) LFAndCash": {
-        "(-) 700 f-) LFAndCash": 1
+        "00 205.60 essForDamages 25": 1
       },
       "deduction_LessForDamages": {
-        "omm?4.00& 35.20\nLessForDamages": 1
-      },
-      "deduction_LFAndCash": {
-        "UnLoading leOa 900 LFAndCash": 1
-      }
-    },
-    "JRRK": {
-      "supplier_name": {
-        "e VoucherNumber0770172026\nNane": 1
-      },
-      "voucher_number": {
-        "erNunber": 1
-      },
-      "deduction_Less for Damage": {
-        "0.00 1ess For Damages": 1
-      },
-      "deduction_Commission": {
-        "1ess For Damages 62.": 1
+        "mm7?4.00 166.00\nLessForDamages": 1
       },
       "deduction_UnLoading": {
-        "For Damages 62.50 Un1oading": 1
+        "essForDamages 207.50\nUnLoading": 1,
+        "ForDamages 25700.00\nYnLloading": 1
+      },
+      "deduction_L/FAndCash": {
+        ".50\nUnLoading 96.00\nL/FAndCash": 1
+      },
+      "deduction_Commission": {
+        "1 12.00 4150.00 Comm7?4.00": 1,
+        "14 5140.00 Comm?4: 00": 1
+      },
+      "deduction_Less for Damage": {
+        "omm?4: 00 205.60\nessForDamages": 1
       },
       "deduction_Other": {
-        "Damages 62.50\nUn1oading 120.00": 1
-      },
-      "deduction_L/F and Cash": {
-        "oading 120.00\n13.00\n1/FAndCash": 1
+        "Qty Price Amount 14": 1
       }
     },
     "ANR": {
@@ -1046,6 +660,37 @@
         "(-) 27.00 (-) L/FAndCash": 1
       }
     },
+    "AYODAIA/A": {
+      "supplier_name": {
+        "e VoucherNumber0670172026\nVane": 1
+      },
+      "voucher_number": {
+        "erNunber": 1
+      },
+      "deduction_Commission": {
+        "000.00\n 14 2880.00\nComm7?4.00X": 1
+      },
+      "deduction_Less for Damage": {
+        "m7?4.00X 115.20\n1essForDamages": 1
+      },
+      "deduction_UnLoading": {
+        "essForDamages 144.00\nUn1oading": 1
+      },
+      "deduction_Other": {
+        "amages 144.00\nUn1oading 112.00": 1,
+        "Price Amount Total 20": 1
+      },
+      "deduction_L/F and Cash": {
+        "1oading 112.00\n29.00\n1FAndCash": 1,
+        ") S1a0 -) 1YFAndCash": 1
+      },
+      "deduction_Less For Damages": {
+        "0 20480.00\n(-)3 1essForDamages": 1
+      },
+      "deduction_Un1oading": {
+        "orDamages 25600.00\nf Un1oading": 1
+      }
+    },
     "DMR": {
       "voucher_number": {
         "ucherNunber": 1
@@ -1064,6 +709,108 @@
       },
       "deduction_Commission": {
         "1 300.00 ) Comm?4.008": 1
+      }
+    },
+    "KRISH/J": {
+      "supplier_name": {
+        "ber183\nsxrDate 06/01/2026\nYane": 1
+      },
+      "voucher_number": {
+        "syNunber": 1
+      },
+      "deduction_Commission": {
+        "1 3 540.00 Comm7?4.00": 1
+      },
+      "deduction_Less for Damage": {
+        "omm7?4.00 21.60\n1essForDanages": 1
+      },
+      "deduction_UnLoading": {
+        "1essForDanages 27.00\nUn1oading": 1
+      },
+      "deduction_Other": {
+        "rDanages 27.00\nUn1oading 24.00": 1
+      },
+      "deduction_L/F and Cash": {
+        "n1oading 24.00\n5.00\n1/FAndCash": 1
+      }
+    },
+    "GRD": {
+      "supplier_name": {
+        "ber165\nherDate 06/01/2026\nNane": 1,
+        "01/VoucherNumber2026\nSupp Name": 1,
+        "Nurnber65\nrDate 03/01/2026\nane": 1
+      },
+      "deduction_Commission": {
+        "Bl 5 1600.00 Comm?4.00": 1,
+        "300.00 3 1290.00 Comm?4.00": 1
+      },
+      "deduction_Less for Damage": {
+        "Comm?4.00 64.00\n1essForDanages": 1,
+        "51.60 1ess For Damages": 1
+      },
+      "deduction_UnLoading": {
+        "1essForDanages 80.00\nUn1oading": 1,
+        "For Damages 64.50 Un1oading": 1
+      },
+      "deduction_Other": {
+        "rDanages 80.00\nUn1oading 40.00": 1,
+        "Damages 64.50\nUn1oading 24.00": 1
+      },
+      "deduction_L/F and Cash": {
+        "1oading 40.00\n16.00\n1/FAndCash": 1,
+        "1oading 24.00\n13.00\n1YFAndCash": 1
+      },
+      "deduction_f-) Less For Damages": {
+        "f-) Less For Damages": 1
+      },
+      "deduction_i) UnLoading": {
+        "Damages 73.00 i) UnLoading": 1
+      },
+      "deduction_-) LYFAndCash": {
+        "7 1Sa0 -) LYFAndCash": 1
+      },
+      "voucher_number": {
+        "ucherNumber9949333786\nrNurnber": 1
+      }
+    },
+    "DPH": {
+      "supplier_name": {
+        "ber184\nherDate 06/01/2026\nNane": 1,
+        "cherNumber0570172026\nSupp Name": 1,
+        "01/VoucherNumber2026\nSupp Name": 1,
+        "Nuaber -Date 03/01/2026 ne": 1
+      },
+      "voucher_number": {
+        "herNuaber": 1,
+        "9949.00 3337.86\nVoucherNunber": 1
+      },
+      "deduction_Less For Damages": {
+        "56.80 Less For Damages": 1
+      },
+      "deduction_UnLoading": {
+        "For Damages 71.00 UnLoading": 1,
+        "rDamages 12550.00\n-j UnLoading": 1,
+        "orDamages 29500.00\n) UnLoading": 1,
+        "ssForDamages 8700.00\nUn1oading": 1
+      },
+      "deduction_Other": {
+        "Damages 71.00\nUnLoading 48.00": 1,
+        "10040.00 ) LessForDamages 1": 1,
+        "2 90.00 180.00 bs)": 1
+      },
+      "deduction_LFAndCash": {
+        "nLoading 48.00\n14.00\nLFAndCash": 1
+      },
+      "deduction_Commission": {
+        "6 1420.00 me Comm?4.00": 1,
+        "11 S90000 () Comm?400": 1
+      },
+      "deduction_Less for Damage": {
+        "m?400 236.00\n-) LessForDamages": 1,
+        "mm?4.00 6960.00\n1essForDamages": 1
+      },
+      "deduction_L/F and Cash": {
+        "3 S9.00O0 -3 L/FAndCash": 1
       }
     },
     "DSM": {
@@ -1152,6 +899,41 @@
       },
       "deduction_L/F and Cash": {
         "1oading 64.00\n13.00\n1/FAndCash": 1
+      }
+    },
+    "JPYK": {
+      "voucher_number": {
+        "rNuaber": 1,
+        "2 100.00 200.00\nVoucherNumber": 1
+      },
+      "deduction_Commission": {
+        "90.00 3 530.00 Comm?4.00": 1,
+        "Damages 30.00 7) UnLoading": 1,
+        "1 3 1090.00 Comnm9?4.00": 1
+      },
+      "deduction_Less for Damage": {
+        "Comm?4.00 21.20\n1essForDanages": 1,
+        "-) Less For Damages": 1,
+        "43.60 1ess For 0amages": 1
+      },
+      "deduction_UnLoading": {
+        "1essForDanages 26.50\nUn1oading": 1,
+        "Damages 30.00 7) UnLoading": 1,
+        "For 0amages 54.50 Un1oading": 1
+      },
+      "deduction_L/F and Cash": {
+        "n1oading 24.00\n5.00\n1/FAndCash": 1,
+        "UnLoading 24.00\n-) L/FAndCash": 1,
+        "1oading 24.00\n11.00\n1/FAndCash": 1
+      },
+      "deduction_Other": {
+        "0\nUn1oading 24.00": 1,
+        "200.00\nVoucherNumber97\nTotal 3": 1,
+        "0amages 54.50\nUn1oading 24.00": 1
+      },
+      "supplier_name": {
+        "01/VoucherNumber2026\nSupp Name": 1,
+        "Nunber83\nw0ate 03/01/2026\njane": 1
       }
     },
     "YKHM": {
@@ -1267,244 +1049,55 @@
         "1oading 64.00\n14.00\n1/FAndCash": 1
       }
     },
-    "UPM": {
+    "SHANKAR/G": {
       "supplier_name": {
-        "unber196\naDate 06/01/2026\njane": 1,
-        "cherNumber0570172026\nSupp Name": 1
+        "01/VoucherNumber2026\nSupp Name": 1
       },
       "voucher_number": {
-        "srNunber": 1,
-        "nssnroererooeer\nVoucherNuraber": 1
+        "VoucherNuaber": 1
       },
       "deduction_Commission": {
-        "2 100.00 200.00 Comm?4.00": 1,
-        "Supp Name UPM Comm?4.00": 1
-      },
-      "deduction_Less for Damage": {
-        "omm?4.00 110.00\n1essForDamages": 1
-      },
-      "deduction_UnLoading": {
-        "essForDamages 137.50\nUn1oading": 1,
-        "sForDamages 13250.00\nUnLoading": 1
-      },
-      "deduction_L/F and Cash": {
-        "sForDamages 137.50\nUn1oading 1": 1
-      },
-      "deduction_Other": {
-        "50\nUn1oading 128.00\n1/FAndCash": 1,
-        "es 13250.00\nUnLoading 12000.00": 1
-      },
-      "deduction_L/FAndCash": {
-        "ding 12000.00\n27.00\nL/FAndCash": 1
-      }
-    },
-    "ANMY": {
-      "voucher_number": {
-        "peer\nverNuaber": 1,
-        "YoucherNumber": 1,
-        "9949.00 3337.86\nVoucherNuaber": 1,
-        "For 0amages 22.00 Un1oading": 1
-      },
-      "deduction_Commission": {
-        "vi 3 760.00 Comm7?4.00": 1,
-        "1 1 440.00 Comm9?4.00": 1
-      },
-      "deduction_Less for Damage": {
-        "30.40 1ess For Damages": 1,
-        "p-) Less For Damages": 1,
-        "17.60 1ess For 0amages": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 38.00 Un1oading": 1,
-        "ForDanages 25.00\n(-) UnLoading": 1,
-        "Damages 47.00 7) UnLoading": 1,
-        "For 0amages 22.00 Un1oading": 1
-      },
-      "deduction_Other": {
-        ".00\nUn1oading 24.00": 1,
-        "2000.00 (-) LessForDanages 2": 1,
-        "420.00 840.00 Total 3": 1,
-        "amages 22.00\nUn1oading 8000.00": 1
-      },
-      "deduction_L/F and Cash": {
-        "n1oading 24.00\n8.00\n1/FAndCash": 1,
-        "UnLoading 2400.00\n- LYFAndCash": 1,
-        "1oading 8000.00\n4.00\n1FAndCash": 1
-      },
-      "supplier_name": {
-        "cherNumber0570172026\nSupp Name": 1,
-        "01/VoucherNumber2026\nSupp Name": 1,
-        "ber80\nsaxr0ate 03/01/2026\nJane": 1
-      },
-      "deduction_Comm?4.00": {
-        "3 500.00 (-) Comm?4.00": 1
-      },
-      "deduction_LessForDanages": {
-        ".00 2000.00\n(-) LessForDanages": 1
-      },
-      "deduction_L/FAndCash": {
-        "(-) 0.00 (-) L/FAndCash": 1
-      }
-    },
-    "KRISHNAIA/T": {
-      "supplier_name": {
-        "Nunber194\nDate 06/01/2026\nne": 1,
-        "01/VoucherNumber2026\nSuppNamne": 1,
-        "Number66\nrDate 03/01/2026\njane": 1
-      },
-      "voucher_number": {
-        "Nunber": 1,
-        "12139, 9949.00 3337.86\nxNumber": 1
-      },
-      "deduction_Commission": {
-        "200.00 6 1580.00 Comm7?4.00X": 1,
-        "2 300.00 (-) Comm?4.008": 1
-      },
-      "deduction_Less for Damage": {
-        "63.20 1ess For Damages": 1,
-        "1880.00 1ess For Damages": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 79.00 Un1oading": 1,
-        "1 0.00 (-) UnLoading": 1,
-        "1 470.00 Comm?4.00& 1": 1
-      },
-      "deduction_Other": {
-        "Damages 79.00\nUn1oading 48.00": 1,
-        "(-) UnLoading 1600.00 io)": 1,
-        "0\nUn1oading": 1
-      },
-      "deduction_L/F and Cash": {
-        "1oading 48.00\n16.00\n1/FAndCash": 1,
-        "io) 300 -) LFAndCash": 1,
-        "Un1oading 500\nSada\n1YFAndCash": 1
-      }
-    },
-    "PATHI/PB": {
-      "supplier_name": {
-        "Number176 Date 06/01/2026 ae": 1,
-        "ucherDate 04/01/2026\nSupp Name": 1
-      },
-      "voucher_number": {
-        "eRASEDeeD\nNumber": 1,
-        "9949.00 3337.86\nVoucher Nunber": 1
-      },
-      "deduction_Commission": {
-        "For Damages 10.00 Un1oading": 1
-      },
-      "deduction_Less for Damage": {
-        "8.00 1ess For Damages": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 10.00 Un1oading": 1,
-        "Damages 1S500 (-) UnLoading": 1
-      },
-      "deduction_Other": {
-        "Damages 10.00 Un1oading 8.00": 1,
-        "(-) UnLoading 800.00 (-)": 1
-      },
-      "deduction_L/F and Cash": {
-        "Un1oading 8.00\n2.00\n1/FAndCash": 1,
-        "(-) L/F and Cash": 1
-      },
-      "deduction_Comm?4.00X": {
-        "1 300.00 (-) Comm?4.00X": 1
-      }
-    },
-    "KLH": {
-      "supplier_name": {
-        "nber168\nerDate 06/01/2026\nNane": 1,
-        "01/VoucherNumber2026\nSupp Name": 2,
-        "xrDate 0370.00 1720.26 jane": 1
-      },
-      "deduction_Less For Damages": {
-        "12.00 Less For Damages": 1,
-        "S400 Less For Damages": 1
-      },
-      "deduction_UnLoading": {
-        "For Damages 15.00 UnLoading": 1,
-        "e: 040-24412139, 9949.00 3337.": 1,
-        "For Damages 67.50 YnLoading": 1
-      },
-      "deduction_Other": {
-        "Damages 15.00 UnLoading 8.00": 1,
-        "00.00\nom)": 1,
-        "Damages 67.50\nYnLoading 24-00": 1
-      },
-      "deduction_L/FAndCash": {
-        "UnLoading 8.00\n3.00\nL/FAndCash": 1
-      },
-      "deduction_Commission": {
-        "1 1 300.00 Comm?4.00": 1,
-        "1 300OO (-) Comm?4.00": 1
-      },
-      "voucher_number": {
-        "Supp Name KLH YoucherNumber": 1,
-        "2139, 99493.00 3397.86\nwNunber": 1
-      },
-      "deduction_L/F and Cash": {
-        "om) 3.00 -) L-FAndCash": 1
-      }
-    },
-    "VARALAXMI/P": {
-      "supplier_name": {
-        "nber172\nerDate 06/01/2026\nNane": 1,
-        "eee ber70 e 03/01/2026": 1
-      },
-      "voucher_number": {
-        "erNunber": 1,
-        "00 205.60 essForDamages 25": 1
+        "11 2670.00 (-) Comm?4.008": 1
       },
       "deduction_LessForDamages": {
-        "mm7?4.00 166.00\nLessForDamages": 1
+        ".008 106.80\n(-) LessForDamages": 1
       },
       "deduction_UnLoading": {
-        "essForDamages 207.50\nUnLoading": 1,
-        "ForDamages 25700.00\nYnLloading": 1
-      },
-      "deduction_L/FAndCash": {
-        ".50\nUnLoading 96.00\nL/FAndCash": 1
-      },
-      "deduction_Commission": {
-        "1 12.00 4150.00 Comm7?4.00": 1,
-        "14 5140.00 Comm?4: 00": 1
-      },
-      "deduction_Less for Damage": {
-        "omm?4: 00 205.60\nessForDamages": 1
+        "orDamages 133.50\n(-) UnLoading": 1
       },
       "deduction_Other": {
-        "Qty Price Amount 14": 1
-      }
-    },
-    "SSI": {
-      "supplier_name": {
-        "01/VoucherNumber2026\nSupp Name": 1,
-        "her0ate 0370.00 1720.26 Nane": 1
-      },
-      "deduction_Comm?4.00 -": {
-        "ForDamages 10.00\n(-) UnLoading": 1
-      },
-      "deduction_Less for Damage": {
-        "- 800.00 (-) LlessForDamages": 1,
-        "Comm?4.00 80.80\n1essFor0amages": 1
-      },
-      "deduction_UnLoading": {
-        "ForDamages 10.00\n(-) UnLoading": 1,
-        "essFor0amages 101.00\nUn1oading": 1
-      },
-      "deduction_Other": {
-        "(-) UnLoading 800.00 (-)": 1,
-        "mages 101.00\nUn1oading 4000.00": 1
+        "(-) UnLoading 88.00 (-)": 1
       },
       "deduction_L/F and Cash": {
-        "f-) L/F and Cash": 1,
-        "ading 4000.00\n20.00\n1/FAndCash": 1
+        "(-) 27.00 () LFAndCash": 1
+      }
+    },
+    "TLS": {
+      "supplier_name": {
+        "01/VoucherNumber2026\nSupp Name": 1,
+        "ucherDate 04/01/2026\nSupp Name": 1,
+        "r\n3rNuaber63, xDate 03/01/2026": 1
+      },
+      "deduction_Less for Damage": {
+        "?400 7520.00\n-) lessForDamages": 1
+      },
+      "deduction_Other": {
+        "a) UnLoading 4300.00 -,": 1,
+        "Name TLS Total 11": 1,
+        "Danages 66.00\nUnLoading 24.00": 1
+      },
+      "deduction_UnLoading": {
+        "Damages -loS0 7 UnLoading": 1,
+        "essFor Danages 66.00\nUnLoading": 1
       },
       "voucher_number": {
-        "erNumber9949939786\nhexrNunber6": 1
+        "9949.00 3337.86\nveer\n3rNuaber": 1
       },
-      "deduction_Commission": {
-        "vl S 2020.00 Comm?4.00": 1
+      "deduction_LessFor Danages": {
+        "nm7?4.00& S280\nLessFor Danages": 1
+      },
+      "deduction_L/FAndCash": {
+        "Loading 24.00\n13.00\nL/FAndCash": 1
       }
     },
     "DRD/GRD": {
@@ -1528,34 +1121,6 @@
       },
       "deduction_L/F and Cash": {
         "(-) 13.00 (-) L/FAndCash": 1
-      }
-    },
-    "VERLAXHI/P": {
-      "supplier_name": {
-        "01/VoucherNumber2026\nSupp Name": 1
-      },
-      "voucher_number": {
-        "VoucherNuaber": 1
-      }
-    },
-    "PM": {
-      "supplier_name": {
-        "cherNumber0570172026\nSupp Name": 1
-      },
-      "voucher_number": {
-        "VoucherNuaber": 1
-      },
-      "deduction_LessForDamages": {
-        "00 12280.00\n(-) LessForDamages": 1
-      },
-      "deduction_UnLoading": {
-        "orDamages 153.50\n(-) UnLoading": 1
-      },
-      "deduction_f-)": {
-        "(-) UnLoading 120.00 f-)": 1
-      },
-      "deduction_LFAndCash": {
-        "f-) 31.00 (-) LFAndCash": 1
       }
     },
     "DD": {
@@ -1645,6 +1210,41 @@
         "000.00\n)": 1
       }
     },
+    "BSR": {
+      "supplier_name": {
+        "ucherDate 05/01/2026\nSupp Name": 1,
+        "rNumber88\nrDate 03/01/2026\nare": 1
+      },
+      "voucher_number": {
+        "VoucherNunber": 1,
+        "1 340.00 340.00 2": 1
+      },
+      "deduction_Comm?4.00": {
+        "2 700.00 (-) Comm?4.00": 1
+      },
+      "deduction_Less For Damages": {
+        "(-) Less For Damages": 1
+      },
+      "deduction_UnLoading": {
+        "Damages 35.00 (-) UnLoading": 1
+      },
+      "deduction_Other": {
+        "(-) UnLoading 1600.00 (-)": 1,
+        "Damages 4400.00\nUnLoading leOa": 1
+      },
+      "deduction_f-) LFAndCash": {
+        "(-) 700 f-) LFAndCash": 1
+      },
+      "deduction_LessForDamages": {
+        "omm?4.00& 35.20\nLessForDamages": 1
+      },
+      "deduction_LFAndCash": {
+        "UnLoading leOa 900 LFAndCash": 1
+      },
+      "deduction_Commission": {
+        "340.00 2 880.00 Comm?4.00&": 1
+      }
+    },
     "TNM": {
       "supplier_name": {
         "01/VoucherNumber2026\nSupp Name": 1,
@@ -1684,27 +1284,24 @@
         "VoucherNuaber": 1
       }
     },
-    "SRIVANI/G": {
+    "PM": {
       "supplier_name": {
-        "01/VoucherNumber2026\nSupp Name": 1
+        "cherNumber0570172026\nSupp Name": 1
       },
       "voucher_number": {
-        "VoucherNunber": 1
+        "VoucherNuaber": 1
       },
-      "deduction_Comm7?4.008": {
-        "S 970.00 (-) Comm7?4.008": 1
-      },
-      "deduction_Less For Damages": {
-        "(-) Less For Damages": 1
+      "deduction_LessForDamages": {
+        "00 12280.00\n(-) LessForDamages": 1
       },
       "deduction_UnLoading": {
-        "Damages 48.50 (-) UnLoading": 1
+        "orDamages 153.50\n(-) UnLoading": 1
       },
-      "deduction_Other": {
-        "(-) UnLoading 40.00 (-)": 1
+      "deduction_f-)": {
+        "(-) UnLoading 120.00 f-)": 1
       },
-      "deduction_L/F and Cash": {
-        "(-) 1000.00 f-) LFAndCash": 1
+      "deduction_LFAndCash": {
+        "f-) 31.00 (-) LFAndCash": 1
       }
     },
     "KARTIK/V": {
@@ -1752,29 +1349,6 @@
         "(-) 2000.00 f-) LFAndCash": 1
       }
     },
-    "SHANKAR/G": {
-      "supplier_name": {
-        "01/VoucherNumber2026\nSupp Name": 1
-      },
-      "voucher_number": {
-        "VoucherNuaber": 1
-      },
-      "deduction_Commission": {
-        "11 2670.00 (-) Comm?4.008": 1
-      },
-      "deduction_LessForDamages": {
-        ".008 106.80\n(-) LessForDamages": 1
-      },
-      "deduction_UnLoading": {
-        "orDamages 133.50\n(-) UnLoading": 1
-      },
-      "deduction_Other": {
-        "(-) UnLoading 88.00 (-)": 1
-      },
-      "deduction_L/F and Cash": {
-        "(-) 27.00 () LFAndCash": 1
-      }
-    },
     "PRC": {
       "supplier_name": {
         "cherNumber0570172026\nSupp Name": 1
@@ -1795,6 +1369,41 @@
         "- 4100.00 an) LYFAndCash": 1
       }
     },
+    "SV": {
+      "deduction_LessForDamages": {
+        "9?4.00 SS20\n(-) LessForDamages": 1,
+        "mm?400X5520\n(-) LessForDamages": 1
+      },
+      "deduction_UnLoading": {
+        "rDamages 6900.00\n(-) UnLoading": 2
+      },
+      "deduction_f-)": {
+        "(-) UnLoading 32.00 f-)": 1
+      },
+      "deduction_- L/FAndCash": {
+        "f-) 1400.00 - L/FAndCash": 1
+      },
+      "deduction_Other": {
+        "(-) UnLoading 4000.00 i-)": 1
+      },
+      "deduction_L/FAndCash": {
+        "i-) 14.00 -) L/FAndCash": 1
+      }
+    },
+    "NRR": {
+      "supplier_name": {
+        "cherNumber0570172026\nSupp Name": 1
+      },
+      "deduction_UnLoading": {
+        "orDamages 100.00S0\n4 UnLoading": 1
+      },
+      "deduction_Other": {
+        ".00 480.00\nTotal 13": 1
+      },
+      "deduction_L/F and Cash": {
+        "ne -0000a -; LFAndCash": 1
+      }
+    },
     "NDV": {
       "supplier_name": {
         "cherNumber0570172026\nSupp Name": 1
@@ -1813,6 +1422,37 @@
       },
       "deduction_L/F and Cash": {
         "00 1200.00\ni-)j LessForDamages": 1
+      }
+    },
+    "VERLAXHI/P": {
+      "supplier_name": {
+        "01/VoucherNumber2026\nSupp Name": 1
+      },
+      "voucher_number": {
+        "VoucherNuaber": 1
+      }
+    },
+    "SRIVANI/G": {
+      "supplier_name": {
+        "01/VoucherNumber2026\nSupp Name": 1
+      },
+      "voucher_number": {
+        "VoucherNunber": 1
+      },
+      "deduction_Comm7?4.008": {
+        "S 970.00 (-) Comm7?4.008": 1
+      },
+      "deduction_Less For Damages": {
+        "(-) Less For Damages": 1
+      },
+      "deduction_UnLoading": {
+        "Damages 48.50 (-) UnLoading": 1
+      },
+      "deduction_Other": {
+        "(-) UnLoading 40.00 (-)": 1
+      },
+      "deduction_L/F and Cash": {
+        "(-) 1000.00 f-) LFAndCash": 1
       }
     },
     "JESWANTH": {
@@ -1846,6 +1486,58 @@
         "6\nVoucherNuaber93\n- L/FAndCash": 1
       }
     },
+    "VSY": {
+      "supplier_name": {
+        "01/VoucherNumber2026\nSupp Name": 1
+      },
+      "voucher_number": {
+        "9949.00 3337.86\nVoucherNuaber": 1
+      },
+      "deduction_Commission": {
+        "8 17S0O0 i-) Comm?4.00&": 1
+      },
+      "deduction_Less for Damage": {
+        "i) Less For Damages": 1
+      },
+      "deduction_UnLoading": {
+        "Damages 87.50 7 UnLoading": 1
+      }
+    },
+    "NANDU/D": {
+      "supplier_name": {
+        "cherNumber0470172026\nSupp Name": 1,
+        "Number78 Date 03/01/2026 1e": 1
+      },
+      "voucher_number": {
+        "9949.00 3337.86\nVoucherNuaber": 1,
+        "12139, 99493.00 3379.66\nNumber": 1
+      },
+      "deduction_Comm?400": {
+        "1 300.00 (-) Comm?400": 1
+      },
+      "deduction_UnLoading": {
+        "1 0.00 (-) UnLoading": 1,
+        "For Damages 26.50 Un1oading": 1
+      },
+      "deduction_an)": {
+        "(-) UnLoading 800.00 an)": 1
+      },
+      "deduction_a) L/F and Cash": {
+        "04\nVoucherDate VoucherNumber04": 1
+      },
+      "deduction_Commission": {
+        "Amount 1 530.00 Comm?4.00&": 1
+      },
+      "deduction_Less for Damage": {
+        "21.20 1ess For Damages": 1
+      },
+      "deduction_Other": {
+        "1ess For Damages 26.": 1
+      },
+      "deduction_L/F and Cash": {
+        "Un1oading 800 saa 1/FAndCash": 1
+      }
+    },
     "UPM/PBSR": {
       "supplier_name": {
         "01/VoucherNumber2026\nSupp Name": 1
@@ -1876,6 +1568,20 @@
       },
       "deduction_L/F and Cash": {
         "UnLoading 7200.00\n-) LFAndCash": 1
+      }
+    },
+    "JASHVANTH": {
+      "supplier_name": {
+        "Nunber71 Date 03/01/2026 ne": 1
+      },
+      "voucher_number": {
+        "9949.00 3337.86 a Nunber": 1
+      },
+      "deduction_Other": {
+        "EefetesciressatcueeSheDSOED\n16": 1
+      },
+      "deduction_L/F and Cash": {
+        "JASHVANTH DDD ape L/FAndCash": 1
       }
     },
     "SWAMY/N": {
@@ -1938,6 +1644,17 @@
         "n1oading 16.00\n7.00\n1/FAndCash": 1
       }
     },
+    "VANITHA/D": {
+      "supplier_name": {
+        "-Nunber77\n-Date 03/01/2026\nme": 1
+      },
+      "voucher_number": {
+        "99, 9949393.00 9397.86\n-Nunber": 1
+      },
+      "deduction_Other": {
+        "ssForDamages Solu\nUn1oading eo": 1
+      }
+    },
     "ANRY": {
       "supplier_name": {
         "uaber74\nsrDate 03/01/2026\nNane": 1
@@ -1954,46 +1671,30 @@
     }
   },
   "field_stats": {
+    "supplier_name": {
+      "BERR": {
+        "BMRR": 1
+      },
+      "SsI": {
+        "SSI": 1
+      },
+      "JESWVANTH": {
+        "JESWANTH": 1
+      }
+    },
     "voucher_number": {
-      "077012026": {
-        "143": 1
-      },
-      "07701": {
-        "140": 1,
-        "142": 1,
-        "132": 1
-      },
-      "0770172026": {
-        "148": 1,
-        "144": 1,
-        "156": 1,
-        "135": 1,
-        "133": 1,
-        "155": 1,
-        "137": 1,
-        "153": 1,
-        "147": 1
-      },
       "0670172026": {
-        "187": 1,
-        "174": 1
-      },
-      "0570172026": {
-        "130": 1,
-        "141": 1,
-        "147": 1,
-        "138": 1,
-        "152": 1,
-        "148": 1,
-        "158": 1
+        "174": 1,
+        "187": 1
       },
       "2026": {
-        "145": 1,
-        "142": 1,
+        "143": 1,
         "137": 1,
         "156": 1,
         "154": 1,
-        "143": 1,
+        "145": 1,
+        "142": 1,
+        "94": 1,
         "93": 1,
         "97": 1,
         "102": 1,
@@ -2002,8 +1703,16 @@
         "88": 1,
         "107": 1,
         "89": 1,
-        "94": 1,
         "100": 1
+      },
+      "0570172026": {
+        "141": 1,
+        "138": 1,
+        "152": 1,
+        "147": 1,
+        "148": 1,
+        "130": 1,
+        "158": 1
       },
       "701": {
         "144": 1
@@ -2019,10 +1728,10 @@
         "62": 1,
         "84": 1,
         "80": 1,
-        "89": 1,
         "69": 1,
         "68": 1,
-        "65": 1
+        "65": 1,
+        "89": 1
       },
       "060": {
         "79": 1
@@ -2035,11 +1744,6 @@
       },
       "00024": {
         "67": 1
-      }
-    },
-    "supplier_name": {
-      "JESWVANTH": {
-        "JESWANTH": 1
       }
     }
   }

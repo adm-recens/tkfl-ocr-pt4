@@ -34,7 +34,7 @@ class OCRCorrectionModel:
         
     def learn_from_correction(self, raw_ocr: str, auto_extracted: str, user_corrected: str, field_name: str = None):
         """
-        Learn a correction pattern from user feedback
+        Learn a character-level correction pattern from user feedback using Levenshtein distance
         
         Args:
             raw_ocr: Original OCR text
@@ -44,16 +44,24 @@ class OCRCorrectionModel:
         """
         if not auto_extracted or not user_corrected or auto_extracted == user_corrected:
             return
-        
-        # Store pattern
-        if auto_extracted not in self.ocr_patterns:
-            self.ocr_patterns[auto_extracted] = []
-            self.pattern_stats[auto_extracted] = defaultdict(int)
-        
-        self.ocr_patterns[auto_extracted].append(user_corrected)
-        self.pattern_stats[auto_extracted][user_corrected] += 1
-        self.total_samples += 1
-        self.last_trained = datetime.now()
+            
+        import difflib
+        matcher = difflib.SequenceMatcher(None, auto_extracted, user_corrected)
+        for tag, i1, i2, j1, j2 in matcher.get_opcodes():
+            if tag == 'replace':
+                bad_char = auto_extracted[i1:i2]
+                good_char = user_corrected[j1:j2]
+                
+                # We only want to learn small character-level confusions, not entire strings
+                if len(bad_char) <= 4 and len(good_char) <= 4:
+                    if bad_char not in self.ocr_patterns:
+                        self.ocr_patterns[bad_char] = []
+                        self.pattern_stats[bad_char] = defaultdict(int)
+                    
+                    self.ocr_patterns[bad_char].append(good_char)
+                    self.pattern_stats[bad_char][good_char] += 1
+                    self.total_samples += 1
+                    self.last_trained = datetime.now()
     
     def get_correction_suggestion(self, text: str, confidence_threshold: float = 0.7) -> dict:
         """
@@ -102,6 +110,25 @@ class OCRCorrectionModel:
             'confidence': confidence,
             'pattern_matches': len(corrections)
         }
+        
+    def apply_ocr_corrections(self, text: str) -> str:
+        """Globally apply high-confidence learned character swaps to raw text before parsing."""
+        if not text or not self.pattern_stats:
+            return text
+            
+        corrected_text = text
+        for bad_char, corrections in self.pattern_stats.items():
+            total = sum(corrections.values())
+            if total == 0: continue
+            
+            best_correction = max(corrections.items(), key=lambda x: x[1])
+            confidence = best_correction[1] / total
+            
+            # Safely replace known bad OCR hallucinations with high confidence
+            if confidence >= 0.8 and total >= 2:
+                corrected_text = corrected_text.replace(bad_char, best_correction[0])
+                
+        return corrected_text
     
     def get_stats(self) -> dict:
         """Get model statistics"""
@@ -343,7 +370,7 @@ class ParsingCorrectionModel:
 
     def find_value_by_anchor(self, field_name: str, raw_ocr: str, supplier_name: str) -> dict:
         """
-        Scan raw OCR for values using learned anchors for this supplier.
+        Scan raw OCR for values using learned fuzzy anchors for this supplier.
         """
         if not supplier_name:
             return None
@@ -358,29 +385,46 @@ class ParsingCorrectionModel:
             
         # Sort anchors by frequency (most common first)
         sorted_anchors = sorted(anchors.items(), key=lambda x: x[1], reverse=True)
+        import difflib
+        
+        lines = [line.strip() for line in raw_ocr.split('\n') if line.strip()]
         
         for anchor_text, count in sorted_anchors:
             if count < 1: continue # Ignore noise
             
-            try:
-                # Regex: Anchor + Separators + (Capture Value)
-                # Value: Non-newline chars until end of line or long space
-                escaped_anchor = re.escape(anchor_text)
-                pattern = re.compile(escaped_anchor + r"\s*[:=-]?\s*([^\n]+)", re.IGNORECASE)
-                
-                match = pattern.search(raw_ocr)
-                if match:
-                    value = match.group(1).strip()
-                    # Basic cleanup
-                    value = re.sub(r"\s{2,}.*", "", value) # Stop at double space
-                    return {
-                        'value': value,
-                        'confidence': 0.8 + (min(count, 10) / 50.0), # Higher count = higher confidence
-                        'anchor': anchor_text
-                    }
-            except Exception:
-                continue
-                
+            anchor_words = anchor_text.split()
+            anchor_len = len(anchor_words)
+            
+            for line_idx, line in enumerate(lines):
+                words = line.split()
+                if len(words) < anchor_len:
+                    continue
+                    
+                # Sliding window of words to find the anchor
+                for window_idx in range(len(words) - anchor_len + 1):
+                    window = " ".join(words[window_idx:window_idx + anchor_len])
+                    similarity = difflib.SequenceMatcher(None, anchor_text.lower(), window.lower()).ratio()
+                    
+                    if similarity > 0.82:  # Fuzzy match threshold to ignore bad OCR!
+                        # We found the anchor! The value is what follows it
+                        remaining_line = " ".join(words[window_idx + anchor_len:])
+                        # Clean leading separators
+                        remaining_line = re.sub(r"^[\s:=-]+", "", remaining_line).strip()
+                        
+                        value = remaining_line
+                        
+                        if not value and line_idx + 1 < len(lines):
+                            # Value is on the next line (Spatial Context)
+                            value = lines[line_idx + 1].strip()
+                            
+                        if value:
+                            # Basic cleanup: stop at double space or large gaps
+                            value = re.sub(r"\s{2,}.*", "", value)
+                            return {
+                                'value': value,
+                                'confidence': 0.85 + (min(count, 10) / 100.0), # Active high confidence
+                                'anchor': anchor_text
+                            }
         return None
 
     def save_model(self, filename: str = 'parsing_corrections_model.json'):

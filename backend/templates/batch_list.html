@@ -1,6 +1,106 @@
 {% extends "base.html" %}
 
 {% block content %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.8/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
+<style>
+    /* Wrapper */
+    .dataTables_wrapper {
+        padding: 1rem 0;
+    }
+
+    .dataTables_wrapper .top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+        padding: 0 1.5rem;
+    }
+
+    .dataTables_wrapper .bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1rem;
+        padding: 1rem 1.5rem 0;
+        border-top: 1px solid #e2e8f0;
+    }
+
+    /* Inputs & Selects Override for Tailwind Preflight */
+    .dataTables_filter input,
+    .dataTables_length select {
+        border: 1px solid #cbd5e1;
+        border-radius: 0.375rem;
+        padding: 0.25rem 0.5rem;
+        margin-left: 0.5rem;
+        background-color: white;
+        color: #0f172a;
+        outline: none;
+    }
+
+    .dataTables_filter input:focus,
+    .dataTables_length select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 1px #3b82f6;
+    }
+
+    /* Pagination Override */
+    .dataTables_paginate {
+        display: flex;
+        gap: 0.25rem;
+        padding-top: 0 !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        padding: 0.25rem 0.75rem !important;
+        border-radius: 0.375rem;
+        border: 1px solid #e2e8f0 !important;
+        background: white !important;
+        color: #0f172a !important;
+        cursor: pointer;
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin: 0 !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled) {
+        background: #f8fafc !important;
+        border-color: #cbd5e1 !important;
+        color: #0f172a !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+        background: #3b82f6 !important;
+        color: white !important;
+        border-color: #3b82f6 !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background: #f1f5f9 !important;
+        border-color: #e2e8f0 !important;
+    }
+
+    .dataTables_info {
+        font-size: 0.875rem;
+        color: #64748b !important;
+        padding-top: 0 !important;
+    }
+
+    /* Table Fixes */
+    table.dataTable.no-footer {
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    table.dataTable thead th {
+        border-bottom: 1px solid #e2e8f0;
+    }
+</style>
+
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
     <div class="flex justify-between items-center mb-8">
         <div>
@@ -18,7 +118,7 @@
 
     <!-- Batch List Table -->
     <div class="bg-white shadow overflow-hidden sm:rounded-lg">
-        <table class="min-w-full divide-y divide-gray-200">
+        <table id="batchTable" class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
                     <th scope="col"
@@ -101,62 +201,33 @@
             </tbody>
         </table>
 
-        <!-- Pagination -->
-        {% if total_pages > 1 %}
-        <div class="bg-white px-4 py-3 border-t border-gray-200 flex items-center justify-between sm:px-6">
-            <div class="flex-1 flex justify-between sm:hidden">
-                {% if page > 1 %}
-                <a href="{{ url_for('main.batch_list_page', page=page-1) }}"
-                    class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Previous</a>
-                {% endif %}
-                {% if page < total_pages %} <a href="{{ url_for('main.batch_list_page', page=page+1) }}"
-                    class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
-                    Next</a>
-                    {% endif %}
-            </div>
-            <div class="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                <div>
-                    <p class="text-sm text-gray-700">
-                        Showing page <span class="font-medium">{{ page }}</span> of <span class="font-medium">{{
-                            total_pages }}</span>
-                    </p>
-                </div>
-                <div>
-                    <nav class="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                        {% if page > 1 %}
-                        <a href="{{ url_for('main.batch_list_page', page=page-1) }}"
-                            class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                            <span class="sr-only">Previous</span>
-                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                    d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </a>
-                        {% endif %}
-
-                        <span
-                            class="relative inline-flex items-center px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-700">
-                            {{ page }}
-                        </span>
-
-                        {% if page < total_pages %} <a href="{{ url_for('main.batch_list_page', page=page+1) }}"
-                            class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-                            <span class="sr-only">Next</span>
-                            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                fill="currentColor" aria-hidden="true">
-                                <path fill-rule="evenodd"
-                                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                            </a>
-                            {% endif %}
-                    </nav>
-                </div>
-            </div>
-        </div>
-        {% endif %}
     </div>
 </div>
+
+<script>
+    $(document).ready(function () {
+        $('#batchTable').DataTable({
+            paging: true,
+            searching: true,
+            ordering: true,
+            info: true,
+            pageLength: 10,
+            lengthChange: true,
+            order: [[1, 'desc']], // Sort by date descending by default
+            dom: '<"top"lf>rt<"bottom"p><"clear">',
+            language: {
+                search: "Search Batches:",
+                info: "Showing _START_ to _END_ of _TOTAL_ batches",
+                infoEmpty: "No batches to show",
+                infoFiltered: "(filtered from _MAX_ total batches)",
+                paginate: {
+                    first: "First",
+                    last: "Last",
+                    next: "Next",
+                    previous: "Previous"
+                }
+            }
+        });
+    });
+</script>
 {% endblock %}

@@ -179,6 +179,14 @@ class QualityFocusedExtractor:
     
     def __init__(self, ocr_text: str):
         self.raw_text = ocr_text or ""
+        
+        # Immediate OCR hallucination fixes globally
+        self.raw_text = re.sub(r'(\d{2})7(\d{2})7(20\d{2})', r'\1/\2/\3', self.raw_text)
+        self.raw_text = re.sub(r'[6S]rand\s*Total', 'GrandTotal', self.raw_text, flags=re.IGNORECASE)
+        self.raw_text = re.sub(r'1ess\s*For\s*Da[mn]', 'LessForDam', self.raw_text, flags=re.IGNORECASE)
+        self.raw_text = re.sub(r'Un1oading', 'UnLoading', self.raw_text, flags=re.IGNORECASE)
+        self.raw_text = re.sub(r'(?:1YF|1/F).*Cash', 'L/FAndCash', self.raw_text, flags=re.IGNORECASE)
+        
         self.lines = [line.strip() for line in self.raw_text.split('\n') if line.strip()]
         self.debug_log = []
         self.data = {
@@ -255,9 +263,38 @@ class QualityFocusedExtractor:
             })
             self._log(f"  Less for Damages @5%: {damage:.2f}")
         
-        # Extract other deductions from OCR (Unloading, L/F Cash)
+        # Extract other deductions from OCR (Unloading, L/F Cash, Other)
         other_deductions = self._extract_other_deductions()
-        deductions.extend(other_deductions)
+        
+        # Deduplicate by type - prefer extracted over calculated
+        final_deductions = []
+        seen_types = set()
+        
+        # First add extracted deductions (higher priority)
+        for ded in other_deductions:
+            ded_type_normalized = ded['deduction_type'].lower().replace(' ', '')
+            if 'commission' in ded_type_normalized:
+                ded_type_normalized = 'commission'
+            elif 'damage' in ded_type_normalized:
+                ded_type_normalized = 'damage'
+            
+            if ded_type_normalized not in seen_types:
+                final_deductions.append(ded)
+                seen_types.add(ded_type_normalized)
+        
+        # Then add calculated deductions only if type not already present
+        for ded in deductions:
+            ded_type_normalized = ded['deduction_type'].lower().replace(' ', '')
+            if 'commission' in ded_type_normalized:
+                ded_type_normalized = 'commission'
+            elif 'damage' in ded_type_normalized:
+                ded_type_normalized = 'damage'
+            
+            if ded_type_normalized not in seen_types:
+                final_deductions.append(ded)
+                seen_types.add(ded_type_normalized)
+        
+        deductions = final_deductions
         
         self.data['deductions'] = deductions
         self._log(f"  Total deductions: {len(deductions)}")
@@ -425,7 +462,7 @@ class QualityFocusedExtractor:
     
     def _extract_vn_ocr_variants(self) -> Optional[str]:
         """Strategy 2: Look for OCR error variants"""
-        pattern = r'(?:nuaber|nunber|nunmber|nuamber)[:\s]*(\d{2,4})\b'
+        pattern = r'(?:nu[a-z]*ber|no|number|num|#)[:\s]*(\d{2,4})\b'
         match = re.search(pattern, self.raw_text, re.IGNORECASE)
         return match.group(1) if match else None
     
@@ -484,7 +521,7 @@ class QualityFocusedExtractor:
     
     def _extract_supp_label(self) -> Optional[str]:
         """Strategy 1: Supp Name label"""
-        pattern = r'(?:supp\s*name|suppname|suppnane)[:\s]*(.{2,30}?)(?=\n|$|qty|total|price)'
+        pattern = r'(?:supp\s*name|suppname|suppnane|nane|nare|ne)[:\s]*([A-Z]{2,30}(?:/[A-Z])?|.{2,30}?)(?=\n|$|qty|total|price)'
         match = re.search(pattern, self.raw_text, re.IGNORECASE)
         if match:
             return self._clean_supplier(match.group(1))
@@ -515,6 +552,23 @@ class QualityFocusedExtractor:
             if line.isupper() and 3 <= len(line) <= 30:
                 if not any(word in line.lower() for word in ['date', 'voucher', 'total', 'qty']):
                     return self._clean_supplier(line)
+        return None
+
+    def _extract_supp_positional(self) -> Optional[str]:
+        """Strategy 5: Next line after date"""
+        date_line_idx = -1
+        for i, line in enumerate(self.lines):
+            if re.search(r'\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}', line):
+                date_line_idx = i
+                break
+        
+        if date_line_idx != -1 and date_line_idx + 1 < len(self.lines):
+            for next_idx in range(date_line_idx + 1, min(date_line_idx + 3, len(self.lines))):
+                pot_supp = self.lines[next_idx].strip()
+                pot_supp = re.sub(r'^[a-z]{1,2}\s+', '', pot_supp)
+                if not re.search(r'\b(qty|price|amount|total|comm)\b', pot_supp, re.IGNORECASE) and 2 <= len(pot_supp) <= 30:
+                    if pot_supp.isupper() or '/' in pot_supp:
+                        return self._clean_supplier(pot_supp)
         return None
     
     def _clean_supplier(self, text: str) -> str:
@@ -561,140 +615,359 @@ class QualityFocusedExtractor:
         # Would extract and sum items - simplified for now
         return None
     
+    def _extract_net_explicit(self) -> Optional[float]:
+        """Extract explicit net total string match"""
+        pattern = r'(?:grand|net)[\s\w]*total[\s:]*(-?\d{1,7}(?:\.\d{2})?)'
+        match = re.search(pattern, self.raw_text, re.IGNORECASE)
+        if match:
+             try:
+                 net = float(match.group(1))
+                 return net
+             except:
+                 pass
+        return None
+
     def _extract_net_calculated(self) -> Optional[float]:
         """Calculate net from gross - deductions"""
         # This is calculated after gross is known
         return None
     
     # ==================== LINE ITEMS STRATEGIES ====================
-    
+
     def _extract_items_table(self) -> List[Dict]:
-        """Extract line items from Qty/Price/Amount table"""
+        """Extract line items from Qty/Price/Amount table with enhanced detection"""
         items = []
-        
-        # Find the table section (after "Qty Price Amount" header or similar)
-        table_started = False
+
+        # Find table boundaries more intelligently
+        table_start_idx = None
+        table_end_idx = None
+
+        # Look for table header
         for i, line in enumerate(self.lines):
             # Detect table header - various OCR variations
-            if re.search(r'(?:qty|quantity|q)[\s\-]*(?:price|p)[\s\-]*(?:amount|amt)', line, re.IGNORECASE):
-                table_started = True
+            if re.search(r'(?:qty|quantity|qty|q)[\s\-._]*(?:price|pr|p)[\s\-._]*(?:amount|amt|amnt)', line, re.IGNORECASE):
+                table_start_idx = i + 1
+                self._log(f"  Table header found at line {i}: {line}")
                 continue
-            
-            # Also start if we see a line with just numbers that looks like an item (before Total)
-            if not table_started and i > 0:
-                # Check if previous line is header-like
-                prev_line = self.lines[i-1]
-                if re.search(r'(?:qty|price|amount)', prev_line, re.IGNORECASE):
-                    # Check if this line has 3 numbers
-                    match = re.search(r'\d{1,3}\s+\d{1,6}(?:\.\d{2})?\s+\d{1,6}(?:\.\d{2})?', line)
-                    if match:
-                        table_started = True
-            
-            # Detect table end (Total line or deductions)
-            if table_started and re.search(r'^(?:total|comm|damage|less|unloading|lf|grand)', line, re.IGNORECASE):
-                break
-            
-            if table_started:
-                    # Pattern: Qty Price Amount (3 numbers in line)
-                    # Example: "1 300.00 300.00" or "5 200.00 1000.00"
-                    # Handle OCR errors like "3 4000.00 120.00" (should be 40.00)
-                    match = re.search(r'(\d{1,3})\s+(\d{1,6}(?:\.\d{2})?)\s+(\d{1,6}(?:\.\d{2})?)', line)
-                    if match:
-                        try:
-                            qty = int(match.group(1))
-                            price = float(match.group(2))
-                            amount = float(match.group(3))
-                            
-                            # Try to fix common OCR decimal errors (100x off)
-                            # If price looks wrong (e.g., 4000 when should be 40), try dividing
-                            if price > 1000 and amount < price * 0.1:
-                                price = price / 100
-                            if amount > 10000 and amount > price * qty * 10:
-                                amount = amount / 100
-                            
-                            # Validate: amount should be approximately qty * price
-                            expected = qty * price
-                            tolerance = max(expected * 0.2, 5)  # 20% tolerance or at least 5
-                            
-                            if abs(amount - expected) <= tolerance:
-                                # Extract item name from beginning of line (before numbers)
-                                item_part = line[:match.start()].strip()
-                                item_name = re.sub(r'^[^a-zA-Z]*', '', item_part)  # Remove leading non-letters
-                                
-                                items.append({
-                                    'item_name': item_name if item_name else f'Item {len(items) + 1}',
-                                    'quantity': qty,
-                                    'unit_price': round(price, 2),
-                                    'line_amount': round(amount, 2)
-                                })
-                        except:
-                            continue
-        
+
+            # Detect table end markers (but allow "Total X XXX.XX" format which contains item data)
+            if table_start_idx:
+                # Check if line looks like a deduction or summary (not item data)
+                # Deductions usually start with (-), Comm, Damage, etc.
+                # But "Total 8 2490.00" is actually item summary data
+                is_deduction = re.search(r'^(?:\(\s*-\s*\)|comm|damage|less|unloading|lf|grand\s*total|deduction)', line, re.IGNORECASE)
+                is_summary_without_data = re.search(r'^(?:total|subtotal)\s*$', line, re.IGNORECASE)  # Just "Total" with no numbers
+                
+                if is_deduction or is_summary_without_data:
+                    table_end_idx = i
+                    self._log(f"  Table end at line {i}: {line}")
+                    break
+
+        # If we didn't find explicit end, try to detect by content change
+        if table_start_idx and not table_end_idx:
+            for i in range(table_start_idx, len(self.lines)):
+                line = self.lines[i]
+                # If line doesn't have 2-3 numbers, it's probably not an item line
+                numbers = re.findall(r'\d+(?:\.\d{2})?', line)
+                if len(numbers) < 2 and not re.search(r'(?:item|product|name)', line, re.IGNORECASE):
+                    table_end_idx = i
+                    break
+            if not table_end_idx:
+                table_end_idx = len(self.lines)
+
+        # Extract items from table section
+        if table_start_idx:
+            self._log(f"  Processing table lines {table_start_idx} to {table_end_idx or len(self.lines)}")
+
+            for i in range(table_start_idx, table_end_idx or len(self.lines)):
+                line = self.lines[i]
+
+                # Skip empty lines
+                if not line.strip():
+                    continue
+
+                # Skip total/summary lines
+                if re.search(r'^(?:total|subtotal|grand|sum)', line, re.IGNORECASE):
+                    continue
+
+                # Try to extract item with enhanced patterns
+                item = self._extract_single_item(line, i, items)
+                if item:
+                    items.append(item)
+                    self._log(f"    Found item: {item['item_name'][:30]}... Qty:{item['quantity']} Price:{item['unit_price']} Amount:{item['line_amount']}")
+
         return items
-    
+
+    def _extract_single_item(self, line: str, line_idx: int, existing_items: List[Dict]) -> Optional[Dict]:
+        """Extract a single item from a line with comprehensive pattern matching"""
+
+        # Pattern 1: Standard Qty Price Amount (3 numbers)
+        # Examples: "Apple 2 50.00 100.00", "2 50.00 100.00", "Apple 2 50 100"
+        pattern1 = r'^(.*?)\s+(\d{1,4})\s+(\d{1,6}(?:\.\d{1,2})?)\s+(\d{1,7}(?:\.\d{1,2})?)$'
+        match = re.match(pattern1, line)
+
+        if match:
+            try:
+                item_name = match.group(1).strip()
+                qty = int(match.group(2))
+                price = float(match.group(3))
+                amount = float(match.group(4))
+
+                # Smart decimal correction
+                price, amount = self._fix_item_amounts(qty, price, amount)
+
+                # Validation
+                if self._validate_item(qty, price, amount):
+                    # Clean item name
+                    item_name = self._clean_item_name(item_name, line_idx)
+
+                    return {
+                        'item_name': item_name if item_name else f'Item {len(existing_items) + 1}',
+                        'quantity': qty,
+                        'unit_price': round(price, 2),
+                        'line_amount': round(amount, 2)
+                    }
+            except:
+                pass
+
+        # Pattern 2: Amount Price Qty (reversed order) - sometimes OCR mixes them up
+        pattern2 = r'^(.*?)\s+(\d{1,7}(?:\.\d{1,2})?)\s+(\d{1,6}(?:\.\d{1,2})?)\s+(\d{1,4})$'
+        match = re.match(pattern2, line)
+
+        if match:
+            try:
+                item_name = match.group(1).strip()
+                amount = float(match.group(2))
+                price = float(match.group(3))
+                qty = int(match.group(4))
+
+                # Check if qty * price ≈ amount (reversed order check)
+                expected = qty * price
+                if abs(amount - expected) <= max(expected * 0.3, 10):
+                    price, amount = self._fix_item_amounts(qty, price, amount)
+
+                    if self._validate_item(qty, price, amount):
+                        item_name = self._clean_item_name(item_name, line_idx)
+
+                        return {
+                            'item_name': item_name if item_name else f'Item {len(existing_items) + 1}',
+                            'quantity': qty,
+                            'unit_price': round(price, 2),
+                            'line_amount': round(amount, 2)
+                        }
+            except:
+                pass
+
+        # Pattern 3: Just numbers (no name, common in poor OCR)
+        pattern3 = r'^(\d{1,4})\s+(\d{1,6}(?:\.\d{1,2})?)\s+(\d{1,7}(?:\.\d{1,2})?)$'
+        match = re.match(pattern3, line.strip())
+
+        if match and not re.search(r'[a-zA-Z]', line):
+            try:
+                qty = int(match.group(1))
+                price = float(match.group(2))
+                amount = float(match.group(3))
+
+                price, amount = self._fix_item_amounts(qty, price, amount)
+
+                if self._validate_item(qty, price, amount):
+                    return {
+                        'item_name': f'Item {len(existing_items) + 1}',
+                        'quantity': qty,
+                        'unit_price': round(price, 2),
+                        'line_amount': round(amount, 2)
+                    }
+            except:
+                pass
+
+        return None
+
+    def _fix_item_amounts(self, qty: int, price: float, amount: float) -> tuple:
+        """Fix common OCR decimal errors in item amounts"""
+        expected = qty * price
+
+        # If price seems way off (e.g., 4000 instead of 40.00)
+        if price > 1000 and amount < price * 0.1:
+            price = price / 100
+            expected = qty * price
+
+        # If amount seems way off
+        if amount > 10000 and amount > expected * 10:
+            amount = amount / 100
+
+        # If still not matching, try alternative interpretations
+        tolerance = max(expected * 0.25, 5)
+
+        if abs(amount - expected) > tolerance:
+            # Maybe price and amount are swapped?
+            if abs(price - expected) <= tolerance:
+                price, amount = amount, price
+
+        return price, amount
+
+    def _validate_item(self, qty: int, price: float, amount: float) -> bool:
+        """Validate extracted item data"""
+        # Basic sanity checks
+        if qty <= 0 or qty > 10000:
+            return False
+
+        if price <= 0 or price > 100000:
+            return False
+
+        if amount <= 0 or amount > 1000000:
+            return False
+
+        # Check mathematical relationship
+        expected = qty * price
+        tolerance = max(expected * 0.3, 1)  # 30% tolerance or at least 1
+
+        if abs(amount - expected) > tolerance:
+            # Allow some slack for OCR errors
+            if abs(amount - expected) > expected * 0.5:
+                return False
+
+        return True
+
+    def _clean_item_name(self, name: str, line_idx: int) -> str:
+        """Clean and enhance item name extraction"""
+        # Remove leading non-word characters
+        name = re.sub(r'^[^\w]*', '', name)
+
+        # Remove common artifacts
+        name = re.sub(r'\s*(?:qty|price|amount|total|\d+\.\d{2}).*$', '', name, flags=re.IGNORECASE)
+
+        # If name is empty, try to get it from previous line
+        if not name and line_idx > 0:
+            prev_line = self.lines[line_idx - 1]
+            # Check if previous line looks like a name (no numbers or just a name)
+            if not re.search(r'\d{2,}', prev_line) or re.match(r'^[A-Za-z\s]+$', prev_line.strip()):
+                name = prev_line.strip()
+                name = re.sub(r'^[^\w]*', '', name)
+
+        # Clean up
+        name = name.strip()
+        name = re.sub(r'\s+', ' ', name)  # Normalize spaces
+
+        return name[:100]  # Limit length
+
     def _extract_items_relaxed(self) -> List[Dict]:
-        """Extract items with relaxed validation (for poor OCR)"""
+        """Extract items with relaxed validation (fallback for poor OCR)"""
         items = []
-        
+
         for line in self.lines:
+            # Skip lines that are clearly not items
+            if re.search(r'^(?:total|date|voucher|supplier|qty|price|amount)', line, re.IGNORECASE):
+                continue
+
             # Look for any 3 numbers that could be qty, price, amount
-            numbers = re.findall(r'\b(\d{1,3})\s+(\d{1,5}(?:\.\d{2})?)\s+(\d{1,5}(?:\.\d{2})?)\b', line)
+            numbers = re.findall(r'\b(\d{1,4})\s+(\d{1,6}(?:\.\d{1,2})?)\s+(\d{1,7}(?:\.\d{1,2})?)\b', line)
+
             for match in numbers:
                 try:
                     qty = int(match[0])
                     price = float(match[1])
                     amount = float(match[2])
-                    
-                    # Basic sanity check
+
+                    # Very relaxed validation
                     if qty > 0 and price > 0 and amount > 0:
-                        # Check if amounts make sense
-                        if qty * price * 0.8 <= amount <= qty * price * 1.2:  # Allow 20% tolerance
+                        expected = qty * price
+
+                        # Allow 40% tolerance for poor OCR
+                        if qty * price * 0.6 <= amount <= qty * price * 1.4:
+                            # Try to extract name
+                            item_name = ''
+                            num_match = re.search(r'\b' + re.escape(match[0]) + r'\s+' + re.escape(match[1]), line)
+                            if num_match:
+                                item_name = line[:num_match.start()].strip()
+                                item_name = re.sub(r'^[^\w]*', '', item_name)
+
                             items.append({
-                                'item_name': f'Item {len(items) + 1}',
+                                'item_name': item_name if item_name else f'Item {len(items) + 1}',
                                 'quantity': qty,
-                                'unit_price': price,
-                                'line_amount': amount
+                                'unit_price': round(price, 2),
+                                'line_amount': round(amount, 2)
                             })
+                            break  # Only take first match per line
                 except:
                     continue
-        
+
         return items
     
     # ==================== DEDUCTIONS STRATEGIES ====================
     
     def _extract_other_deductions(self) -> List[Dict]:
-        """Extract Unloading, L/F Cash, and Other (unnamed) deductions from OCR"""
+        """Extract Unloading, L/F Cash, and Other (unnamed) deductions from OCR with comprehensive patterns"""
         deductions = []
         found_amounts = set()  # Track amounts to prevent duplicates
         
-        # Extract Unloading and L/F Cash
+        # Enhanced patterns with OCR error variations
         deduction_patterns = {
-            'Unloading': [
-                r'(?:unload|unloading|unld)[^\d]*([\d,]+\.?\d{0,2})',
-            ],
-            'L/F Cash': [
-                r'(?:l[/\s]*f|lf|l\s*f)[^\d]*(?:and)?[^\d]*(?:cash)?[^\d]*([\d,]+\.?\d{0,2})',
-                r'(?:cash|l\.?f)[^\d]*([\d,]+\.?\d{0,2})',
-            ],
+            'Unloading': {
+                'patterns': [
+                    r'(?:unloading|unload|unld|unlod|unlodin)[^\d\n]*(-?\s*[\d,]+\.?\d{0,2})',
+                    r'(?:unloading|unload)[^\d\n]*\(?\s*-\s*\)?[^\d\n]*([\d,]+\.?\d{0,2})',
+                ],
+                'max_amount': 200,
+                'typical_range': (10, 150)
+            },
+            'L/F Cash': {
+                'patterns': [
+                    r'(?:l[/\s]*f|lf|l\s*f|lfand|l\.f)[^\d\n]*(?:and)?[^\d\n]*(?:cash)?[^\d\n]*(-?\s*[\d,]+\.?\d{0,2})',
+                    r'(?:lfandcash|lfcash|lf\s+cash)[^\d\n]*(-?\s*[\d,]+\.?\d{0,2})',
+                    r'(?:cash)[^\d\n]*(?:lf)?[^\d\n]*(-?\s*[\d,]+\.?\d{0,2})',
+                    r'\(\s*-\s*\)[^\d\n]*(?:l[/\s]*f|lf)[^\d\n]*(-?\s*[\d,]+\.?\d{0,2})',
+                ],
+                'max_amount': 500,
+                'typical_range': (20, 400)
+            },
+            'Commission': {
+                'patterns': [
+                    r'(?:comm|comission|commision|com)[^\d\n]*(?:@)?[^\d\n]*(-?\s*[\d,]+\.?\d{0,2})\s*(?:%)?',
+                    r'(?:comm|comission)[^\d\n]*(?:@)?[^\d\n]*(?:4\.?\d*)?\s*(?:%)?[^\d\n]*(-?\s*[\d,]+\.?\d{0,2})',
+                    r'\(\s*-\s*\)[^\d\n]*(?:comm|com)[^\d\n]*(-?\s*[\d,]+\.?\d{0,2})',
+                ],
+                'max_amount': 5000,
+                'typical_range': (10, 1000),
+                'is_percentage': True
+            },
+            'Less for Damages': {
+                'patterns': [
+                    r'(?:less\s*for\s*damages|lessfordamages|damages|damage)[^\d\n]*(-?\s*[\d,]+\.?\d{0,2})',
+                    r'(?:less\s*for)[^\d\n]*(?:damages)?[^\d\n]*(-?\s*[\d,]+\.?\d{0,2})',
+                    r'\(\s*-\s*\)[^\d\n]*(?:damage|less)[^\d\n]*(-?\s*[\d,]+\.?\d{0,2})',
+                ],
+                'max_amount': 1000,
+                'typical_range': (20, 500),
+                'is_percentage': True
+            },
         }
         
         found_types = set()
         
-        for ded_type, patterns in deduction_patterns.items():
+        # Process each deduction type
+        for ded_type, config in deduction_patterns.items():
             if ded_type in found_types:
                 continue
+            
+            patterns = config['patterns']
+            max_amount = config.get('max_amount', 1000)
+            typical_range = config.get('typical_range', (0.1, 1000))
+            is_percentage = config.get('is_percentage', False)
                 
             for pattern in patterns:
                 matches = list(re.finditer(pattern, self.raw_text, re.IGNORECASE))
                 
                 for match in matches:
                     try:
-                        amount_str = match.group(1).replace(',', '')
+                        amount_str = match.group(1).replace(',', '').replace('-', '').strip()
+                        if not amount_str:
+                            continue
+                            
                         amount = float(amount_str)
                         
-                        # Fix decimal errors (e.g., 6400 -> 64, 48000 -> 480)
-                        if amount > 1000:
-                            amount = amount / 100
+                        # Enhanced decimal error correction
+                        # Check if amount seems wrong based on context
+                        amount = self._smart_decimal_fix(amount, ded_type, match.group(0))
                         
                         rounded_amount = round(amount, 2)
                         
@@ -702,49 +975,74 @@ class QualityFocusedExtractor:
                         if rounded_amount in found_amounts:
                             continue
                         
-                        # Validate reasonable range
-                        if 0.1 <= amount <= 1000:
+                        # Skip if amount is unreasonably small
+                        if amount < 0.01:
+                            continue
+                        
+                        # For percentage-based deductions, calculate from gross
+                        if is_percentage and self.data.get('gross_total'):
+                            # Check if amount is actually a percentage (usually < 100)
+                            if amount < 100 and '%' in match.group(0):
+                                if ded_type == 'Commission':
+                                    amount = self.data['gross_total'] * (amount / 100)
+                                    ded_type = f'Commission @{int(amount)}%'
+                                elif ded_type == 'Less for Damages':
+                                    # Usually 5% for damages
+                                    amount = self.data['gross_total'] * 0.05
+                                    ded_type = 'Less for Damages'
+                        
+                        # Final validation
+                        if amount <= max_amount and typical_range[0] <= amount <= typical_range[1] * 2:
                             deductions.append({
                                 'deduction_type': ded_type,
                                 'amount': rounded_amount
                             })
                             found_types.add(ded_type)
                             found_amounts.add(rounded_amount)
-                            self._log(f"  {ded_type}: {amount:.2f}")
+                            self._log(f"  {ded_type}: {rounded_amount:.2f}")
                             break
-                    except:
+                    except Exception as e:
                         continue
         
-        # Extract "Other" deductions (lines with (-) marker but no recognizable text)
-        # Pattern: (-) or (- ) followed by amount with no text in between
-        other_pattern = r'\(\s*-\s*\)\s*([\d,]+\.?\d{0,2})\s*$'
-        matches = list(re.finditer(other_pattern, self.raw_text, re.MULTILINE))
+        # Extract "Other" deductions - look for (-) marker with amount but no recognizable label
+        other_patterns = [
+            r'\(\s*-\s*\)\s*([\d,]+\.?\d{0,2})\s*$',
+            r'\(\s*-\s*\)\s*([\d,]+\.?\d{0,2})\s*(?!comm|damage|unload|lf|cash)',
+            r'^\s*[-\(]+\s*\)\s*([\d,]+\.?\d{0,2})',
+        ]
         
-        for match in matches:
-            try:
-                amount_str = match.group(1).replace(',', '')
-                amount = float(amount_str)
-                
-                # Fix decimal errors
-                if amount > 1000:
-                    amount = amount / 100
-                
-                rounded_amount = round(amount, 2)
-                
-                # Skip if we already have this amount (prevents duplicates)
-                if rounded_amount in found_amounts:
+        for pattern in other_patterns:
+            matches = list(re.finditer(pattern, self.raw_text, re.MULTILINE | re.IGNORECASE))
+            
+            for match in matches:
+                try:
+                    amount_str = match.group(1).replace(',', '')
+                    amount = float(amount_str)
+                    
+                    # Fix decimal errors
+                    amount = self._smart_decimal_fix(amount, 'Other', '')
+                    
+                    rounded_amount = round(amount, 2)
+                    
+                    # Skip if we already have this amount
+                    if rounded_amount in found_amounts:
+                        continue
+                    
+                    # Skip if already captured by other patterns (check surrounding context)
+                    surrounding = self.raw_text[max(0, match.start()-50):min(len(self.raw_text), match.end()+50)]
+                    if any(keyword in surrounding.lower() for keyword in ['comm', 'damage', 'unload', 'lf', 'cash']):
+                        continue
+                    
+                    # Validate reasonable range
+                    if 0.1 <= amount <= 1000:
+                        deductions.append({
+                            'deduction_type': 'Other',
+                            'amount': rounded_amount
+                        })
+                        found_amounts.add(rounded_amount)
+                        self._log(f"  Other: {rounded_amount:.2f}")
+                except:
                     continue
-                
-                # Validate reasonable range
-                if 0.1 <= amount <= 1000:
-                    deductions.append({
-                        'deduction_type': 'Other',
-                        'amount': rounded_amount
-                    })
-                    found_amounts.add(rounded_amount)
-                    self._log(f"  Other: {amount:.2f}")
-            except:
-                continue
         
         return deductions
     
@@ -776,6 +1074,32 @@ class QualityFocusedExtractor:
             if amount > 5000:
                 return amount / 100
             return amount
+        
+        return amount
+    
+    def _smart_decimal_fix(self, amount: float, ded_type: str, context: str = "") -> float:
+        """Intelligently fix decimal errors based on deduction type and amount magnitude"""
+        if amount < 100:
+            return amount
+        
+        # Define typical maximums for each deduction type
+        typical_max = {
+            'Unloading': 150,
+            'L/F Cash': 400,
+            'Commission': 1000,
+            'Less for Damages': 500,
+            'Other': 500,
+        }
+        
+        max_expected = typical_max.get(ded_type, 1000)
+        
+        # If amount is way too high, try dividing by 100
+        if amount > max_expected * 10:
+            return amount / 100
+        
+        # If amount is still too high but closer, try dividing by 10
+        if amount > max_expected * 5:
+            return amount / 10
         
         return amount
     

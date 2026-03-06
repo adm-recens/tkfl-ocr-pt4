@@ -17,6 +17,14 @@ class TKFLReceiptParserV2:
     
     def __init__(self, ocr_text: str):
         self.raw_text = ocr_text or ""
+        
+        # Immediate OCR hallucination fixes globally
+        self.raw_text = re.sub(r'(\d{2})7(\d{2})7(20\d{2})', r'\1/\2/\3', self.raw_text)
+        self.raw_text = re.sub(r'[6S]rand\s*Total', 'GrandTotal', self.raw_text, flags=re.IGNORECASE)
+        self.raw_text = re.sub(r'1ess\s*For\s*Da[mn]', 'LessForDam', self.raw_text, flags=re.IGNORECASE)
+        self.raw_text = re.sub(r'Un1oading', 'UnLoading', self.raw_text, flags=re.IGNORECASE)
+        self.raw_text = re.sub(r'(?:1YF|1/F).*Cash', 'L/FAndCash', self.raw_text, flags=re.IGNORECASE)
+        
         self.lines = [line.strip() for line in self.raw_text.split('\n') if line.strip()]
         
         self.data = {
@@ -75,7 +83,8 @@ class TKFLReceiptParserV2:
         # But NOT followed by date patterns
         patterns = [
             r'(?:voucher\s*number|vouchernumber|voucher\s*no)[\s:]*(\d{2,4})\b',
-            r'(?:nuaber|nunber|number)[\s:]*(\d{2,4})\b',
+            r'(?:nu[a-z]*ber|no)[\s:]*(\d{2,4})\b',
+            r'(?:number|num|#)[\s:]*(\d{2,4})\b'
         ]
         
         for pattern in patterns:
@@ -166,6 +175,7 @@ class TKFLReceiptParserV2:
         patterns = [
             r'(?:supp\s*name|suppname|suppnane|suppnare)[\s:]*(.{2,30}?)(?=\n|$|qty|total)',
             r'(?:supp)[\s:]*(.{2,30}?)(?=\n|$|qty)',
+            r'(?:nane|nare|name|ne)[\s:]*([A-Z]{2,30}(?:/[A-Z])?)(?=\n|$|qty)' # Handles "Nane MACHAGIRI/A"
         ]
         
         for pattern in patterns:
@@ -206,6 +216,27 @@ class TKFLReceiptParserV2:
                                 self._log(f"Found supplier (next line): {next_line}")
                                 return
         
+        # Strategy 3: Positional Fallback (If we found a Date, Supplier is usually next line or two)
+        if not self.data['supplier_name'] and self.data['voucher_date']:
+            date_line_idx = -1
+            for i, line in enumerate(self.lines):
+                if re.search(r'\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}', line):
+                    date_line_idx = i
+                    break
+            
+            if date_line_idx != -1 and date_line_idx + 1 < len(self.lines):
+                # Check next 2 lines for something that looks like a supplier (All caps, contains / or just words)
+                for next_idx in range(date_line_idx + 1, min(date_line_idx + 3, len(self.lines))):
+                    pot_supp = self.lines[next_idx].strip()
+                    # Strip bad OCR prefixes like 'ae ', 'vi ', 'ne '
+                    pot_supp = re.sub(r'^[a-z]{1,2}\s+', '', pot_supp)
+                    if not re.search(r'\b(qty|price|amount|total|comm)\b', pot_supp, re.IGNORECASE) and 2 <= len(pot_supp) <= 30:
+                        if pot_supp.isupper() or '/' in pot_supp:
+                            self.data['supplier_name'] = pot_supp
+                            self.confidence['supplier_name'] = 60
+                            self._log(f"Found supplier (positional): {pot_supp}")
+                            return
+
         self._log("No supplier found")
         self.confidence['supplier_name'] = 0
     
@@ -330,7 +361,27 @@ class TKFLReceiptParserV2:
             self.confidence['deductions'] = 30
     
     def _calculate_net_total(self):
-        """Calculate net total from gross - deductions"""
+        """Extract net total explicitly from GrandTotal, or calculate from gross - deductions"""
+        
+        # Strategy 1: Explicit Grand Total / Net Total string match 
+        # (This is more accurate than subtraction if OCR missed a deduction)
+        pattern = r'(?:grand|net)[\s\w]*total[\s:]*(-?\d{1,7}(?:\.\d{2})?)'
+        match = re.search(pattern, self.raw_text, re.IGNORECASE)
+        if match:
+             try:
+                 net = float(match.group(1))
+                 # Validate it's somewhat close to Gross - Deductions so we didn't just grab a random number
+                 if self.data['gross_total']:
+                     expected = self.data['gross_total'] - (self.data['total_deductions'] or 0)
+                     if abs(net - expected) <= max(expected * 0.2, 50): # 20% diff max
+                          self.data['net_total'] = net
+                          self.confidence['net_total'] = 90
+                          self._log(f"Found explicit Net Total: {net}")
+                          return
+             except:
+                 pass
+                 
+        # Strategy 2: Calculate fallback
         if self.data['gross_total']:
             if self.data['total_deductions']:
                 self.data['net_total'] = self.data['gross_total'] - self.data['total_deductions']
@@ -357,6 +408,12 @@ class TKFLReceiptParserV2:
 
 def parse_receipt_text_tkfl_v2(ocr_text: str) -> Dict:
     """Main entry point for TKFL v2 parsing"""
+    try:
+        from backend.services.ml_training_service import MLTrainingService
+        ocr_text = MLTrainingService.apply_ocr_character_corrections(ocr_text)
+    except Exception:
+        pass  # Fail gracefully if ML service isn't available
+
     parser = TKFLReceiptParserV2(ocr_text)
     return parser.parse()
 

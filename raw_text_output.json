@@ -1,0 +1,105 @@
+[
+    {
+        "voucher_id": 604,
+        "filename": "WhatsApp_Image_2026-01-11_at_14.45.15.jpeg",
+        "raw_text": "ae\nerNuaber116\nerDate 11/01/2026\nNane MACHAGIRI/A\nee\nQty Price Amount\n1 550.00 550.00\n1 200.00 200.00\nvi 2 750.00\nComm?4.00 30.00\n1essForDanmnages 37.50\nUn1oading 16.00\n8.00\n1/FAndCash 140.00\nGrandTotal 519.00",
+        "parsed_json": {
+            "items": [
+                {
+                    "quantity": 1,
+                    "item_name": "Item 1",
+                    "unit_price": 550.0,
+                    "line_amount": 550.0
+                },
+                {
+                    "quantity": 1,
+                    "item_name": "Item 2",
+                    "unit_price": 200.0,
+                    "line_amount": 200.0
+                }
+            ],
+            "master": {
+                "net_total": null,
+                "gross_total": 750.0,
+                "voucher_date": "2026-01-11",
+                "supplier_name": "MACHAGIRI/A",
+                "voucher_number": "116"
+            },
+            "deductions": [
+                {
+                    "amount": 30.0,
+                    "deduction_type": "Commission @4%"
+                },
+                {
+                    "amount": 37.5,
+                    "deduction_type": "Less for Damages"
+                },
+                {
+                    "amount": 140.0,
+                    "deduction_type": "L/F Cash"
+                }
+            ]
+        }
+    },
+    {
+        "voucher_id": 600,
+        "filename": "WhatsApp_Image_2026-01-11_at_14.45.13.jpeg",
+        "raw_text": "Nunaber112\nDate 11/01/2026\nae VANITHA/D\nComm7?4.00 180.40\n1essForDanages 225.50\nUn1oading 112.00\n4\n1YFAndCash 188000.00\n6randTotal 206007.00",
+        "parsed_json": {
+            "items": [],
+            "master": {
+                "net_total": null,
+                "gross_total": 225.5,
+                "voucher_date": "2026-01-11",
+                "supplier_name": null,
+                "voucher_number": null
+            },
+            "deductions": [
+                {
+                    "amount": 9.02,
+                    "deduction_type": "Commission @4%"
+                },
+                {
+                    "amount": 11.28,
+                    "deduction_type": "Less for Damages"
+                }
+            ]
+        }
+    },
+    {
+        "voucher_id": 599,
+        "filename": "WhatsApp_Image_2026-01-11_at_14.45.13_1.jpeg",
+        "raw_text": "herNuaber113, herDate 11/01/2026\nNare NARSIMA/D\nQty Price Amount\n2 50000100000.00\n8 33000264000.00\n3 180.00 540.00\nal 13, 4180.00\nComm7?4.00X 167.20\n1essForDamages 209.00\nUn1oading 104.00\n42.00\n1/YFAndCash 910.00\nPSAEDDGDAADGEEESTSETDENDGDGHPGEDGADOTEADQNDSTYY: GUADVNNNYGRNED.RETTSEEDSERNEDSYRNNDCONIED",
+        "parsed_json": {
+            "items": [
+                {
+                    "quantity": 3,
+                    "item_name": "Item 1",
+                    "unit_price": 180.0,
+                    "line_amount": 540.0
+                }
+            ],
+            "master": {
+                "net_total": null,
+                "gross_total": 4180.0,
+                "voucher_date": "2026-01-11",
+                "supplier_name": null,
+                "voucher_number": "113"
+            },
+            "deductions": [
+                {
+                    "amount": 167.2,
+                    "deduction_type": "Commission @4%"
+                },
+                {
+                    "amount": 209.0,
+                    "deduction_type": "Less for Damages"
+                },
+                {
+                    "amount": 910.0,
+                    "deduction_type": "L/F Cash"
+                }
+            ]
+        }
+    }
+]

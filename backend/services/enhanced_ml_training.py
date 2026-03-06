@@ -17,7 +17,7 @@ class EnhancedMLTraining:
     """Enhanced training with validation and confidence metrics"""
     
     @staticmethod
-    def train_with_validation(feedback_limit: int = 5000, save_models: bool = True, include_smart_crop: bool = True):
+    def train_with_validation(feedback_limit: int = 5000, save_models: bool = True):
         """
         Train models with validation metrics to prove improvement
         
@@ -49,8 +49,7 @@ class EnhancedMLTraining:
             ml_logger.info("[ENHANCED-TRAINING] Training models...")
             training_result = MLTrainingService.train_models(
                 feedback_limit=feedback_limit,
-                save_models=save_models,
-                include_smart_crop=include_smart_crop
+                save_models=save_models
             )
             
             # Step 5: Run AFTER validation (with ML)
@@ -104,8 +103,7 @@ class EnhancedMLTraining:
             ml_logger.warning("[ENHANCED-TRAINING] Not enough data for validation (need at least 10 samples)")
             training_result = MLTrainingService.train_models(
                 feedback_limit=feedback_limit,
-                save_models=save_models,
-                include_smart_crop=include_smart_crop
+                save_models=save_models
             )
             training_result['validation_summary'] = {
                 'error': 'Not enough data for validation',

@@ -1,0 +1,1416 @@
+{
+  "version": "1.0",
+  "created_at": "2026-02-28T18:12:43.306777",
+  "validation_runs": [
+    {
+      "before": {
+        "deduction_Less for Damage": {
+          "accuracy": 0.0,
+          "total_samples": 20,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "257",
+              "raw_text_snippet": "a sSuEr&\nIRCHASER&COMMAGENT\nVoucherNumber500024\nrROAD, HYDERABAD )\n40-244121399949333786.00\neee\nber7"
+            },
+            {
+              "predicted": "",
+              "actual": "72",
+              "raw_text_snippet": "hberNunber190\nherDate 06/01/2026\nNane VINITHA/D\nQty Price Amount\n2 270.00 540.00\n3 210.00 630.00\n3 9"
+            },
+            {
+              "predicted": "",
+              "actual": "65",
+              "raw_text_snippet": "oof by i 4, it !\ndy. ty ; ae lhe\nMh ay ih He i ile et!\nROA0.00Y0ERABA0500026\nne: 040-24612139, 9949."
+            },
+            {
+              "predicted": "",
+              "actual": "36",
+              "raw_text_snippet": "MM\nHAF, HYDERABAD$VoucherNumber00024\ne: VoucherNumber040-VoucherNumber24412139, VoucherNumber9949333"
+            },
+            {
+              "predicted": "",
+              "actual": "95.5",
+              "raw_text_snippet": "MAFAXROA0.00Y0ERABA0500024\np: VoucherNumber080-VoucherNumber26412139, VoucherNumber99493335766\nrNuab"
+            },
+            {
+              "predicted": "",
+              "actual": "13",
+              "raw_text_snippet": "-Nunber171\n-Date 06/01/2026\nDSM\nme\nQty Price Amount\n1 260.00 260.00\n1 260.00\nConn 2 4.00 10.40\n1essF"
+            },
+            {
+              "predicted": "",
+              "actual": "144",
+              "raw_text_snippet": "erNunber187\nsrDate VoucherNumber0670172026\nVane AYODAIA/A\nQty Price Arnount\n1 280.00 280.00\n5 280001"
+            },
+            {
+              "predicted": "",
+              "actual": "23.5",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nTMONPURCHASER&COMMAGENT\nSHAFAXROAD.HYDERABAD500024\n.040-24412139, 9949.00 3337.8"
+            },
+            {
+              "predicted": "",
+              "actual": "10",
+              "raw_text_snippet": "VoucherNumber151\nVoucherDate 05/01/VoucherNumber2026\nSupp Name SsI\nQty Price Amount\n1 200.00 200.00\n"
+            },
+            {
+              "predicted": "",
+              "actual": "22.5",
+              "raw_text_snippet": "ah\nbherNunber182 .\nbherDate 06/01/2026\nJANK\nNane\nee\nQty Price Amount\n1 270.00 270.00\n2 90.00 180.00\n"
+            }
+          ]
+        },
+        "deduction_Other": {
+          "accuracy": 0.0,
+          "total_samples": 29,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "9",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "7",
+              "raw_text_snippet": "VoucherNunber155\nYoucherDate 05/01/2026\nSupp Name BSR\n1 460.00 460.00\n1 240.00 240.00\nTotal 2 700.00"
+            },
+            {
+              "predicted": "",
+              "actual": "12",
+              "raw_text_snippet": "AHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone: 040-24412139, 9949.0"
+            },
+            {
+              "predicted": "",
+              "actual": "3",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEHONPURCHASER&COMMAGENT\nDARUSHAFAKROAD.HYDERABAD500024\nPhone: 040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "29",
+              "raw_text_snippet": "erNunber187\nsrDate VoucherNumber0670172026\nVane AYODAIA/A\nQty Price Arnount\n1 280.00 280.00\n5 280001"
+            },
+            {
+              "predicted": "",
+              "actual": "6",
+              "raw_text_snippet": "Voucher Number159\nVoucherDate 05/01/VoucherNumber2026\nSupp Name EYH\n 1 400.00 400.00\n1 200.00 200.00"
+            },
+            {
+              "predicted": "",
+              "actual": "19",
+              "raw_text_snippet": "Voucher Number136\nVoucherDate 05/01/VoucherNumber2026\nSupp Name TLS\nSrandTotal cir\nTotal 6 1880.00\n-"
+            },
+            {
+              "predicted": "",
+              "actual": "41",
+              "raw_text_snippet": "Voucher Number139\nVoucherDate VoucherNumber0570172026\nSupp Name PRC\n2 7000.00 140.00\nTotal 11 41000."
+            },
+            {
+              "predicted": "",
+              "actual": "20",
+              "raw_text_snippet": "52 scomm2 0s00026\nVoucherNumber040-VoucherNumber26012139, VoucherNumber9949939786\nhexrNunber689\nher0"
+            },
+            {
+              "predicted": "",
+              "actual": "20",
+              "raw_text_snippet": "Voucher Number157\nVoucherDate VoucherNumber0570172026\nSupp Name NRR\n9 170.00 1530.00\n4 120.00 480.00"
+            }
+          ]
+        },
+        "supplier_name": {
+          "accuracy": 0.0,
+          "total_samples": 20,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "JNMK",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "TRC",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nSMONPURCHASER&COMMAGENT\nSHAFAXROAD.HYDERABAD500024\nne: 040-24412139, 9949.00 333"
+            },
+            {
+              "predicted": "",
+              "actual": "DSM",
+              "raw_text_snippet": "-Nunber171\n-Date 06/01/2026\nDSM\nme\nQty Price Amount\n1 260.00 260.00\n1 260.00\nConn 2 4.00 10.40\n1essF"
+            },
+            {
+              "predicted": "",
+              "actual": "YKHM",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "TNM",
+              "raw_text_snippet": "VoucherDate 05/01/VoucherNumber2026\nSupp Name TNM\nQty Price Amount\nVoucherNumber156\n2 490.00 980.00\n"
+            },
+            {
+              "predicted": "",
+              "actual": "KLH",
+              "raw_text_snippet": "me PMEETR\n3\nAHMED SHARIF & BROS\nMONPURCHASER&COMMAGENT\nNAFAXROAD, HYDERABAD500024\ne: 040-24412139, 9"
+            },
+            {
+              "predicted": "",
+              "actual": "ABHM",
+              "raw_text_snippet": "ee\nonPURCHAGER& Comm AGENT\nAFAXROAD, HYDERABAD500026: 040-24412139, 9949.00 3337.66\nNunber87\nDate 03"
+            },
+            {
+              "predicted": "",
+              "actual": "DPH",
+              "raw_text_snippet": "Voucher Number140\nVoucherDate VoucherNumber0570172026\nSupp Name DPH\nTots 6 2510.00\n) Comm?4: 00 1004"
+            },
+            {
+              "predicted": "",
+              "actual": "ANR",
+              "raw_text_snippet": "TT: erNuaber174\nerDate VoucherNumber0670172026\nANR\nNane\nQty Price Amount\n1 280.00 280.00\n3 250.00 75"
+            },
+            {
+              "predicted": "",
+              "actual": "SHANKAR/G",
+              "raw_text_snippet": "VoucherNuaber143\nVoucherDate 05/01/VoucherNumber2026\nSupp Name SHANKAR/G\n- Qty Price Amount\n- 830000"
+            }
+          ]
+        },
+        "deduction_Comm?4.00": {
+          "accuracy": 0.0,
+          "total_samples": 2,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "28",
+              "raw_text_snippet": "VoucherNunber155\nYoucherDate 05/01/2026\nSupp Name BSR\n1 460.00 460.00\n1 240.00 240.00\nTotal 2 700.00"
+            },
+            {
+              "predicted": "",
+              "actual": "25.6",
+              "raw_text_snippet": "VYoucherNuraber138\nVoucherDate VoucherNumber0570172026\nSuppNarme YKHM\nTotal 3 640.00\n(-) Comm?4.00 2"
+            }
+          ]
+        },
+        "deduction_Commission": {
+          "accuracy": 0.0,
+          "total_samples": 20,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "205.6",
+              "raw_text_snippet": "a sSuEr&\nIRCHASER&COMMAGENT\nVoucherNumber500024\nrROAD, HYDERABAD )\n40-244121399949333786.00\neee\nber7"
+            },
+            {
+              "predicted": "",
+              "actual": "36",
+              "raw_text_snippet": "Voucher Number153\nVoucherDate 05/01/VoucherNumber2026\nSupp Name DMRD\nLLLLLVILLLLLSESLSSSARSEDSEDGYSE"
+            },
+            {
+              "predicted": "",
+              "actual": "12",
+              "raw_text_snippet": "ucherNunber192\nucherDate wRe2172026\nDHR.\nppNane\nQty Price Amount\n1 300.00 300.00\nstal 1 300.00\n) Com"
+            },
+            {
+              "predicted": "",
+              "actual": "76.4",
+              "raw_text_snippet": "MAFAXROA0.00Y0ERABA0500024\np: VoucherNumber080-VoucherNumber26412139, VoucherNumber99493335766\nrNuab"
+            },
+            {
+              "predicted": "",
+              "actual": "164",
+              "raw_text_snippet": "Voucher Number139\nVoucherDate VoucherNumber0570172026\nSupp Name PRC\n2 7000.00 140.00\nTotal 11 41000."
+            },
+            {
+              "predicted": "",
+              "actual": "209.2",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "132",
+              "raw_text_snippet": "ee\nonPURCHAGER& Comm AGENT\nAFAXROAD, HYDERABAD500026: 040-24412139, 9949.00 3337.66\nNunber87\nDate 03"
+            },
+            {
+              "predicted": "",
+              "actual": "46.8",
+              "raw_text_snippet": "AHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone: 040-24412139, 9949.0"
+            },
+            {
+              "predicted": "",
+              "actual": "55.2",
+              "raw_text_snippet": "AHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 9949.0"
+            },
+            {
+              "predicted": "",
+              "actual": "12",
+              "raw_text_snippet": "Voucher Nunmber158\nVoucherDate VoucherNumber0570172026\nSupp Name NDV\n1 200.00 2000.00\n1 100.00 100.0"
+            }
+          ]
+        },
+        "voucher_number": {
+          "accuracy": 0.0,
+          "total_samples": 13,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "701",
+              "actual": "144",
+              "raw_text_snippet": "VoucherNunber144\nVoucherDate 0$/VoucherNumber701/VoucherNumber2026\nSupp Name SRIVANI/G\nQty Price Amo"
+            },
+            {
+              "predicted": "2026",
+              "actual": "156",
+              "raw_text_snippet": "VoucherDate 05/01/VoucherNumber2026\nSupp Name TNM\nQty Price Amount\nVoucherNumber156\n2 490.00 980.00\n"
+            },
+            {
+              "predicted": "2026",
+              "actual": "143",
+              "raw_text_snippet": "VoucherNuaber143\nVoucherDate 05/01/VoucherNumber2026\nSupp Name SHANKAR/G\n- Qty Price Amount\n- 830000"
+            },
+            {
+              "predicted": "",
+              "actual": "190",
+              "raw_text_snippet": "hberNunber190\nherDate 06/01/2026\nNane VINITHA/D\nQty Price Amount\n2 270.00 540.00\n3 210.00 630.00\n3 9"
+            },
+            {
+              "predicted": "",
+              "actual": "87",
+              "raw_text_snippet": "ee\nonPURCHAGER& Comm AGENT\nAFAXROAD, HYDERABAD500026: 040-24412139, 9949.00 3337.66\nNunber87\nDate 03"
+            },
+            {
+              "predicted": "0570172026",
+              "actual": "147",
+              "raw_text_snippet": "VoucherNuaber147\nVYoucherDate VoucherNumber0570172026\nSupp Name PM\nTotal 1S 3070.00\n(-) Comm?4.00 12"
+            },
+            {
+              "predicted": "",
+              "actual": "181",
+              "raw_text_snippet": "rNuaber181 ;\nrDate 06/01/2026\nane JVLK\nQty Price Arnount\n1 200.00 200.00\n2 100.00 200.00\n3 400.00\nCo"
+            },
+            {
+              "predicted": "040",
+              "actual": "68",
+              "raw_text_snippet": "WFaAXROA0.00Y0ERABA0500026: VoucherNumber040-VoucherNumber24412139, VoucherNumber9949333766\nNunber68"
+            },
+            {
+              "predicted": "",
+              "actual": "72",
+              "raw_text_snippet": "ai\nAHMEDSHARIF&BROS\nPURCHASER&COMMAGENT\nSHAFAXROAD.HYDERABAD50002\nne: 040-24412139, 9949.00 3337.66\n"
+            },
+            {
+              "predicted": "500026",
+              "actual": "53",
+              "raw_text_snippet": "AFA HYDERABAD VoucherNumber500026\ne: VoucherNumber040-VoucherNumber24612139, VoucherNumber9949333786"
+            }
+          ]
+        },
+        "deduction_L/FAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 2,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "210",
+              "raw_text_snippet": "YoucherNumber152\nYoucherDate VoucherNumber0570172026\nSupp Name ANMY\n1 60.00 60.00\nTotal 3 500.00\n(-)"
+            },
+            {
+              "predicted": "",
+              "actual": "350",
+              "raw_text_snippet": "AHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 9949.0"
+            }
+          ]
+        },
+        "deduction_UnLoading": {
+          "accuracy": 0.0,
+          "total_samples": 18,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "80",
+              "raw_text_snippet": "ue oT eel ant Tl eae: IN mn: le iy\nnempextbce&tnos\nONPURCHASER&COMN\n500024.00\nAFAXROAD, HYDERABAD\ny:"
+            },
+            {
+              "predicted": "",
+              "actual": "48",
+              "raw_text_snippet": "TT: erNuaber174\nerDate VoucherNumber0670172026\nANR\nNane\nQty Price Amount\n1 280.00 280.00\n3 250.00 75"
+            },
+            {
+              "predicted": "",
+              "actual": "64",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABADS00024\nPhone: 040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "24",
+              "raw_text_snippet": "syNunber183\nsxrDate 06/01/2026\nYane KRISH/J\nQty Price Arnount\n1 250.00 250.00\n1 200.00 200.00\n1 90.0"
+            },
+            {
+              "predicted": "",
+              "actual": "8",
+              "raw_text_snippet": "SHAFAXROA0.00Y0ERABA0500024\nmea.: VoucherNumber040-VoucherNumber24412139, VoucherNumber9949333786\ney"
+            },
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "cmeeeereeeeeeweeeeeeeeeeenanonenssnroererooeer\nVoucherNuraber130\nVoucherDate VoucherNumber0570172026"
+            },
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "VoucherNuaber147\nVYoucherDate VoucherNumber0570172026\nSupp Name PM\nTotal 1S 3070.00\n(-) Comm?4.00 12"
+            },
+            {
+              "predicted": "",
+              "actual": "96",
+              "raw_text_snippet": "VoucherNumber146\nYoucherDate VoucherNumber0570172026\nSupp Name CM\nTotal 12 2010.00\n(-) Comm?4.00 804"
+            },
+            {
+              "predicted": "",
+              "actual": "24",
+              "raw_text_snippet": "rNuaber181 ;\nrDate 06/01/2026\nane JVLK\nQty Price Arnount\n1 200.00 200.00\n2 100.00 200.00\n3 400.00\nCo"
+            },
+            {
+              "predicted": "",
+              "actual": "96",
+              "raw_text_snippet": "erNunber172\nerDate 06/01/2026\nNane VARALAXMI/P\nQty Price Amount\n1 600.00 600.00\n5 44000220000.00\n5 2"
+            }
+          ]
+        },
+        "deduction_L/F and Cash": {
+          "accuracy": 0.0,
+          "total_samples": 12,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "2730",
+              "raw_text_snippet": "VoucherNumber131\nYoucherDate VoucherNumber0570172026\nSupp Name AVR\nTotal 12 3920.00\n(-) Comm?4.00 15"
+            },
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "syNunber183\nsxrDate 06/01/2026\nYane KRISH/J\nQty Price Arnount\n1 250.00 250.00\n1 200.00 200.00\n1 90.0"
+            },
+            {
+              "predicted": "",
+              "actual": "150",
+              "raw_text_snippet": "Voucher Number159\nVoucherDate 05/01/VoucherNumber2026\nSupp Name EYH\n 1 400.00 400.00\n1 200.00 200.00"
+            },
+            {
+              "predicted": "",
+              "actual": "240",
+              "raw_text_snippet": "Voucher Number140\nVoucherDate VoucherNumber0570172026\nSupp Name DPH\nTots 6 2510.00\n) Comm?4: 00 1004"
+            },
+            {
+              "predicted": "",
+              "actual": "1140",
+              "raw_text_snippet": "AS\nAHNEDSHARIF&BROS\nPURCHASER&Comm\nAFAXROAD, HYD 500024.00\n-040-24412139, 9949.00 3337.86\na\nNunber71"
+            },
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "MM\nHAF, HYDERABAD$VoucherNumber00024\ne: VoucherNumber040-VoucherNumber24412139, VoucherNumber9949333"
+            },
+            {
+              "predicted": "",
+              "actual": "980",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone: 040-24412139, 99"
+            },
+            {
+              "predicted": "",
+              "actual": "28",
+              "raw_text_snippet": "srNunber196\naDate 06/01/2026\njane UPM\nQty Price Amount\n5 26000130000.00\n1 250.00 250.00\n4 150.00 600"
+            },
+            {
+              "predicted": "",
+              "actual": "200",
+              "raw_text_snippet": "AS\namp SHARIF&BROS\nONPURCHASER&COMMAGENT\nAFAXROAD, HYDERABAD500024: 040-24412139, 9949.00 3337.86\nNu"
+            },
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "rNuaber180, rDate 06/01/2026\nane\nQty Price Amount\n1 90.00 90.00\n3 530.00\nComm?4.00 21.20\n1essForDana"
+            }
+          ]
+        },
+        "deduction_LessForDamages": {
+          "accuracy": 0.0,
+          "total_samples": 5,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "153.5",
+              "raw_text_snippet": "VoucherNuaber147\nVYoucherDate VoucherNumber0570172026\nSupp Name PM\nTotal 1S 3070.00\n(-) Comm?4.00 12"
+            },
+            {
+              "predicted": "",
+              "actual": "100.5",
+              "raw_text_snippet": "VoucherNumber146\nYoucherDate VoucherNumber0570172026\nSupp Name CM\nTotal 12 2010.00\n(-) Comm?4.00 804"
+            },
+            {
+              "predicted": "",
+              "actual": "44",
+              "raw_text_snippet": ";PURCHASER&COMMAGENT\naXROAD, HYDERABAD500024\nVoucherNumber040-VoucherNumber24412139.00VoucherNumber9"
+            },
+            {
+              "predicted": "",
+              "actual": "75",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139, 9949"
+            },
+            {
+              "predicted": "",
+              "actual": "44",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nMONPURCHASER&COMMAGENT\nHAFAXROAD.HYDERABAD500024\ne: 040-24412139, 9949.00 3337.6"
+            }
+          ]
+        },
+        "deduction_f-) LFAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "210",
+              "raw_text_snippet": "VoucherDate 05/01/VoucherNumber2026\nSupp Name TNM\nQty Price Amount\nVoucherNumber156\n2 490.00 980.00\n"
+            }
+          ]
+        },
+        "deduction_ca)": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "46",
+              "raw_text_snippet": "Voucher Number132\nVoucherDate 05/01/VoucherNumber2026\nSupp Name SN\nTotal 11 4610.00\n(-) Comm?4.008 1"
+            }
+          ]
+        },
+        "voucher_date": {
+          "accuracy": 0.0,
+          "total_samples": 6,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "2026-01-04",
+              "raw_text_snippet": "AS\nAHHEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone: 040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "2026-01-03",
+              "raw_text_snippet": "nae ss\neeDaIY& BROS\nSHAF RCHASER&COMMAGENT\naXROAD.HYDERABAD500026\nme: 040-24412139, 9949.00 3337.86\n"
+            },
+            {
+              "predicted": "",
+              "actual": "2026-01-05",
+              "raw_text_snippet": "YoucherNumber145\nVoucher Date 05/01/VoucherNumber2026\nSupp Name ANR\nLLLLSD-SGD-S-P---cD-D-D-GES-EED-"
+            },
+            {
+              "predicted": "",
+              "actual": "2026-01-05",
+              "raw_text_snippet": "Voucher Number133\nVoucherDate VoucherNumber0570172026\nSV\nSupp Name\nQty Price Amount\n3 430.00 1290.00"
+            },
+            {
+              "predicted": "",
+              "actual": "2026-01-05",
+              "raw_text_snippet": "VoucherNuaber141\nYoucherDate VoucherNumber0570172026\nSuppNare DRD/GRD\nQty Price Amount\n1 600.00 600."
+            },
+            {
+              "predicted": "",
+              "actual": "2024-01-06",
+              "raw_text_snippet": "TT: erNuaber174\nerDate VoucherNumber0670172026\nANR\nNane\nQty Price Amount\n1 280.00 280.00\n3 250.00 75"
+            }
+          ]
+        },
+        "deduction_-) LYFAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 994"
+            }
+          ]
+        },
+        "deduction_Less For Damages": {
+          "accuracy": 0.0,
+          "total_samples": 2,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "15",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone: 040-24412139, 99"
+            },
+            {
+              "predicted": "",
+              "actual": "59",
+              "raw_text_snippet": "VoucherDate 05/01/VoucherNumber2026\nSupp Name TNM\nQty Price Amount\nVoucherNumber156\n2 490.00 980.00\n"
+            }
+          ]
+        },
+        "deduction_om) LFAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "240",
+              "raw_text_snippet": "VoucherNumber161\nVoucherDate VoucherNumber0570172026\nSupp Name ALP\n4 350.00 14000.00\n2 200.00 400.00"
+            }
+          ]
+        },
+        "deduction_Comm?4.00 -": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "8",
+              "raw_text_snippet": "VoucherNumber151\nVoucherDate 05/01/VoucherNumber2026\nSupp Name SsI\nQty Price Amount\n1 200.00 200.00\n"
+            }
+          ]
+        },
+        "deduction_Comm?4.00X": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "12",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEHONPURCHASER&COMMAGENT\nDARUSHAFAKROAD.HYDERABAD500024\nPhone: 040-24412139, 994"
+            }
+          ]
+        },
+        "deduction_a) L/FAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "180",
+              "raw_text_snippet": "VYoucherNuraber138\nVoucherDate VoucherNumber0570172026\nSuppNarme YKHM\nTotal 3 640.00\n(-) Comm?4.00 2"
+            }
+          ]
+        },
+        "deduction_LFAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "360",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139, 9949"
+            }
+          ]
+        },
+        "deduction_Comm?400": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "82.4",
+              "raw_text_snippet": "aD\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COHHAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone: .040-24412139, 99"
+            }
+          ]
+        }
+      },
+      "after": {
+        "deduction_Less for Damage": {
+          "accuracy": 0.0,
+          "total_samples": 20,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "257",
+              "raw_text_snippet": "a sSuEr&\nIRCHASER&COMMAGENT\nVoucherNumber500024\nrROAD, HYDERABAD )\n40-244121399949333786.00\neee\nber7"
+            },
+            {
+              "predicted": "",
+              "actual": "72",
+              "raw_text_snippet": "hberNunber190\nherDate 06/01/2026\nNane VINITHA/D\nQty Price Amount\n2 270.00 540.00\n3 210.00 630.00\n3 9"
+            },
+            {
+              "predicted": "",
+              "actual": "65",
+              "raw_text_snippet": "oof by i 4, it !\ndy. ty ; ae lhe\nMh ay ih He i ile et!\nROA0.00Y0ERABA0500026\nne: 040-24612139, 9949."
+            },
+            {
+              "predicted": "",
+              "actual": "36",
+              "raw_text_snippet": "MM\nHAF, HYDERABAD$VoucherNumber00024\ne: VoucherNumber040-VoucherNumber24412139, VoucherNumber9949333"
+            },
+            {
+              "predicted": "",
+              "actual": "95.5",
+              "raw_text_snippet": "MAFAXROA0.00Y0ERABA0500024\np: VoucherNumber080-VoucherNumber26412139, VoucherNumber99493335766\nrNuab"
+            },
+            {
+              "predicted": "",
+              "actual": "13",
+              "raw_text_snippet": "-Nunber171\n-Date 06/01/2026\nDSM\nme\nQty Price Amount\n1 260.00 260.00\n1 260.00\nConn 2 4.00 10.40\n1essF"
+            },
+            {
+              "predicted": "",
+              "actual": "144",
+              "raw_text_snippet": "erNunber187\nsrDate VoucherNumber0670172026\nVane AYODAIA/A\nQty Price Arnount\n1 280.00 280.00\n5 280001"
+            },
+            {
+              "predicted": "",
+              "actual": "23.5",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nTMONPURCHASER&COMMAGENT\nSHAFAXROAD.HYDERABAD500024\n.040-24412139, 9949.00 3337.8"
+            },
+            {
+              "predicted": "",
+              "actual": "10",
+              "raw_text_snippet": "VoucherNumber151\nVoucherDate 05/01/VoucherNumber2026\nSupp Name SsI\nQty Price Amount\n1 200.00 200.00\n"
+            },
+            {
+              "predicted": "",
+              "actual": "22.5",
+              "raw_text_snippet": "ah\nbherNunber182 .\nbherDate 06/01/2026\nJANK\nNane\nee\nQty Price Amount\n1 270.00 270.00\n2 90.00 180.00\n"
+            }
+          ]
+        },
+        "deduction_Other": {
+          "accuracy": 0.0,
+          "total_samples": 29,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "9",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "7",
+              "raw_text_snippet": "VoucherNunber155\nYoucherDate 05/01/2026\nSupp Name BSR\n1 460.00 460.00\n1 240.00 240.00\nTotal 2 700.00"
+            },
+            {
+              "predicted": "",
+              "actual": "12",
+              "raw_text_snippet": "AHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone: 040-24412139, 9949.0"
+            },
+            {
+              "predicted": "",
+              "actual": "3",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEHONPURCHASER&COMMAGENT\nDARUSHAFAKROAD.HYDERABAD500024\nPhone: 040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "29",
+              "raw_text_snippet": "erNunber187\nsrDate VoucherNumber0670172026\nVane AYODAIA/A\nQty Price Arnount\n1 280.00 280.00\n5 280001"
+            },
+            {
+              "predicted": "",
+              "actual": "6",
+              "raw_text_snippet": "Voucher Number159\nVoucherDate 05/01/VoucherNumber2026\nSupp Name EYH\n 1 400.00 400.00\n1 200.00 200.00"
+            },
+            {
+              "predicted": "",
+              "actual": "19",
+              "raw_text_snippet": "Voucher Number136\nVoucherDate 05/01/VoucherNumber2026\nSupp Name TLS\nSrandTotal cir\nTotal 6 1880.00\n-"
+            },
+            {
+              "predicted": "",
+              "actual": "41",
+              "raw_text_snippet": "Voucher Number139\nVoucherDate VoucherNumber0570172026\nSupp Name PRC\n2 7000.00 140.00\nTotal 11 41000."
+            },
+            {
+              "predicted": "",
+              "actual": "20",
+              "raw_text_snippet": "52 scomm2 0s00026\nVoucherNumber040-VoucherNumber26012139, VoucherNumber9949939786\nhexrNunber689\nher0"
+            },
+            {
+              "predicted": "",
+              "actual": "20",
+              "raw_text_snippet": "Voucher Number157\nVoucherDate VoucherNumber0570172026\nSupp Name NRR\n9 170.00 1530.00\n4 120.00 480.00"
+            }
+          ]
+        },
+        "supplier_name": {
+          "accuracy": 0.0,
+          "total_samples": 20,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "JNMK",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "TRC",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nSMONPURCHASER&COMMAGENT\nSHAFAXROAD.HYDERABAD500024\nne: 040-24412139, 9949.00 333"
+            },
+            {
+              "predicted": "",
+              "actual": "DSM",
+              "raw_text_snippet": "-Nunber171\n-Date 06/01/2026\nDSM\nme\nQty Price Amount\n1 260.00 260.00\n1 260.00\nConn 2 4.00 10.40\n1essF"
+            },
+            {
+              "predicted": "",
+              "actual": "YKHM",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "TNM",
+              "raw_text_snippet": "VoucherDate 05/01/VoucherNumber2026\nSupp Name TNM\nQty Price Amount\nVoucherNumber156\n2 490.00 980.00\n"
+            },
+            {
+              "predicted": "",
+              "actual": "KLH",
+              "raw_text_snippet": "me PMEETR\n3\nAHMED SHARIF & BROS\nMONPURCHASER&COMMAGENT\nNAFAXROAD, HYDERABAD500024\ne: 040-24412139, 9"
+            },
+            {
+              "predicted": "",
+              "actual": "ABHM",
+              "raw_text_snippet": "ee\nonPURCHAGER& Comm AGENT\nAFAXROAD, HYDERABAD500026: 040-24412139, 9949.00 3337.66\nNunber87\nDate 03"
+            },
+            {
+              "predicted": "",
+              "actual": "DPH",
+              "raw_text_snippet": "Voucher Number140\nVoucherDate VoucherNumber0570172026\nSupp Name DPH\nTots 6 2510.00\n) Comm?4: 00 1004"
+            },
+            {
+              "predicted": "",
+              "actual": "ANR",
+              "raw_text_snippet": "TT: erNuaber174\nerDate VoucherNumber0670172026\nANR\nNane\nQty Price Amount\n1 280.00 280.00\n3 250.00 75"
+            },
+            {
+              "predicted": "",
+              "actual": "SHANKAR/G",
+              "raw_text_snippet": "VoucherNuaber143\nVoucherDate 05/01/VoucherNumber2026\nSupp Name SHANKAR/G\n- Qty Price Amount\n- 830000"
+            }
+          ]
+        },
+        "deduction_Comm?4.00": {
+          "accuracy": 0.0,
+          "total_samples": 2,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "28",
+              "raw_text_snippet": "VoucherNunber155\nYoucherDate 05/01/2026\nSupp Name BSR\n1 460.00 460.00\n1 240.00 240.00\nTotal 2 700.00"
+            },
+            {
+              "predicted": "",
+              "actual": "25.6",
+              "raw_text_snippet": "VYoucherNuraber138\nVoucherDate VoucherNumber0570172026\nSuppNarme YKHM\nTotal 3 640.00\n(-) Comm?4.00 2"
+            }
+          ]
+        },
+        "deduction_Commission": {
+          "accuracy": 0.0,
+          "total_samples": 20,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "205.6",
+              "raw_text_snippet": "a sSuEr&\nIRCHASER&COMMAGENT\nVoucherNumber500024\nrROAD, HYDERABAD )\n40-244121399949333786.00\neee\nber7"
+            },
+            {
+              "predicted": "",
+              "actual": "36",
+              "raw_text_snippet": "Voucher Number153\nVoucherDate 05/01/VoucherNumber2026\nSupp Name DMRD\nLLLLLVILLLLLSESLSSSARSEDSEDGYSE"
+            },
+            {
+              "predicted": "",
+              "actual": "12",
+              "raw_text_snippet": "ucherNunber192\nucherDate wRe2172026\nDHR.\nppNane\nQty Price Amount\n1 300.00 300.00\nstal 1 300.00\n) Com"
+            },
+            {
+              "predicted": "",
+              "actual": "76.4",
+              "raw_text_snippet": "MAFAXROA0.00Y0ERABA0500024\np: VoucherNumber080-VoucherNumber26412139, VoucherNumber99493335766\nrNuab"
+            },
+            {
+              "predicted": "",
+              "actual": "164",
+              "raw_text_snippet": "Voucher Number139\nVoucherDate VoucherNumber0570172026\nSupp Name PRC\n2 7000.00 140.00\nTotal 11 41000."
+            },
+            {
+              "predicted": "",
+              "actual": "209.2",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "132",
+              "raw_text_snippet": "ee\nonPURCHAGER& Comm AGENT\nAFAXROAD, HYDERABAD500026: 040-24412139, 9949.00 3337.66\nNunber87\nDate 03"
+            },
+            {
+              "predicted": "",
+              "actual": "46.8",
+              "raw_text_snippet": "AHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone: 040-24412139, 9949.0"
+            },
+            {
+              "predicted": "",
+              "actual": "55.2",
+              "raw_text_snippet": "AHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 9949.0"
+            },
+            {
+              "predicted": "",
+              "actual": "12",
+              "raw_text_snippet": "Voucher Nunmber158\nVoucherDate VoucherNumber0570172026\nSupp Name NDV\n1 200.00 2000.00\n1 100.00 100.0"
+            }
+          ]
+        },
+        "voucher_number": {
+          "accuracy": 0.0,
+          "total_samples": 13,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "701",
+              "actual": "144",
+              "raw_text_snippet": "VoucherNunber144\nVoucherDate 0$/VoucherNumber701/VoucherNumber2026\nSupp Name SRIVANI/G\nQty Price Amo"
+            },
+            {
+              "predicted": "2026",
+              "actual": "156",
+              "raw_text_snippet": "VoucherDate 05/01/VoucherNumber2026\nSupp Name TNM\nQty Price Amount\nVoucherNumber156\n2 490.00 980.00\n"
+            },
+            {
+              "predicted": "2026",
+              "actual": "143",
+              "raw_text_snippet": "VoucherNuaber143\nVoucherDate 05/01/VoucherNumber2026\nSupp Name SHANKAR/G\n- Qty Price Amount\n- 830000"
+            },
+            {
+              "predicted": "",
+              "actual": "190",
+              "raw_text_snippet": "hberNunber190\nherDate 06/01/2026\nNane VINITHA/D\nQty Price Amount\n2 270.00 540.00\n3 210.00 630.00\n3 9"
+            },
+            {
+              "predicted": "",
+              "actual": "87",
+              "raw_text_snippet": "ee\nonPURCHAGER& Comm AGENT\nAFAXROAD, HYDERABAD500026: 040-24412139, 9949.00 3337.66\nNunber87\nDate 03"
+            },
+            {
+              "predicted": "0570172026",
+              "actual": "147",
+              "raw_text_snippet": "VoucherNuaber147\nVYoucherDate VoucherNumber0570172026\nSupp Name PM\nTotal 1S 3070.00\n(-) Comm?4.00 12"
+            },
+            {
+              "predicted": "",
+              "actual": "181",
+              "raw_text_snippet": "rNuaber181 ;\nrDate 06/01/2026\nane JVLK\nQty Price Arnount\n1 200.00 200.00\n2 100.00 200.00\n3 400.00\nCo"
+            },
+            {
+              "predicted": "040",
+              "actual": "68",
+              "raw_text_snippet": "WFaAXROA0.00Y0ERABA0500026: VoucherNumber040-VoucherNumber24412139, VoucherNumber9949333766\nNunber68"
+            },
+            {
+              "predicted": "",
+              "actual": "72",
+              "raw_text_snippet": "ai\nAHMEDSHARIF&BROS\nPURCHASER&COMMAGENT\nSHAFAXROAD.HYDERABAD50002\nne: 040-24412139, 9949.00 3337.66\n"
+            },
+            {
+              "predicted": "500026",
+              "actual": "53",
+              "raw_text_snippet": "AFA HYDERABAD VoucherNumber500026\ne: VoucherNumber040-VoucherNumber24612139, VoucherNumber9949333786"
+            }
+          ]
+        },
+        "deduction_L/FAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 2,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "210",
+              "raw_text_snippet": "YoucherNumber152\nYoucherDate VoucherNumber0570172026\nSupp Name ANMY\n1 60.00 60.00\nTotal 3 500.00\n(-)"
+            },
+            {
+              "predicted": "",
+              "actual": "350",
+              "raw_text_snippet": "AHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 9949.0"
+            }
+          ]
+        },
+        "deduction_UnLoading": {
+          "accuracy": 0.0,
+          "total_samples": 18,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "80",
+              "raw_text_snippet": "ue oT eel ant Tl eae: IN mn: le iy\nnempextbce&tnos\nONPURCHASER&COMN\n500024.00\nAFAXROAD, HYDERABAD\ny:"
+            },
+            {
+              "predicted": "",
+              "actual": "48",
+              "raw_text_snippet": "TT: erNuaber174\nerDate VoucherNumber0670172026\nANR\nNane\nQty Price Amount\n1 280.00 280.00\n3 250.00 75"
+            },
+            {
+              "predicted": "",
+              "actual": "64",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABADS00024\nPhone: 040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "24",
+              "raw_text_snippet": "syNunber183\nsxrDate 06/01/2026\nYane KRISH/J\nQty Price Arnount\n1 250.00 250.00\n1 200.00 200.00\n1 90.0"
+            },
+            {
+              "predicted": "",
+              "actual": "8",
+              "raw_text_snippet": "SHAFAXROA0.00Y0ERABA0500024\nmea.: VoucherNumber040-VoucherNumber24412139, VoucherNumber9949333786\ney"
+            },
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "cmeeeereeeeeeweeeeeeeeeeenanonenssnroererooeer\nVoucherNuraber130\nVoucherDate VoucherNumber0570172026"
+            },
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "VoucherNuaber147\nVYoucherDate VoucherNumber0570172026\nSupp Name PM\nTotal 1S 3070.00\n(-) Comm?4.00 12"
+            },
+            {
+              "predicted": "",
+              "actual": "96",
+              "raw_text_snippet": "VoucherNumber146\nYoucherDate VoucherNumber0570172026\nSupp Name CM\nTotal 12 2010.00\n(-) Comm?4.00 804"
+            },
+            {
+              "predicted": "",
+              "actual": "24",
+              "raw_text_snippet": "rNuaber181 ;\nrDate 06/01/2026\nane JVLK\nQty Price Arnount\n1 200.00 200.00\n2 100.00 200.00\n3 400.00\nCo"
+            },
+            {
+              "predicted": "",
+              "actual": "96",
+              "raw_text_snippet": "erNunber172\nerDate 06/01/2026\nNane VARALAXMI/P\nQty Price Amount\n1 600.00 600.00\n5 44000220000.00\n5 2"
+            }
+          ]
+        },
+        "deduction_L/F and Cash": {
+          "accuracy": 0.0,
+          "total_samples": 12,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "2730",
+              "raw_text_snippet": "VoucherNumber131\nYoucherDate VoucherNumber0570172026\nSupp Name AVR\nTotal 12 3920.00\n(-) Comm?4.00 15"
+            },
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "syNunber183\nsxrDate 06/01/2026\nYane KRISH/J\nQty Price Arnount\n1 250.00 250.00\n1 200.00 200.00\n1 90.0"
+            },
+            {
+              "predicted": "",
+              "actual": "150",
+              "raw_text_snippet": "Voucher Number159\nVoucherDate 05/01/VoucherNumber2026\nSupp Name EYH\n 1 400.00 400.00\n1 200.00 200.00"
+            },
+            {
+              "predicted": "",
+              "actual": "240",
+              "raw_text_snippet": "Voucher Number140\nVoucherDate VoucherNumber0570172026\nSupp Name DPH\nTots 6 2510.00\n) Comm?4: 00 1004"
+            },
+            {
+              "predicted": "",
+              "actual": "1140",
+              "raw_text_snippet": "AS\nAHNEDSHARIF&BROS\nPURCHASER&Comm\nAFAXROAD, HYD 500024.00\n-040-24412139, 9949.00 3337.86\na\nNunber71"
+            },
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "MM\nHAF, HYDERABAD$VoucherNumber00024\ne: VoucherNumber040-VoucherNumber24412139, VoucherNumber9949333"
+            },
+            {
+              "predicted": "",
+              "actual": "980",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone: 040-24412139, 99"
+            },
+            {
+              "predicted": "",
+              "actual": "28",
+              "raw_text_snippet": "srNunber196\naDate 06/01/2026\njane UPM\nQty Price Amount\n5 26000130000.00\n1 250.00 250.00\n4 150.00 600"
+            },
+            {
+              "predicted": "",
+              "actual": "200",
+              "raw_text_snippet": "AS\namp SHARIF&BROS\nONPURCHASER&COMMAGENT\nAFAXROAD, HYDERABAD500024: 040-24412139, 9949.00 3337.86\nNu"
+            },
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "rNuaber180, rDate 06/01/2026\nane\nQty Price Amount\n1 90.00 90.00\n3 530.00\nComm?4.00 21.20\n1essForDana"
+            }
+          ]
+        },
+        "deduction_LessForDamages": {
+          "accuracy": 0.0,
+          "total_samples": 5,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "153.5",
+              "raw_text_snippet": "VoucherNuaber147\nVYoucherDate VoucherNumber0570172026\nSupp Name PM\nTotal 1S 3070.00\n(-) Comm?4.00 12"
+            },
+            {
+              "predicted": "",
+              "actual": "100.5",
+              "raw_text_snippet": "VoucherNumber146\nYoucherDate VoucherNumber0570172026\nSupp Name CM\nTotal 12 2010.00\n(-) Comm?4.00 804"
+            },
+            {
+              "predicted": "",
+              "actual": "44",
+              "raw_text_snippet": ";PURCHASER&COMMAGENT\naXROAD, HYDERABAD500024\nVoucherNumber040-VoucherNumber24412139.00VoucherNumber9"
+            },
+            {
+              "predicted": "",
+              "actual": "75",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139, 9949"
+            },
+            {
+              "predicted": "",
+              "actual": "44",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nMONPURCHASER&COMMAGENT\nHAFAXROAD.HYDERABAD500024\ne: 040-24412139, 9949.00 3337.6"
+            }
+          ]
+        },
+        "deduction_f-) LFAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "210",
+              "raw_text_snippet": "VoucherDate 05/01/VoucherNumber2026\nSupp Name TNM\nQty Price Amount\nVoucherNumber156\n2 490.00 980.00\n"
+            }
+          ]
+        },
+        "deduction_ca)": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "46",
+              "raw_text_snippet": "Voucher Number132\nVoucherDate 05/01/VoucherNumber2026\nSupp Name SN\nTotal 11 4610.00\n(-) Comm?4.008 1"
+            }
+          ]
+        },
+        "voucher_date": {
+          "accuracy": 0.0,
+          "total_samples": 6,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "2026-01-04",
+              "raw_text_snippet": "AS\nAHHEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone: 040-24412139, 994"
+            },
+            {
+              "predicted": "",
+              "actual": "2026-01-03",
+              "raw_text_snippet": "nae ss\neeDaIY& BROS\nSHAF RCHASER&COMMAGENT\naXROAD.HYDERABAD500026\nme: 040-24412139, 9949.00 3337.86\n"
+            },
+            {
+              "predicted": "",
+              "actual": "2026-01-05",
+              "raw_text_snippet": "YoucherNumber145\nVoucher Date 05/01/VoucherNumber2026\nSupp Name ANR\nLLLLSD-SGD-S-P---cD-D-D-GES-EED-"
+            },
+            {
+              "predicted": "",
+              "actual": "2026-01-05",
+              "raw_text_snippet": "Voucher Number133\nVoucherDate VoucherNumber0570172026\nSV\nSupp Name\nQty Price Amount\n3 430.00 1290.00"
+            },
+            {
+              "predicted": "",
+              "actual": "2026-01-05",
+              "raw_text_snippet": "VoucherNuaber141\nYoucherDate VoucherNumber0570172026\nSuppNare DRD/GRD\nQty Price Amount\n1 600.00 600."
+            },
+            {
+              "predicted": "",
+              "actual": "2024-01-06",
+              "raw_text_snippet": "TT: erNuaber174\nerDate VoucherNumber0670172026\nANR\nNane\nQty Price Amount\n1 280.00 280.00\n3 250.00 75"
+            }
+          ]
+        },
+        "deduction_-) LYFAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "120",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone.040-24412139, 994"
+            }
+          ]
+        },
+        "deduction_Less For Damages": {
+          "accuracy": 0.0,
+          "total_samples": 2,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "15",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD, HYDERABAD500024\nPhone: 040-24412139, 99"
+            },
+            {
+              "predicted": "",
+              "actual": "59",
+              "raw_text_snippet": "VoucherDate 05/01/VoucherNumber2026\nSupp Name TNM\nQty Price Amount\nVoucherNumber156\n2 490.00 980.00\n"
+            }
+          ]
+        },
+        "deduction_om) LFAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "240",
+              "raw_text_snippet": "VoucherNumber161\nVoucherDate VoucherNumber0570172026\nSupp Name ALP\n4 350.00 14000.00\n2 200.00 400.00"
+            }
+          ]
+        },
+        "deduction_Comm?4.00 -": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "8",
+              "raw_text_snippet": "VoucherNumber151\nVoucherDate 05/01/VoucherNumber2026\nSupp Name SsI\nQty Price Amount\n1 200.00 200.00\n"
+            }
+          ]
+        },
+        "deduction_Comm?4.00X": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "12",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEHONPURCHASER&COMMAGENT\nDARUSHAFAKROAD.HYDERABAD500024\nPhone: 040-24412139, 994"
+            }
+          ]
+        },
+        "deduction_a) L/FAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "180",
+              "raw_text_snippet": "VYoucherNuraber138\nVoucherDate VoucherNumber0570172026\nSuppNarme YKHM\nTotal 3 640.00\n(-) Comm?4.00 2"
+            }
+          ]
+        },
+        "deduction_LFAndCash": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "360",
+              "raw_text_snippet": "AS\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COMMAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone.040-24412139, 9949"
+            }
+          ]
+        },
+        "deduction_Comm?400": {
+          "accuracy": 0.0,
+          "total_samples": 1,
+          "correct_count": 0,
+          "error_examples": [
+            {
+              "predicted": "",
+              "actual": "82.4",
+              "raw_text_snippet": "aD\nAHMEDSHARIF&BROS\nLEMONPURCHASER&COHHAGENT\nDARUSHAFAXROAD.HYDERABAD500024\nPhone: .040-24412139, 99"
+            }
+          ]
+        }
+      },
+      "improvement": {
+        "deduction_Less for Damage": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 20
+        },
+        "deduction_Other": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 29
+        },
+        "supplier_name": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 20
+        },
+        "deduction_Comm?4.00": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 2
+        },
+        "deduction_Commission": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 20
+        },
+        "voucher_number": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 13
+        },
+        "deduction_L/FAndCash": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 2
+        },
+        "deduction_UnLoading": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 18
+        },
+        "deduction_L/F and Cash": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 12
+        },
+        "deduction_LessForDamages": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 5
+        },
+        "deduction_f-) LFAndCash": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 1
+        },
+        "deduction_ca)": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 1
+        },
+        "voucher_date": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 6
+        },
+        "deduction_-) LYFAndCash": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 1
+        },
+        "deduction_Less For Damages": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 2
+        },
+        "deduction_om) LFAndCash": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 1
+        },
+        "deduction_Comm?4.00 -": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 1
+        },
+        "deduction_Comm?4.00X": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 1
+        },
+        "deduction_a) L/FAndCash": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 1
+        },
+        "deduction_LFAndCash": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 1
+        },
+        "deduction_Comm?400": {
+          "before_accuracy": 0.0,
+          "after_accuracy": 0.0,
+          "absolute_improvement": 0.0,
+          "percent_improvement": 0.0,
+          "samples": 1
+        }
+      },
+      "validation_samples": 158
+    }
+  ]
+}

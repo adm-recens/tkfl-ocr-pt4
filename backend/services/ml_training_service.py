@@ -8,7 +8,6 @@ from datetime import datetime
 from backend.db import get_connection
 from backend.ml_models.ml_correction_model import OCRCorrectionModel, ParsingCorrectionModel
 from backend.services.ml_feedback_service import MLFeedbackService
-from backend.services.smart_crop_training_service import SmartCropTrainingService
 import logging
 from backend.services.learning_history_tracker import LearningHistoryTracker
 
@@ -243,20 +242,20 @@ class MLTrainingService:
         return training_data
     
     @staticmethod
-    def train_models(feedback_limit: int = 5000, save_models: bool = True, include_smart_crop: bool = True):
+    def train_models(feedback_limit: int = 5000, save_models: bool = True):
         """
-        Train OCR, Parsing correction models AND Smart Crop model from collected feedback.
+        Train OCR and Parsing correction models from collected user feedback.
+        
+        Note: Smart Crop model is trained separately via SmartCropTrainingService.
         
         Args:
             feedback_limit: Max number of corrections to use
             save_models: Whether to save trained models to disk
-            include_smart_crop: Whether to train smart crop model as well
         
         Returns: {
             'status': 'success|error',
             'ocr_model_stats': {...},
             'parsing_model_stats': {...},
-            'smart_crop_stats': {...},
             'total_samples': int,
             'training_time': float
         }
@@ -269,7 +268,6 @@ class MLTrainingService:
             'training_time': 0,
             'ocr_model_stats': {},
             'parsing_model_stats': {},
-            'smart_crop_stats': {},
             'models_saved': save_models
         }
         
@@ -277,17 +275,6 @@ class MLTrainingService:
             # Train OCR and Parsing models
             correction_result = MLTrainingService._train_correction_models(feedback_limit, save_models)
             result.update(correction_result)
-            
-            # Train Smart Crop model if requested
-            if include_smart_crop:
-                try:
-                    crop_result = SmartCropTrainingService.train_smart_crop_model(data_limit=feedback_limit)
-                    result['smart_crop_stats'] = crop_result.get('model_stats', {})
-                    result['smart_crop_status'] = crop_result.get('status', 'unknown')
-                except Exception as e:
-                    ml_logger.error(f"[ML-TRAINING] Smart crop training failed: {e}")
-                    result['smart_crop_stats'] = {'error': str(e)}
-                    result['smart_crop_status'] = 'failed'
             
             result['training_time'] = time.time() - start_time
             
@@ -305,14 +292,9 @@ class MLTrainingService:
             
             # Track what was learned
             new_patterns = []
-            
-            # Extract unique corrections as "patterns" for reporting
-            # This gives users concrete examples of what was learned (e.g. "TAS" -> "TK")
             seen_patterns = set()
             for corr in corrections_used:
-                # Create a unique signature for this correction pattern
                 pattern_key = f"{corr.get('field')}|{corr.get('auto')}|{corr.get('corrected')}"
-                
                 if pattern_key not in seen_patterns:
                     new_patterns.append({
                         'field': corr.get('field'),
@@ -410,31 +392,31 @@ class MLTrainingService:
     
     @staticmethod
     def get_training_status():
-        """Get status of all models: OCR, Parsing, and Smart Crop"""
+        """Get status of text parsing models: OCR and Parsing."""
         ocr_model = OCRCorrectionModel()
         parsing_model = ParsingCorrectionModel()
         
         ocr_loaded = ocr_model.load_model(MLTrainingService.OCR_MODEL_NAME)
         parsing_loaded = parsing_model.load_model(MLTrainingService.PARSING_MODEL_NAME)
         
-        # Get smart crop model status
-        crop_status = SmartCropTrainingService.get_training_status()
-        
         return {
             'ocr_model_available': ocr_loaded,
             'parsing_model_available': parsing_loaded,
-            'smart_crop_model_available': crop_status.get('model_available', False),
             'ocr_stats': ocr_model.get_stats() if ocr_loaded else None,
             'parsing_fields': list(parsing_model.parsing_corrections.keys()) if parsing_loaded else [],
-            'smart_crop_stats': {
-                'trained_at': crop_status.get('trained_at'),
-                'training_samples': crop_status.get('training_samples', 0),
-                'patterns_count': crop_status.get('patterns_count', 0),
-                'avg_crop_size': crop_status.get('avg_crop_size', {}),
-                'crop_variations': crop_status.get('crop_variations', {})
-            } if crop_status.get('model_available') else None,
             'last_trained': ocr_model.last_trained if isinstance(ocr_model.last_trained, str) else (ocr_model.last_trained.isoformat() if ocr_model.last_trained else None)
         }
+    
+    @staticmethod
+    def apply_ocr_character_corrections(raw_text: str) -> str:
+        """Globally apply OCR character swaps learned from user corrections before standard parsing."""
+        try:
+            ocr_model = OCRCorrectionModel()
+            if ocr_model.load_model(MLTrainingService.OCR_MODEL_NAME):
+                return ocr_model.apply_ocr_corrections(raw_text)
+        except Exception as e:
+            ml_logger.error(f"[ML] Error applying OCR corrections: {e}")
+        return raw_text
     
     @staticmethod
     def apply_learned_corrections(auto_extracted_data: dict, raw_ocr: str) -> dict:
@@ -482,34 +464,29 @@ class MLTrainingService:
                 supplier_name = master.get('supplier_name_suggestion') or master.get('supplier_name')
                 
                 if supplier_name and parsing_loaded:
-                    # 1. Recover Date
-                    if not master.get('voucher_date'):
-                        anchor_result = parsing_model.find_value_by_anchor('voucher_date', raw_ocr, supplier_name)
-                        if anchor_result:
-                            # Try to parse the date found by anchor
-                            from backend.parser import try_parse_date
-                            parsed_date = try_parse_date(anchor_result['value'])
-                            if parsed_date:
-                                master['voucher_date'] = parsed_date
+                    # 1. Recover/Overwrite Date
+                    anchor_result = parsing_model.find_value_by_anchor('voucher_date', raw_ocr, supplier_name)
+                    if anchor_result and anchor_result.get('confidence', 0) > 0.8:
+                        from backend.parser import try_parse_date
+                        parsed_date = try_parse_date(anchor_result['value'])
+                        if parsed_date:
+                            master['voucher_date'] = parsed_date
                     
-                    # 2. Recover Voucher Number
-                    if not master.get('voucher_number'):
-                        anchor_result = parsing_model.find_value_by_anchor('voucher_number', raw_ocr, supplier_name)
-                        if anchor_result:
-                            # Clean up characters often mistaken in voucher numbers
-                            cleaned_vn = "".join(c for c in anchor_result['value'] if c.isalnum() or c in '-/')
-                            if cleaned_vn:
-                                master['voucher_number'] = cleaned_vn
+                    # 2. Recover/Overwrite Voucher Number
+                    anchor_result = parsing_model.find_value_by_anchor('voucher_number', raw_ocr, supplier_name)
+                    if anchor_result and anchor_result.get('confidence', 0) > 0.8:
+                        cleaned_vn = "".join(c for c in anchor_result['value'] if c.isalnum() or c in '-/')
+                        if cleaned_vn:
+                            master['voucher_number'] = cleaned_vn
                                 
-                    # 3. Recover Totals (if missing)
+                    # 3. Recover/Overwrite Totals
                     for total_field in ['net_total', 'gross_total']:
-                        if not master.get(total_field):
-                            anchor_result = parsing_model.find_value_by_anchor(total_field, raw_ocr, supplier_name)
-                            if anchor_result:
-                                from backend.parser import safe_float_conversion
-                                val = safe_float_conversion(anchor_result['value'])
-                                if val:
-                                    master[total_field] = val
+                        anchor_result = parsing_model.find_value_by_anchor(total_field, raw_ocr, supplier_name)
+                        if anchor_result and anchor_result.get('confidence', 0) > 0.8:
+                            from backend.parser import safe_float_conversion
+                            val = safe_float_conversion(anchor_result['value'])
+                            if val:
+                                master[total_field] = val
             
             # Apply Item-level corrections
             if 'items' in corrected and parsing_loaded:
@@ -532,7 +509,6 @@ class MLTrainingService:
                             str(item.get('quantity', ''))
                         )
                         if result.get('confidence', 0.0) > 0.7:
-                            # Try to maintain type if possible, or just string swap
                             item['quantity'] = result.get('suggestion')
                             
                     # Correct Unit Price
@@ -554,78 +530,27 @@ class MLTrainingService:
                         )
                         if result.get('confidence', 0.0) > 0.7:
                             item['line_amount'] = result.get('suggestion')
-            
-            # 4. Recover Deductions (Adaptive Deduction Parsing)
-            # Scan for specific deduction keywords as requested by user
-            if parsing_loaded:
-                deduction_patterns = {
-                    'Commission': [r'Comm\s*@', r'Commission'],
-                    'Damage': [r'Less\s*for\s*Damage', r'Damage'],
-                    'Unloading': [r'UnLoading', r'Unloading'],
-                    'L/F and Cash': [r'L/F\s*and\s*Cash', r'L/F'],
-                    'Other': [r'Other'] 
-                }
-                
-                # Combine user requested patterns with learned anchors if available
-                if supplier_name:
-                    learned_deductions = parsing_model.learned_anchors.get(supplier_name.upper(), {})
-                    for field, anchors in learned_deductions.items():
-                        if field.startswith('deduction_'):
-                            ded_type = field.replace('deduction_', '')
-                            # Add high-frequency anchors as patterns
-                            best_anchors = sorted(anchors.items(), key=lambda x: x[1], reverse=True)[:2]
-                            if ded_type not in deduction_patterns:
-                                deduction_patterns[ded_type] = []
-                            for anchor, _ in best_anchors:
-                                deduction_patterns[ded_type].append(re.escape(anchor))
-
-                # Initialize deductions list if missing
-                if 'deductions' not in corrected:
-                    corrected['deductions'] = []
-                
-                existing_deduction_types = {d.get('deduction_type') for d in corrected.get('deductions', [])}
-                
-                import re
+                            
+            # 4. Recover/Overwrite Deductions (Adaptive Deduction Parsing)
+            if parsing_loaded and supplier_name:
+                learned_deductions = parsing_model.learned_anchors.get(supplier_name.upper(), {})
                 from backend.parser import safe_float_conversion
-
-                for ded_type, patterns in deduction_patterns.items():
-                    # Skip if already found by standard parser
-                    if any(ded_type in str(exist) for exist in existing_deduction_types):
-                        continue
+                
+                # Keep existing deductions, but overwrite if ML has high confidence
+                existing_deductions = {d.get('deduction_type'): d.get('amount') for d in corrected.get('deductions', [])}
+                
+                for field, anchors in learned_deductions.items():
+                    if field.startswith('deduction_'):
+                        ded_type = field.replace('deduction_', '')
+                        anchor_result = parsing_model.find_value_by_anchor(field, raw_ocr, supplier_name)
                         
-                    for pat in patterns:
-                        try:
-                            # Search for Pattern + Number + Optional %
-                            # Capture group 1: number, group 2: optional %
-                            regex = re.compile(pat + r".*?(\d+\.?\d*)\s*(%)?", re.IGNORECASE)
-                            match = regex.search(raw_ocr)
-                            if match:
-                                # We found a potential deduction!
-                                val_str = match.group(1)
-                                is_percentage = bool(match.group(2))
-                                
-                                val = safe_float_conversion(val_str)
-                                
-                                if val and val > 0:
-                                    # Special handling for Commission %
-                                    if ded_type == 'Commission' and is_percentage:
-                                        # Calculate amount from Gross Total
-                                        gross = corrected.get('master', {}).get('gross_total') or 0
-                                        amount = gross * (val / 100.0)
-                                        corrected['deductions'].append({
-                                            'deduction_type': f"{ded_type} @ {val}%",
-                                            'amount': amount
-                                        })
-                                    else:
-                                        # Assume it's a direct amount
-                                        if val > 1.0: # Filter out noise like "1%" or small integers that might be dates
-                                            corrected['deductions'].append({
-                                                'deduction_type': ded_type,
-                                                'amount': val
-                                            })
-                                    break # specific pattern found, move to next type
-                        except Exception:
-                            continue
+                        if anchor_result and anchor_result.get('confidence', 0) > 0.8:
+                            val = safe_float_conversion(anchor_result['value'])
+                            if val and val > 0:
+                                existing_deductions[ded_type] = val
+
+                if existing_deductions:
+                    corrected['deductions'] = [{'deduction_type': k, 'amount': v} for k, v in existing_deductions.items()]
             
         except Exception as e:
             ml_logger.error(f"[ML] Error applying learned corrections: {e}")

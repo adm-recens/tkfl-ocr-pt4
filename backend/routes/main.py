@@ -279,11 +279,16 @@ def training_page():
     # Fetch real stats from the feedback service
     stats = MLFeedbackService.get_dataset_stats()
     
-    # Get ML training status
+    # Get text parsing ML status (OCR + Parsing models)
     from backend.services.ml_training_service import MLTrainingService
     ml_status = MLTrainingService.get_training_status()
+
+    # Get smart crop model status separately
+    from backend.services.smart_crop_training_service import SmartCropTrainingService
+    crop_status = SmartCropTrainingService.get_training_status()
     
-    return render_template("training.html", stats=stats, ml_status=ml_status)
+    return render_template("training.html", stats=stats, ml_status=ml_status, crop_status=crop_status)
+
 
 @main_bp.route("/confirm_delete", methods=["GET"])
 def confirm_delete_all():

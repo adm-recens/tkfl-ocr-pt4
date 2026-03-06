@@ -1,0 +1,1015 @@
+{
+  "stats": {
+    "total": 259,
+    "has_voucher_number": 254,
+    "has_date": 175,
+    "has_supplier": 240,
+    "has_gross_total": 259,
+    "has_net_total": 148,
+    "has_items": 219,
+    "has_deductions": 242,
+    "failed_completely": 0
+  },
+  "failing_examples": [
+    {
+      "id": 566,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.03_1.jpeg",
+      "text_snippet": "VoucherNumber118\nYoucherDate 09/01/2026\nSupp Name MS\nQty Price Amount\n3 4000.00 120.00\nTotal 8 2420.00\n(-) Comm9?400X 9680.00\n(-) LessForDamages 12100.00\n(-) UnLoading 64.00\n(-) 2400.00\nf) LYFAndCash 480.00Q0",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 600,
+      "file": "WhatsApp_Image_2026-01-11_at_14.45.13.jpeg",
+      "text_snippet": "Nunaber112\nDate 11/01/2026\nae VANITHA/D\nComm7?4.00 180.40\n1essForDanages 225.50\nUn1oading 112.00\n4\n1YFAndCash 188000.00\n6randTotal 206007.00",
+      "missing": {
+        "voucher_number": true,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 517,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.47.jpeg",
+      "text_snippet": "Nuanber144\nDate VoucherNumber0770172026\nne NANDU/D\nQty Price Amount\n1 100.00 100.00\n1 100.00\nComm74.00X 4.00\n1ess For Damages 5.00\nUn1oading. 8.00\n1.00\n1YFAnd Cash 70.00",
+      "missing": {
+        "voucher_number": true,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 523,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.09.jpeg",
+      "text_snippet": "Voucher Number212\nVoucherDate 08/01/VoucherNumber2026\nSupp Name TNR\noweeraesewaaneSSSOSSSSeeeeeSsaeeeree: -eo- eeweeeeroewewoeaeeeeeSeeeweeweweeeeeeSeeoe\neee\nTotal 1 300.00\n(-) Comm?4.00 12.00\n(-) Less For Damages 1 0.00\neo) UnLoading 800.00\n(-) 3.00\n(-) LFAndCash 4000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 497,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.35.jpeg",
+      "text_snippet": "rNunber133\nrDate VoucherNumber0770172026\nMPN, ane\nQty Price Amount\n2 60.00 120.00\n2 120.00\nComm?4.008 4.80\n1essForDanages 6.00\nUn1oading 16.00\n1.00\n1/F and Cash 80.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 506,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.40.jpeg",
+      "text_snippet": "hherNuaber151, herDate 07/01/2026\n)Nane JPYK\na\nQty Price Amount\na\n1 280.00 280.00\n2 60.00 120.00\nal 3 400.00\nComm?4.008 16.00\n1essForDanages 20.00\nUn1oading 24.00\n4.00\n1/FAndCash 120.00\nareEravereanapasas PNPENYCPChEPSHNDHDSUERGIRY-WEND-GHnD.eueeemcameene",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 541,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.18.jpeg",
+      "text_snippet": "Voucher Number229\nVoucherDate 08/01/VoucherNumber2026\nSupp Name JSYT\n1 250.00 250.00\n1 240.00 240.00\nTotal 2 490.00\nf-) Comm?4.00 1960.00\n(-) LessForDanages 24S50\n(-) UnLoading 16.00\nwe) S0a\no) LFAndCash 14000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 505,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.40_1.jpeg",
+      "text_snippet": "eherNuaber152\ncherDate 07/01/2026\n-pNane ISH/J\nQty Price Amount\n1 250.00 250.00\n2 120.00 240.00\ntal 3 490.00\n) Comm7?4.00X 19.60\n LessForDarmages 24.50\n UnLoading 24.00\n 5.00\n LFAndCash 120.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 511,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.43.jpeg",
+      "text_snippet": "rNunber132, rDate VoucherNumber07701/VoucherNumber2026\n8Re AYR\nQty Price Amount\n5 300.00 1500.00\n1 130.00 130.00\n2 100.00 200.00\n4 40.00 160.00\n12 1990.00\nComm7?4.008 79.60\n1ess For Damages 99.50\nUn1oading 96.00\n20.00\n1/FAndCash 173000.00\n6rand Total -35.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 515,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.46_1.jpeg",
+      "text_snippet": "xNunaber142\nxrDate VoucherNumber07701/VoucherNumber2026\nYSY\nlane\nen\nQty Price Amount\n1 180.00 180.00\n4 70.00 280.00\nL S 460.00\nComm?4.00 18.40\nLess For Damages 23.00\nUnLoading 40.00\n5.00\nL/FAndCash 350.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 518,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.48_1.jpeg",
+      "text_snippet": "erNunber147\nsrDate VoucherNumber0770172026\nNane JRRK\nQty Price Anount\n1010000100000.00\n5 50.00 250.00\n1 15 1250.00\nComm7?4.00X 5 0.00\n1ess For Damages 62.50\nUn1oading 120.00\n13.00\n1/FAndCash 900.00\nGrandTotal 105.00\nPCRPGDGDCUD-GENDEPEYCUP-EDGGPGADCEPEeED-eoee DGEDGEFGGNDCDQNNPOE)QUE4eaPeeCa",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 576,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.16_1.jpeg",
+      "text_snippet": "VoucherNuaber101\nYoucherDate 10/01/2026\nSupp Name AYODAIAA\nQty Price Amount\nTotal 8 1500.00\n(-) Comm?400X 60O0\n(-) LlessForDamages 7500.00\nf-) UnLoading 64O0\n-) 1S5o0\na) LFAndCash 48000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 590,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.22.jpeg",
+      "text_snippet": "VoucherNuaber113\nVoucherDate VoucherNumber1070172026\nSupp Name VANITHA/D\nQty Price Amount\nTotal 9 3110.00\nf-) Comm9?4.00 12440.00\ni-) Less For Damages 1S5550\ni-) UnLoading 72.00\na) LYFAndCash 6300.00u",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 575,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.15.jpeg",
+      "text_snippet": "SLES\nSSeS\nee\n-- eee\nVoucherNumber99\nVoucherDate VoucherNumber1070172026\nSupp Name MACHAGIRI/A\nQty Price Amount\nTotal 3 1050.00\n(-) Comm?4.008 42.00\n() Less For Damages S2.50\nf-j UnLoading 2400.00\n-) 1100.00\n) LYFAndCash 21000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 509,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.42.jpeg",
+      "text_snippet": "herNumber155\nherDate VoucherNumber0770172026\nNane SN\nQty Price Amount\nee\n1 360.00 360.00\n4 320.00 1280.00\n1 240.00 240.00\n1 200.00 200.00\nal 7 2080.00\nme\nComm7?4.008 83.20\nLessForDanages 104.00\nUnLoading S6.00\n1.00\nLFAndCash 490.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 516,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.46.jpeg",
+      "text_snippet": "cherNuaber141\ncherDate 07/01/2026\n-pNare GRD\nQty Price Amount\n1 260.00 260.00\n2 200.00 400.00\n2 70.00 140.00\ntal ) 800.00\nComm?4.00 32.00\n1ess For Damages 40.00\nUn1oading 40.00\n8.00\n1/FAndCash 200.00\n?DSGE-GEPGDGEPGEDGDaelDcaEeeGuwaED n0DCEEDGEEPGRDGHIPGHERGEDCNGNDNEGHeGERGaEGEDcuPS",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 519,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.48.jpeg",
+      "text_snippet": "cherNuaber145\ncherDate 07/01/2026\npNane VANITHA/D\nQty Price Amount\n1 400.00 400.00\n4 35000140000.00\n3 100.00 300.00\n1 60.00 60.00\n2 40.00 80.00\ntal 11 2240.00\nComm7?4.008 89.60\n1essForDamages 112.00\nUn1oading 88.00\n22.00\n1/FAndCash 122000.00\nAPPD-DCPEDCHDGEDCYGEDGDHNDGEDGN-GUD-GED-GDeEDcme",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 513,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.45_1.jpeg",
+      "text_snippet": "cherNuaber139\ncherDate 07/01/2026\npNane H5 .\nQty Price Amount\n1 400.00 400.00\n2 100.00 200.00\n3 40.00 120.00\n1 40.00 40.00\ntal 7 760.00\nComm7?4.00 30.40\n1ess For Damages 38.00\nUn1oading 56.00\n8.00\n1/FAndCash 870.00\nPNEPEDOEDPGDOEDCOGEY5UITGID5UEP-GINPCUDGEN5DGEDCEUEGENEHEENDwlee5ODGINTCEDGUNDGHEDGitt)CEEDne",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 536,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.15.jpeg",
+      "text_snippet": "Voucher Nunber223\nVoucherDate 08/01/VoucherNumber2026\nTK\nSupp Name\nQty Price Amount\n5 330.00 1650.00\n2 70.00 140.00\nTotal ? 1790.00\nf-) Comm?400 7160.00\nfo) Less For Damages 89S500\n-) UnLoading S6oa\n(-) 18o0n\n-; LFAndCash 420.00a0",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 537,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.16_1.jpeg",
+      "text_snippet": "VoucherNuaber227\nVoucherDate 08/01/VoucherNumber2026\nSupp Name VINITA/D\nQty Price Amount\nTotal 9 18000.00\n(-) Comm?4.00x 72.00\nam) LessForDamages 9000.00\n(-) UnLoading 72.00o0a\nom) 18o0\ni) LYFAndCash 63000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 538,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.16.jpeg",
+      "text_snippet": "VoucherNumber226\nVoucherDate 08/01/VoucherNumber2026\nSupp Name DMRD\nQty Price Amount\n1 60.00 60.00\nTotal S 680.00\nf-) Comm?4.008 2? 20\n(-) Less For Damages 34.00\n) UnLoading 4000.00\na) LFAndCash 350.00 0a",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 539,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.17.jpeg",
+      "text_snippet": "LSLLLLLLLLLSASDSEDSD-eDcOeeSauauee\neee\nTee\n- Oe\nVoucherNumber228\nVoucherDate 08/01/VoucherNumber2026\nSupp Name NANDU/D\nQty Price Amount\nTotal 1 150.00\n(-) Comm?4008 6.00\n(-) LessForDanmages ?SO\nf-) UnLoading 800.00\non) 2.00\niy LFAndCash 7000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 540,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.18_1.jpeg",
+      "text_snippet": "VoucherNumber230\nVoucherDate 08/01/VoucherNumber2026\nSupp Name SWAMY/N\nQty Price Amount\nTotal 4 1070.00\n(-) Comm?4.00 4280.00\n(-) LlessForDamages 53.50\nf-) UnLoading 32.00\ni) 11o0\na) L/F and Cash -1000",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 535,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.15_2.jpeg",
+      "text_snippet": "VoucherNunber225\nVoucherDate VoucherNumber0870172026\nSupp Name SsI\n1 70.00 70.00\nTotal 3 460.00\n(-) Comm?4.00 18.40\n(-) Less For Damages 23.00\nf-) UnLoading 2400.00\nf-) 0.00\nf-)j LYFAndCash 21000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 583,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.19_2.jpeg",
+      "text_snippet": "VoucherNunber108\nVoucherDate VoucherNumber1070172026\nSupp Name KARTHIK/V\nQty Price Amount\n1 140.00 140.00\n2 20.00 40.00\nTotal 3 180.00\n(-) Comm?4.00X ?20\n(-) Less For Damages 9.00\n(-) UnLoading 2400.00\nf) 2aa\n LYFAndCash 21000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 548,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.21.jpeg",
+      "text_snippet": "VoucherNumber236\nYVoucherDate 08/01/VoucherNumber2026\nDSM\nSupp Name\nQty Price Amount\n1 100.00 100.00\nTotal 1 1000.00\n(-) Comm?4.008 400\n(-) Less For Damages 0.00\n(-) UnLoading 800.00\n(-) 100\nf-) L/F and Cash 4000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 549,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.22.jpeg",
+      "text_snippet": "Voucher Number238\nVoucherDate VoucherNumber0870172026\nSupp Name DPH\n3 140.00 420.00\nSrandTotal 119400.00\nTotal 7 1700.00\n(-) Comm?4.00 6800.00\n(-) LessForDamages 8500.00\nf-) UnLoading S600\nfm) 70a\ni) L/F and Cash -80.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 543,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.19.jpeg",
+      "text_snippet": "VoucherNumber231\nVoucherDate VoucherNumber0870172026\nSupp Name TRC\nQty Price Amount\n1 250.00 250.00\n1 100.00 100.00\nTotal 2 350.00\n(-) Comm?4008 14.00\n(-) Less For Damages 17.50\n(-) UnLoading 16.00\n(-) 400\ni-) L/FAndCash 8000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 551,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.23.jpeg",
+      "text_snippet": "Voucher Number239\nYoucherDate 08/01/2026\nSupp Name GRD\nTotal 6 12400.00\n() Comm?4.00 4960.00\na) LessForDamages 6200.00\ni-) UnLoading 4800.00\nf-) 12.00\na) L/F and Cash -40-00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 530,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.13_1.jpeg",
+      "text_snippet": "Voucher Number220\nVoucherDate 08/01/VoucherNumber2026\nSuppNare ANR\n9 32000288000.00\n1 40.00 40.00\nTotal 12 3680.00\n(-) Comm?4.008 147.20\n(-) LlessForDamages 184.00\n() UnLoading 9600.00\nf-) 3?00\nf3 LFAndCash 72000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 531,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.13.jpeg",
+      "text_snippet": "-anaePeo\nVoucherNuraber219\nYoucherDate 08/01/2026\nSupp Name GIRI/E\nQty Price Amount\nTotal 2 750.00\n(-) Comm?4.008 30.00\n(-) Less For Damages 37.50\n(-) UnLoading 16.00\n(-) 8.00\n(-) LYFAndCash 120.00",
+      "missing": {
+        "voucher_number": true,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 545,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.20_2.jpeg",
+      "text_snippet": "Voucher Number235\nVoucherDate 08/01/VoucherNumber2026\nSupp Name GBS\nTotal 9 1S50000\n(-) Comm?4.00 6000.00\n(-) Less For Damages 75.00\nf-) UnLoading 7200.00\nam) 1Sa0\ni-) L/FAndCash 63000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 532,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.14_1.jpeg",
+      "text_snippet": "VoucherNumber222\nVoucherDate 08/01/VoucherNumber2026\nSupp Name MALIAK/G\nQty Price Amount\n2 100.00 200.00\nTotal 4 600.00\n(-) Comm?400 2400.00\n(-) LessForDamages 3000.00\nf-) UnLoading 3200.00\nf) 60a\nf-) LFAndCash 75000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 533,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.14.jpeg",
+      "text_snippet": "Voucher Number221\nVoucherDate 08/01/VoucherNumber2026\nSupp Name MS\n2 30.00 6000.00\nTotal 7 1560.00\n(-) Comm?4.00 6240.00\n(-) LessForDamages 7800.00\n(-) UnLoading S6.00\n(-) 160.00\nf-) LFAndCash 42000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 524,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.10_1.jpeg",
+      "text_snippet": "VoucherNunber214\nVoucherDate 08/01/VoucherNumber2026\nSupp Name JNHK, Qty Price Amount\n7 2 100.00 200.00: 1 30.00 30.00\n5\n;Total 3 230.00\nE(-) Conm74.00 9.20\n(- Less For Damages 11.50\n8(-) UnLoading 24.00\n(-) 2.00\n(-) LYFAndCash 120.00\n- Grand Total 63.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 542,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.19_1.jpeg",
+      "text_snippet": "Voucher Number232\nVoucherDate 08/01/VoucherNumber2026\nSupp Name ABH\n1 60.00 60.00\n2 30.00 6000.00\nTotal 18 3620.00\nfj Comm?4.00 14480.00\nf-) LessForDamages 18100.00\n(-j UnLoading 14400.00\nfay LFAndCash 720.00-00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 546,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.20.jpeg",
+      "text_snippet": "Voucher Nuaber233\nVoucherDate VoucherNumber0870172026\nSupp Name ABHM\n1 50.00 50.00\n1 30.00 30.00\nTotal 9 1640.00\n(-) Comm?4.00 6560.00\ni) LessForDamages 200.00\no) UnLoading 72.00\nv- leao\n-) LFAndCash 360.00a0",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 547,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.21_1.jpeg",
+      "text_snippet": "VoucherNumber237\nVoucherDate 08/01/VoucherNumber2026\nSupp Name GRM\n2 200.00 400.00\nTotal 3 S00.00\n(-) Comm?4.00 2000.00\n(-) LessForDamages 2500.00\n() UnLoading 2400.00\n(-) 0.00\n L/FAndCash 120.00o0",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 525,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.10.jpeg",
+      "text_snippet": "VoucherNuaber213\nVoucherDate 08/01/VoucherNumber2026\nSupp Name JDRR\na\nQty Price Amount\n1 200.00 200.00\n1 160.00 160.00\n1 100.00 100.00\nTotal 3 460.00\n(-) Comm?4.00 18.40\n(-) LessForDanmages 23.00\n(-) UnLoading 24.00\n(-) 5.00\n(-) L/FAndCash 620.00\nLLLILESLSSLYLESSONYGSEUDCENDEy-SN-semD-SUENDWEEED",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 526,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.11_1.jpeg",
+      "text_snippet": "VoucherNumber216\nVoucherDate 08/01/VoucherNumber2026\nSupp Name JPYK\nQty Price Amount\n1 100.00 100.00\n1 40.00 4000.00\nTotal 2 140.00\n(-) Comm?4.00 5.60\n(-) Less For Damages ?00\nf-) UnLoading 1600.00\nf) 100\nfo) L/F and Cash 800.00u",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 527,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.11.jpeg",
+      "text_snippet": "YoucherNumber215\nVoucherDate 08/01/VoucherNumber2026\nJVLK\nSupp Name\nQty Price Amount\n1 200.00 200.00\n2 30.00 60.00\nTotal 3 260.00\n(-) Comm?4.00X 10.40\n(-) Less For Damages 13.00\n(-) UnLoading 24.00\n(-) 3.00\n(-j LYFAndCash 12000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 528,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.12_1.jpeg",
+      "text_snippet": "YoucherNuaber218\nYoucherDate 08/01/2026\nSuppNaae JASHVANTH/A\nQty Price Amount\n1 100.00 100.00\n7 60.00 420.00\nTotal 8 520.00\n(-) Comm?4.008 20.80\n(-) LessForDanages 26.00\n(-) UnLoading 64.00\n(-) 5.00\n(-) L/FAndCash 620.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 534,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.15_1.jpeg",
+      "text_snippet": "VoucherNuaber224\nVoucherDate 08/01/VoucherNumber2026\nSupp Name KAVSRI/T\nQty Price Amount\n2 200.00 400.00\n1 70.00 70.00\n1 30.00 30.00\nTotal 4 500.00\n(-) Comm?4.008 20.00\n(-) Less For Damages 25.00\n(-) UnLoading 32.00\n(-) 5.00\n(-) L/FAndCash 280.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 550,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.23_1.jpeg",
+      "text_snippet": "VoucherNumber240\nVoucherDate VoucherNumber0870172026\nSupp Name NRR\nQty Price Amount\n6 200.00 1200.00\n3 40.00 120.00\nTotal 9 1320.00\n(-) Comm9?4.008 S280\n(-) LessForDamages 6600.00\n(-) UnLoading 72.00\nf-) 13.00\na L/FAndCash 630.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 554,
+      "file": "WhatsApp_Image_2026-01-09_at_15.29.57_1.jpeg",
+      "text_snippet": "Voucher Number106\nVoucherDate 09/01/VoucherNumber2026\nJSYT\nSupp Name\nQty Price Amount\n1 270.00 270.00\n1 170.00 170.00\nTotal 2 440.00\n(-) Comm?4.008 1?60\n(-) LessForDamages 2200.00\n(-) UnLoading l 0.00\n-) LFAndCash 14000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 555,
+      "file": "WhatsApp_Image_2026-01-09_at_15.29.57.jpeg",
+      "text_snippet": "VoucherNuaber105\nVoucherDate 09/01/VoucherNumber2026\nSupp Name AEY\nQty Price Arnount\n1 300.00 300.00\nTotal 1 300.00\n(-) Comm?4.008 12.00\n(-) LessForDanages 15.00\n(-) UnLoading 8.00\n(-) 3.00\n(-) L/FAndCash 70.00\nLLLLLSSSSYST-SYYSD-DGEPSEGUDwenDGe-GeD",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 556,
+      "file": "WhatsApp_Image_2026-01-09_at_15.29.58_1.jpeg",
+      "text_snippet": "VoucherNunmber108\nVoucherDate 09/01/VoucherNumber2026\nSupp Name PKRR\nQty Price Amount\n2 300.00 600.00\nTotal 12 S00000\n(-) Comm?400 2000.00\n(-) LessForDamages 25000.00\n(-) UnLoading 9600.00\ni) So.aa\ni) LFAndCash 480.00aa",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 557,
+      "file": "WhatsApp_Image_2026-01-09_at_15.29.58.jpeg",
+      "text_snippet": "VoucherNunmber107\nYoucherDate 09/01/2026\nSupp Name YKHM\n1 30.00 30.00\nTotal 3 600.00\n(-) Comm9?4.00 24.00\n(-) Less For Damages 30.00\n(-) UnLoading 2400.00\nf-j 6.00\n(-) LFAndCash 18000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 558,
+      "file": "WhatsApp_Image_2026-01-09_at_15.29.59_1.jpeg",
+      "text_snippet": "VoucherNumber110\nVoucherDate 09/01/VoucherNumber2026\nSupp Name TLS\nQty Price Amount\nTotal 8 1530.00\n(-) Comm?400X 6120.00\npf) Less For Damages 76.50\nae UnLoading 6b400\n-, 1Sa0\n-: LYFAndCash boon",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 604,
+      "file": "WhatsApp_Image_2026-01-11_at_14.45.15.jpeg",
+      "text_snippet": "ae\nerNuaber116\nerDate 11/01/2026\nNane MACHAGIRI/A\nee\nQty Price Amount\n1 550.00 550.00\n1 200.00 200.00\nvi 2 750.00\nComm?4.00 30.00\n1essForDanmnages 37.50\nUn1oading 16.00\n8.00\n1/FAndCash 140.00\nGrandTotal 519.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 560,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.00_1.jpeg",
+      "text_snippet": "VoucherNumber112\nYoucherDate 09/01/2026\nSupp Name VSY\nQty Price Amount\n1 270.00 270.00\n1 150.00 150.00\nTotal 2 420.00\n(-) Comm?4.00 16.80\nf-) LessForDamages 2100.00\n() UnLoading 1600.00\na) 400\nray LFAndCash 14000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 561,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.00.jpeg",
+      "text_snippet": "VoucherNuaber111\nVoucherDate 09/01/VoucherNumber2026\nSupp Name KLH\nQty Price Amount\nTotal 1 300.00\n(-) Comm?4.00 1200.00\n(-) Less For Damages 1 0.00\n(-) UnLoading 8.00\na) 3.00\ni LFAndCash 7000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 563,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.01.jpeg",
+      "text_snippet": "oeeaeeeneweseeee6eoe6eaeeeesaeeeeoeeweeaeeee\nVoucherNunmber113\nYoucherDate 0970.00 1720.26\nSSI\nSuppNare\nQty Price Amount\n1 270.00 270.00\n1 250.00 250.00\n1 250.00 250.00\n1 100.00 100.00\nTotal 4 870.00\n(-) Comm6?4.00 34.80\n(-) Less For Damages 43.50\n(-) UnLoading 32.00\n(-) 900\nf) LFAndCash 300.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 564,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.02_1.jpeg",
+      "text_snippet": "VoucherNuaber116\nVoucherDate 09/01/VoucherNumber2026\nSupp Name MACHAGIRI/A\nQty Price Amount\n1 30.00 30.00\nTotal 3 530.00\n(-) Comm?400 2120.00\ni-) Less For Damages 26.50\nvey UnLoading 2400.00\n-) 0.00\ni) LFAndCash 43000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 567,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.03.jpeg",
+      "text_snippet": "VoucherNuaber117\nVYoucherDate VoucherNumber0970172026\nSuppNare ANR\nQty Price Amount\n1 70.00 70.00\nTotal 18 8450.00\n(-) Comm?4.00 338.00\n(-) LessForDamages 42250.00\no UnLoading 14400.00\nc-; 8500.00\noj LFAndCash 1080.00a0",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 568,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.04_1.jpeg",
+      "text_snippet": "7 1FAndCash 1400.00a9\nVoucherNumber120\nVoucherDate VoucherNumber0970172026\nSupp Name G11\nQty Price Amount\n1 60.00 6000.00\n1 20.00 20.00\nTotal 15 3180.00\n3 Comm?4.00 12720.00\n-; 1essForDamages 159.00a0\n-3 Un1oading VoucherNumber120)on",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 569,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.04_2.jpeg",
+      "text_snippet": "Voucher Number121\nVoucherDate 09/01/VoucherNumber2026\nSupp Name SN\n1 30.00 30.00\nTotal 6 2630.00\n(-) Comm?4.00 10S20\n(-) LessForDamages 131.50\nf-) UnLoading 4800.00\nf-) 2600.00\ni) LYFAndCash 87000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 570,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.04.jpeg",
+      "text_snippet": "VoucherNunmber119\nVoucherDate 09/01/VoucherNumber2026\nSupp Name TK\nQty Price Amount\n3 40.00 120.00\nTotal 9 3720.00\n(-) Comm?4.00 14880.00\n(-) LessForDamages 18600.00\n-) UnLoading 7200.00\naj L/FAndCash 540.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 571,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.05_1.jpeg",
+      "text_snippet": "VoucherNuaber123\nVoucherDate VoucherNumber0970172026\nSupp Name UMA/G\n1 400.00 400.00\n1 200.00 200.00\nTotal 2 600.00\n(-) Comm?4.00 2400.00\nf-) LessForDamages 3000.00\n(-) UnLoading 16.00\n(-) 600\niy LFAndCash 14000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 599,
+      "file": "WhatsApp_Image_2026-01-11_at_14.45.13_1.jpeg",
+      "text_snippet": "herNuaber113, herDate 11/01/2026\nNare NARSIMA/D\nQty Price Amount\n2 50000100000.00\n8 33000264000.00\n3 180.00 540.00\nal 13, 4180.00\nComm7?4.00X 167.20\n1essForDamages 209.00\nUn1oading 104.00\n42.00\n1/YFAndCash 910.00\nPSAEDDGDAADGEEESTSETDENDGDGHPGEDGADOTEADQNDSTYY: GUADVNNNYGRNED.RETTSEEDSERNEDSYRNNDCONIED",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 573,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.06_1.jpeg",
+      "text_snippet": "VoucherNumber125\nVoucherDate 09/01/VoucherNumber2026\nSupp Name TRC\n2 40.00 8000.00\nTotal S 620.00\n(-) Comm?4.00 24.80\n(-) LessForDamages 3100.00\n) UnLoading 4000.00\n-) 600\noey L/F and Cash -00.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 574,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.06.jpeg",
+      "text_snippet": "Voucher Number124\nVoucherDate 09/01/VoucherNumber2026\nGBS\nSupp Name\nQty Price Amount\n3 190.00 570.00\n1 130.00 130.00\n1 30.00 30.00\n1 30.00 30.00\nTotal 6 760.00\n(-) Comm?4.00 30.40\n(-) LessForDamages 3800.00\nfm) UnLoading 4800.00\n-) 800\n-) LFAndCash 42000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 577,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.16.jpeg",
+      "text_snippet": "VoucherNuaber100\nVoucherDate 10/01/VoucherNumber2026\nSupp Name JASHVANTH\nQty Price Amount\nTotal 9 2590.00\n(-) Comm?4.00X 10360.00\n(-) LlessForDamages 129.00S0\n(-) UnLoading 7200.00\nf-) 2600.00\naj L/FAndCash 550.00o0",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 578,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.17_1.jpeg",
+      "text_snippet": "VoucherNuaber103\nVoucherDate 10/01/VoucherNumber2026\nSupp Name YKHM\nTotal 3 7500.00\n(-) Comm?4.00 3000.00\n(-) LessForDamages 3750.00\n(-) UnLoading 2400.00\n(-) 800\nf) L/F and Cash 16 0.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 579,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.17.jpeg",
+      "text_snippet": "Voucher Number102\nVoucherDate 10/01/VoucherNumber2026\nSupp Name MS\n2 200.00 400.00\nTotal 6 2400.00\n(-) Comm?400X8 9600.00\n(-) LessForDamages 12000.00\n(-) UnLoading 4800.00\n(-) 2400.00\n(a5 LFAndCash 360.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 580,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.18_1.jpeg",
+      "text_snippet": "L&LLLLPLLLSSTSSSSSS-D-S-GNGEDYSEcDceemes\nVoucherNumber105\nVoucherDate VoucherNumber1070172026\nSupp Name PATHI/PB\nQty Price Amount\nTotal 1 300.00\n(-) Comm?4.00 1200.00\n(-) Less For Damages 1 0.00\n(-) UnLoading 8.00\n(-) 3.00\n(-j L/FAndCash 6000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 581,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.18.jpeg",
+      "text_snippet": "Voucher Nunber104\nVoucherDate VoucherNumber1070172026\nSupp Name TK\nQty Price Arnount\ncee\n6 50000300000.00\n3 230.00 690.00\nae\nTotal 9 3690.00\n(-) Comm?4.008 147.60\n(-) LessForDamages 184.50\n(-) UnLoading 72.00\n(-) 37.00\n(-) L/YFAndCash 740.00\na\nGrandTotal 250009.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 582,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.19_1.jpeg",
+      "text_snippet": "VoucherNumber107\nVoucherDate 10/01/VoucherNumber2026\nSupp Name VSY\n1 400.00 400.00\n1 100.00 100.00\nTotal 2 S00000\ni-) Comm?400 2000.00\n(-) LessForDamages 2500.00\n-) UnLoading 1l600\n7 Soo\n73 LYFAndCash 14000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 584,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.19.jpeg",
+      "text_snippet": "VoucherNuaber106 - VoucherDate 10/01/VoucherNumber2026\nSupp Name TLS\nTotal 9 28009.00\n(-) Comm?400 112.00\nf-) LessForDamages 14000.00\n-) UnLoading 72.00\ni-) L/FAndCash 360000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 585,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.20_1.jpeg",
+      "text_snippet": "eee\nVoucherNumber110\nVoucherDate VoucherNumber1070172026\nSupp Name ANMY\nQty Price Amount\n2 240.00 480.00\n1 50.00 50.00\n1 10.00 1000.00\nTotal 4 S4000\n(-) Comm?4.00 2160.00\n(-) Less For Damages 27.00\nf-) UnLoading 3200.00\ni) 0.00\nf-) LFAndCash 28000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 586,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.20.jpeg",
+      "text_snippet": "VoucherNumber109\nYoucherDate VoucherNumber100172026\nSupp Name KLH\nQty Price Amount\nTotal 1 200.00\n(-) Comm?4.00 8.00\n(-) Less For Damages 10.00\n(-) UnLoading 800.00\n(-) 2.00\n(-) LFAndCash 7000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 587,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.21_1.jpeg",
+      "text_snippet": "VoucherNumber112\nVoucherDate 10/01/VoucherNumber2026\nSupp Name BMRR\nTotal 2 600.00\n(-) Comm?4.00 2400.00\n(-) LessForDamages 3000.00\n(-) UnLoading 1600.00\n(-) 6.00\n(-) LFAndCash 14000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 588,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.21.jpeg",
+      "text_snippet": "VoucherNumber111\nVoucherDate VoucherNumber1070172026\nSupp Name SSI\nTotal 4 890.00\n(-) Comm?4.00 35.60\nf-) LlessForDamages 44S50\n-) UnLoading 32.00\na) 900\nf-) L/F and Cash -8000",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 589,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.22_1.jpeg",
+      "text_snippet": "VoucherNumber114\nYoucherDate VoucherNumber1070172026\nSupp Name PMR\nTotal 1 200.00\n(-) Comm?4.00 800\n(-) LessForDamages 1000.00\n(-) UnLoading 800.00\nf-) 2.00\nf-) LFAndCash 7000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 591,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.23_1.jpeg",
+      "text_snippet": "VoucherNumber116\nVoucherDate VoucherNumber1070172026\nSupp Name JDRK\n2 600.00 1200.00\n1 100.00 100.00\nTotal 3 1300.00\n(-) Comm?400 S200\n(-) LessForDamages 6500.00\n(-) UnLoading 2400.00\n(-j 1300.00\n LFAndCash 62000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 592,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.23.jpeg",
+      "text_snippet": "VoucherNumber115\nVoucherDate 10/01/VoucherNumber2026\nBS\nSupp Name\nQty Price Amount\n7 600.00 4200.00\n3 200.00 600.00\nTotal 10 4800.00\n(-) Comm?4.00 192.00\n(-) LessForDamages 24000.00\n(-) UnLoading 8000.00\nf-) 4800.00\n(5 LFAndCash 95000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 593,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.24_1.jpeg",
+      "text_snippet": "VoucherNumber118\nVoucherDate VoucherNumber1070172026\nSupp Name JVLK\nTotal 3 960.00\n(-) Comm?4.00X 3840.00\nf-) LessForDamages 4800.00\n(-) UnLoading 2400.00\n(-) LFAndCash 12000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 594,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.24.jpeg",
+      "text_snippet": "VoucherNumber117\nVoucherDate 10/VoucherNumber0172026\nSupp Name JNMK\n1 8000.00 8000.00\nTotal 3 980.00\nfo) Comm?400 3920.00\ncm; LessForDamages 4900.00\nae UnLoading -400\noe 1000.00\n-, LFAndash T2o0d",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 595,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.25_1.jpeg",
+      "text_snippet": "VoucherNuaber120\nVoucherDate VoucherNumber1070172026\nSuppNare GSK\nQty Price Amount\n1 30.00 3000.00\nTotal 1 30.00\n(-) Comm?4.00 VoucherNumber120\n(-) Less For Damages 1S0\n(-) UnLoading 800.00\n(-) 000\n(oj LFAndCash 4000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 596,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.25.jpeg",
+      "text_snippet": "VoucherNumber119\nVoucherDate 10/01/VoucherNumber2026\nSupp Name JPYK\nQty Price Amount\n1 400.00 400.00\n1 30.00 30.00\nTotal 2 430.00\n(-) Comm9?400 17.20\n() Less For Damages 21S0\n(-) UnLoading 1600.00\ni) 400\n LYFAndCash 8000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 597,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.26_1.jpeg",
+      "text_snippet": "VoucherNumber122\nVoucherDate 10/01/VoucherNumber2026\nSupp Name GBS\n1 30.00 3000.00\nTotal 6 1780.00\n(-) Comm?4.00 7120.00\n(-) LessForDanmnages 8900.00\nf-) UnLoading 4800.00\n(-) 18.00\nf-) LFAndCash 42000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 598,
+      "file": "WhatsApp_Image_2026-01-10_at_15.17.26.jpeg",
+      "text_snippet": "VoucherNuaber121\nVoucherDate 10/01/VoucherNumber2026\nSupp Name SN\nTotal ? 3980.00\n(-) Comm?4.00 15920.00\nf-) LessForDamages 19900.00\naa UnLoading S6o0\n4 4000.00\n(-; LYFAndCash 49000.00a",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 605,
+      "file": "WhatsApp_Image_2026-01-11_at_14.45.16.jpeg",
+      "text_snippet": "cherNuanber118\ncherDate 11/01/2026\npNane SN .\nQty Price Amount\n1 420.00 420.00\n1 400.00 400.00\n1 390.00 390.00\n1 370.00 370.00\ntal 4 1580.00\nComm?4.00X 63.20\n1ess For Damages 79.00\nUn1oading 32.00\n16.00\n1/YFAndCash 280.00",
+      "missing": {
+        "voucher_number": true,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 565,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.02.jpeg",
+      "text_snippet": "VoucherNumber115\nVoucherDate 09/01/VoucherNumber2026\nSupp Name VANITHA/D\nQty Price Amount\nTotal 8 2490.00\n(-) Comm?4.00 9960.00\n(-) LessForDamages 124.50\n(-) UnLoading 64Q0\naj L/FAndCash 86000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 572,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.05.jpeg",
+      "text_snippet": "Voucher Number122\nVoucherDate 09/01/VoucherNumber2026\nSupp Name SV\nTotal 1 300.00\n(-) Comm?400 1200.00\nt-) Less For Damages 1 0.00\ntt) UnLoading 800.00\nfo) 3.00\nfm LYFAndCash 7000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 553,
+      "file": "WhatsApp_Image_2026-01-09_at_15.29.56.jpeg",
+      "text_snippet": "eeeereer6neoonenaeeeeeeeeneeeemeeeaee\nCTS\nVoucherNumber104\nYoucherDate 09/01/2026\nANMY\nSupp Name\nQty Price Amount\n3 260.00 780.00\n2 30.00 60.00\nTotal S 840.00\n(-) Comm?4.00 33.60\n(-) Less For Damages 42.00\n() UnLoading 40.00\n(-) 8.00\na) LFAndCash 350.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 559,
+      "file": "WhatsApp_Image_2026-01-09_at_15.29.59.jpeg",
+      "text_snippet": "VoucherNuaber109\nVoucherDate 09/01/VoucherNumber2026\nSupp Name PKR\n2 100.00 200.00\nTotal 8 920.00\n(-) Comm?400 3680.00\n(-) LessForDamages 4600.00\n() UnLoading 64.00\nan, 900\no-) LFAndCash 47000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 562,
+      "file": "WhatsApp_Image_2026-01-09_at_15.30.01_1.jpeg",
+      "text_snippet": "VoucherNuaber114\nYoucherDate VoucherNumber0970172026\nSuppNaane BMRR\nQty Price Amount\n1 300.00 300.00\nTotal 3 830.00\n(-) Comm 74.00 33.20\n(-) LessFor Damages 41.50\n(-) UnLoading 24.00\n(-) 8.00\n(-) L/FAndCash 190.00\nLLLLLTSSSSCPSSDSNP-DGEyGEEDGENS.GEEGUESGOES.GEEDGhee.imDGeEDDCEDS",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 602,
+      "file": "WhatsApp_Image_2026-01-11_at_14.45.14.jpeg",
+      "text_snippet": "sega\nherNunber114\nherDate 11/01/2026\nKLH\nNarne\nQty Price Amount\n1 200.00 200.00\nal 1 200.00\nCommn?4.00 8.00\nLess For Damages 10.00\nUnLoading 8.00\n2.00\niF AndCash 70.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 603,
+      "file": "WhatsApp_Image_2026-01-11_at_14.45.15_1.jpeg",
+      "text_snippet": "ane\nxxNumber117\naxDate 1170.00 1720.26\njane UMA/G\nQty Price Amount\n1 200.00 200.00\n1 1 200.00\nComm7?4.00 8.00\n1ess For Damages 10.00\nUn1oading 8.00\n2.00\n1/F and Cash 70.00\nGrandTotal 102.00",
+      "missing": {
+        "voucher_number": true,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 601,
+      "file": "WhatsApp_Image_2026-01-11_at_14.45.14_1.jpeg",
+      "text_snippet": "pene\nxNunber115\nxxDate 11/01/2026\njane JSYT\nQty Price Amount\n1 250.00 250.00\n1 150.00 150.00\nl 2 400.00\nComm7?4.00 16.00\n1ess For Damages 20.00\nUn1oading 16.00\n4.00\n1YFAndCash 140.00\nPP-PEPDDCHDSDDCD-DSCSAUTDDCEYDSHNEDSPUEEDCANTTDETEDCUUNDCAITEDSEEEE",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 544,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.20_1.jpeg",
+      "text_snippet": "eee\nVoucherNumber234\nYoucherDate 0870.00 1720.26\nSupp Name SN\nTotal 6 2560.00\n(-) Comm?4.00 102.40\nf-) LessForDamages 12800.00\n(-) UnLoading 48.00\n(-) 2600.00\n(-j L/FAndCash 342000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 552,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.24.jpeg",
+      "text_snippet": "VYoucherNuaber241\nYoucherDate 08/01/2026\nSuppNarne NOMARK\nQty Price Amount\n1 70.00 70.00\n1 S0.00 S0.00\nTotal 2 120.00\n(-) Comm74008.00 4.80\n(-) Less For Damages 6.00\n(-) UnLoading 16.00\n(-) 1.00\n(-) LYFAndCash 80.00\nGrand Total 12.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": true,
+        "net_total": true
+      }
+    },
+    {
+      "id": 529,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.12.jpeg",
+      "text_snippet": "Voucher Number217\nVoucher Date 08/01/VoucherNumber2026\nSupp Name SVATIKA/A\nQty Price Arnount\n? 25000175000.00\n1 120.00 120.00\n1 100.00 100.00\nPe\nSES-NDCY-SPRDS--CSDE-SKeDSUNEwEDcuvececnywmeere\n- TLLLSeSLE-C-AYGOUDGPGaSONSeDGSesODcemDaueeaasaunen-enyse.eumm\nTotal 9 1970.00\n(-) Comm?4.00 78.80\n(-) Less For Damages 98.50\n(-) UnLoading 72.00\n(-) 20.00\n(-) L/FAndCash 106000.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 522,
+      "file": "WhatsApp_Image_2026-01-08_at_16.22.08.jpeg",
+      "text_snippet": "Voucher Nuaber211\nVoucherDate 08/01/VoucherNumber2026\nTLS\nee S\nSupp Name\nQty Price Amount\n1 200.00 200.00\n4 70.00 280.00\nTotal S 480.00\n(-) Comm?4.008 1920.00\n(-) LessForDamages 2400.00\nf-) UnLoading 4000.00\nfj 50a\n-) L/F and Cash 2-0000",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 503,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.39_1.jpeg",
+      "text_snippet": "cherNuaber150\ncherDate 07/01/2026\npNane JVLK, Qty$$Price Amount\n1 340.00 340.00\n1 270.00 270.00\n1 120.00 120.00\ntal 3 730.00\nComm?4.00X 29.20\nLessForDanages 36.50\nUnLoading 24.00\n7.00\nL/FAndCash 120.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 512,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.44.jpeg",
+      "text_snippet": "herNuaber136\nherDate 07/01/2026\nNane AYODAIAA\nQty Price Amount\n1 200.00 200.00\n3 200.00 600.00\n2 40.00 60.00\nal 6 880.00\nComm7?4.00 35.20\n1ess For Damages 44.00\nUn1oading 48.00\n9.00\n1/FAndCash 360.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 508,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.42_1.jpeg",
+      "text_snippet": "sherNunber157\nsherDate 07/01/2026\nNane GNN\na\nQty Price Amount\n1 220.00 220.00\n4 220.00 880.00\n2 60.00 120.00\nal ? 1220.00\nComm?4.00 48.80\n1essForDanages 61.00\nUn1oading 56.00\n12.00\n1/FAndCash 580.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 507,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.41.jpeg",
+      "text_snippet": "sherNunber154\nsherDate 07/01/2026\nNane NRR\nQty Price Amount\n2 350.00 700.00\n5 27000135000.00\n4 60.00 240.00\nal 11 2290.00\nComm7?4.00 91.60\n1essForDamages 114.50\nUn1oading 88.00\n23.00\n1/FAndCash 770.00\nGrandTotal 120003.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    },
+    {
+      "id": 500,
+      "file": "WhatsApp_Image_2026-01-07_at_16.48.37_1.jpeg",
+      "text_snippet": "cherNuaber146\ncherDate 07/01/2026\npNane DMRD\nQty Price Amount\n1 260.00 260.00\n1 230.00 230.00\n1 60.00 60.00\ntal 3 550.00\nComm?4.008 22.00\n1essForDanages 27.50\nUn1oading 24.00\n6.00\n1/FAndCash 210.00",
+      "missing": {
+        "voucher_number": false,
+        "supplier": false,
+        "net_total": true
+      }
+    }
+  ]
+}
