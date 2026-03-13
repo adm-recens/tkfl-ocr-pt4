@@ -753,8 +753,25 @@ def save_batch(queue_id):
                     
                     data = file_info['validated_data']
                     master = data.get('master', {})
-                    items = data.get('items', [])
-                    deductions = data.get('deductions', [])
+                    
+                    # Process items: Frontend queue uses item_description and rate
+                    items = []
+                    for item in data.get('items', []):
+                        name = item.get('item_name') or item.get('item_description')
+                        amt = item.get('line_amount')
+                        if name or amt:
+                            items.append({
+                                'item_name': name,
+                                'quantity': item.get('quantity'),
+                                'unit_price': item.get('unit_price') or item.get('rate'),
+                                'line_amount': amt
+                            })
+                            
+                    # Process deductions
+                    deductions = []
+                    for ded in data.get('deductions', []):
+                        if ded.get('deduction_type') or ded.get('amount'):
+                            deductions.append(ded)
                     
                     # Insert master
                     # FIX: Handle empty date strings - convert to None for DB

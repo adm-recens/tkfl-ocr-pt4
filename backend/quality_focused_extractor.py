@@ -1004,46 +1004,6 @@ class QualityFocusedExtractor:
                     except Exception as e:
                         continue
         
-        # Extract "Other" deductions - look for (-) marker with amount but no recognizable label
-        other_patterns = [
-            r'\(\s*-\s*\)\s*([\d,]+\.?\d{0,2})\s*$',
-            r'\(\s*-\s*\)\s*([\d,]+\.?\d{0,2})\s*(?!comm|damage|unload|lf|cash)',
-            r'^\s*[-\(]+\s*\)\s*([\d,]+\.?\d{0,2})',
-        ]
-        
-        for pattern in other_patterns:
-            matches = list(re.finditer(pattern, self.raw_text, re.MULTILINE | re.IGNORECASE))
-            
-            for match in matches:
-                try:
-                    amount_str = match.group(1).replace(',', '')
-                    amount = float(amount_str)
-                    
-                    # Fix decimal errors
-                    amount = self._smart_decimal_fix(amount, 'Other', '')
-                    
-                    rounded_amount = round(amount, 2)
-                    
-                    # Skip if we already have this amount
-                    if rounded_amount in found_amounts:
-                        continue
-                    
-                    # Skip if already captured by other patterns (check surrounding context)
-                    surrounding = self.raw_text[max(0, match.start()-50):min(len(self.raw_text), match.end()+50)]
-                    if any(keyword in surrounding.lower() for keyword in ['comm', 'damage', 'unload', 'lf', 'cash']):
-                        continue
-                    
-                    # Validate reasonable range
-                    if 0.1 <= amount <= 1000:
-                        deductions.append({
-                            'deduction_type': 'Other',
-                            'amount': rounded_amount
-                        })
-                        found_amounts.add(rounded_amount)
-                        self._log(f"  Other: {rounded_amount:.2f}")
-                except:
-                    continue
-        
         return deductions
     
     def _fix_decimal_error(self, amount: float, context: str) -> float:

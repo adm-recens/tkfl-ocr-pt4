@@ -6,6 +6,7 @@
 <div class="max-w-screen-2xl mx-auto px-4">
     <form id="validation-form" method="POST" action="{{ save_url }}">
         <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+        <input type="hidden" name="next_url" value="{{ request.args.get('next', '') }}" />
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
             <!-- Left Column: Image -->
@@ -13,7 +14,7 @@
                 <div class="bg-white p-5 rounded-xl shadow-lg">
                     <div class="flex justify-between items-center mb-3">
                         <h2 class="text-lg font-semibold text-gray-800">Receipt Image</h2>
-                        <a href="{{ url_for('main.review_voucher', voucher_id=voucher.id) }}"
+                        <a href="{{ url_for('main.review_voucher', voucher_id=voucher.id) }}{% if request.args.get('next') %}?next={{ request.args.get('next') | urlencode }}{% endif %}"
                             class="text-sm text-indigo-600 hover:text-indigo-900 font-medium">
                             &larr; Back to Review
                         </a>
@@ -62,7 +63,8 @@
 
                 <!-- Line Items Table -->
                 <div class="bg-white p-5 rounded-xl shadow-lg">
-                    <h2 class="text-lg font-semibold text-gray-800 mb-3">Line Items (<span id="item-count">0</span>)</h2>
+                    <h2 class="text-lg font-semibold text-gray-800 mb-3">Line Items (<span id="item-count">0</span>)
+                    </h2>
                     <div class="overflow-x-auto mb-3">
                         <table class="min-w-full text-sm">
                             <thead class="bg-gray-50 border-b">
@@ -172,7 +174,7 @@
     // Use separately passed items and deductions data from backend
     const itemsData = {{ items_data_json | safe }} || parsedData.items || [];
     const deductionsData = {{ deductions_data_json | safe }} || parsedData.deductions || [];
-    
+
     // Debug: Log items data to console for troubleshooting
     console.log('Items data loaded:', itemsData);
     if (itemsData.length > 0) {
@@ -231,7 +233,7 @@
     function createItemRow(data = {}) {
         // Handle multiple possible price field names - ensure we get a number
         let priceValue = '';
-        
+
         // Try unit_price first (from database)
         if (data.unit_price !== undefined && data.unit_price !== null && data.unit_price !== '') {
             priceValue = parseFloat(data.unit_price) || '';
@@ -244,35 +246,68 @@
         else if (data.rate !== undefined && data.rate !== null && data.rate !== '') {
             priceValue = parseFloat(data.rate) || '';
         }
-        
+
         const newRow = itemsTableBody.insertRow();
         newRow.classList.add('hover:bg-gray-50');
-        newRow.innerHTML = `
-            <td class="px-2 py-2">
-                <input type="text" name="item_name" value="${data.item_name || ''}" placeholder="Item description (optional)" 
-                       class="w-full px-2 py-1 text-sm border-b border-gray-200 focus:border-indigo-500 focus:outline-none" />
-            </td>
-            <td class="px-2 py-2">
-                <input type="number" name="quantity" value="${data.quantity || ''}" placeholder="0" step="0.01" min="0"
-                       class="w-full px-2 py-1 text-sm text-right border-b border-gray-200 focus:border-indigo-500 focus:outline-none" />
-            </td>
-            <td class="px-2 py-2">
-                <input type="number" name="unit_price" value="${priceValue || ''}" placeholder="0.00" step="0.01" min="0"
-                       class="w-full px-2 py-1 text-sm text-right border-b border-gray-200 focus:border-indigo-500 focus:outline-none" />
-            </td>
-            <td class="px-2 py-2">
-                <input type="text" name="line_amount" value="${data.line_amount ? parseFloat(data.line_amount).toFixed(2) : ''}" placeholder="0.00" disabled 
-                       class="w-full px-2 py-1 text-sm text-right font-semibold bg-gray-50" />
-            </td>
-            <td class="px-2 py-2 text-center">
-                <button type="button" class="remove-item-btn text-red-500 hover:text-red-700 p-1">
-                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </td>
+
+        // Use insertCell and createElement to prevent XSS
+        const nameCell = newRow.insertCell();
+        nameCell.className = "px-2 py-2";
+        const nameInput = document.createElement("input");
+        nameInput.type = "text";
+        nameInput.name = "item_name";
+        nameInput.value = data.item_name || '';
+        nameInput.placeholder = "Item description (optional)";
+        nameInput.className = "w-full px-2 py-1 text-sm border-b border-gray-200 focus:border-indigo-500 focus:outline-none";
+        nameCell.appendChild(nameInput);
+
+        const qtyCell = newRow.insertCell();
+        qtyCell.className = "px-2 py-2";
+        const qtyInput = document.createElement("input");
+        qtyInput.type = "number";
+        qtyInput.name = "quantity";
+        qtyInput.value = data.quantity || '';
+        qtyInput.placeholder = "0";
+        qtyInput.step = "0.01";
+        qtyInput.min = "0";
+        qtyInput.className = "w-full px-2 py-1 text-sm text-right border-b border-gray-200 focus:border-indigo-500 focus:outline-none";
+        qtyCell.appendChild(qtyInput);
+
+        const priceCell = newRow.insertCell();
+        priceCell.className = "px-2 py-2";
+        const priceInput = document.createElement("input");
+        priceInput.type = "number";
+        priceInput.name = "unit_price";
+        priceInput.value = priceValue || '';
+        priceInput.placeholder = "0.00";
+        priceInput.step = "0.01";
+        priceInput.min = "0";
+        priceInput.className = "w-full px-2 py-1 text-sm text-right border-b border-gray-200 focus:border-indigo-500 focus:outline-none";
+        priceCell.appendChild(priceInput);
+
+        const totalCell = newRow.insertCell();
+        totalCell.className = "px-2 py-2";
+        const totalInput = document.createElement("input");
+        totalInput.type = "text";
+        totalInput.name = "line_amount";
+        totalInput.value = data.line_amount ? parseFloat(data.line_amount).toFixed(2) : '';
+        totalInput.placeholder = "0.00";
+        totalInput.disabled = true;
+        totalInput.className = "w-full px-2 py-1 text-sm text-right font-semibold bg-gray-50";
+        totalCell.appendChild(totalInput);
+
+        const actionCell = newRow.insertCell();
+        actionCell.className = "px-2 py-2 text-center";
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "remove-item-btn text-red-500 hover:text-red-700 p-1";
+        removeBtn.innerHTML = `
+            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
         `;
-        newRow.querySelector('.remove-item-btn').addEventListener('click', () => removeRow(newRow));
+        actionCell.appendChild(removeBtn);
+        removeBtn.addEventListener('click', () => removeRow(newRow));
         attachListeners(newRow);
         updateItemCount();
     }
@@ -280,24 +315,43 @@
     function createDeductionRow(data = {}) {
         const newRow = deductionsTableBody.insertRow();
         newRow.classList.add('hover:bg-gray-50');
-        newRow.innerHTML = `
-            <td class="px-2 py-2">
-                <input type="text" name="deduction_type" value="${data.deduction_type || ''}" placeholder="Type or Select..." list="deduction-types"
-                       class="w-full px-2 py-1 text-sm border-b border-gray-200 focus:border-green-500 focus:outline-none" required/>
-            </td>
-            <td class="px-2 py-2">
-                <input type="number" name="amount" value="${data.amount || ''}" placeholder="0.00" step="0.01" min="0"
-                       class="w-full px-2 py-1 text-sm text-right border-b border-gray-200 focus:border-green-500 focus:outline-none" />
-            </td>
-            <td class="px-2 py-2 text-center">
-                <button type="button" class="remove-deduction-btn text-red-500 hover:text-red-700 p-1">
-                    <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
-                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
-                    </svg>
-                </button>
-            </td>
+
+        const typeCell = newRow.insertCell();
+        typeCell.className = "px-2 py-2";
+        const typeInput = document.createElement("input");
+        typeInput.type = "text";
+        typeInput.name = "deduction_type";
+        typeInput.value = data.deduction_type || '';
+        typeInput.placeholder = "Type or Select...";
+        typeInput.setAttribute('list', 'deduction-types');
+        typeInput.required = true;
+        typeInput.className = "w-full px-2 py-1 text-sm border-b border-gray-200 focus:border-green-500 focus:outline-none";
+        typeCell.appendChild(typeInput);
+
+        const amountCell = newRow.insertCell();
+        amountCell.className = "px-2 py-2";
+        const amountInput = document.createElement("input");
+        amountInput.type = "number";
+        amountInput.name = "amount";
+        amountInput.value = data.amount || '';
+        amountInput.placeholder = "0.00";
+        amountInput.step = "0.01";
+        amountInput.min = "0";
+        amountInput.className = "w-full px-2 py-1 text-sm text-right border-b border-gray-200 focus:border-green-500 focus:outline-none";
+        amountCell.appendChild(amountInput);
+
+        const actionCell = newRow.insertCell();
+        actionCell.className = "px-2 py-2 text-center";
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "remove-deduction-btn text-red-500 hover:text-red-700 p-1";
+        removeBtn.innerHTML = `
+            <svg class="h-4 w-4" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+            </svg>
         `;
-        newRow.querySelector('.remove-deduction-btn').addEventListener('click', () => removeRow(newRow));
+        actionCell.appendChild(removeBtn);
+        removeBtn.addEventListener('click', () => removeRow(newRow));
         attachListeners(newRow);
     }
 
@@ -316,20 +370,28 @@
     document.getElementById('validation-form').addEventListener('submit', function () {
         const finalItems = [];
         itemsTableBody.querySelectorAll('tr').forEach(row => {
-            finalItems.push({
-                item_name: row.querySelector('input[name="item_name"]').value,
-                quantity: parseFloat(row.querySelector('input[name="quantity"]').value) || 0,
-                unit_price: parseFloat(row.querySelector('input[name="unit_price"]').value) || 0,
-                line_amount: parseFloat(row.querySelector('input[name="line_amount"]').value) || 0,
-            });
+            const iname = row.querySelector('input[name="item_name"]').value.trim();
+            const lamt = parseFloat(row.querySelector('input[name="line_amount"]').value) || 0;
+            if (iname || lamt > 0) {
+                finalItems.push({
+                    item_name: iname,
+                    quantity: parseFloat(row.querySelector('input[name="quantity"]').value) || 0,
+                    unit_price: parseFloat(row.querySelector('input[name="unit_price"]').value) || 0,
+                    line_amount: lamt,
+                });
+            }
         });
 
         const finalDeductions = [];
         deductionsTableBody.querySelectorAll('tr').forEach(row => {
-            finalDeductions.push({
-                deduction_type: row.querySelector('input[name="deduction_type"]').value,
-                amount: parseFloat(row.querySelector('input[name="amount"]').value) || 0,
-            });
+            const dtype = row.querySelector('input[name="deduction_type"]').value.trim();
+            const amt = parseFloat(row.querySelector('input[name="amount"]').value) || 0;
+            if (dtype || amt > 0) {
+                finalDeductions.push({
+                    deduction_type: dtype,
+                    amount: amt,
+                });
+            }
         });
 
         document.getElementById('validated_items_json').value = JSON.stringify(finalItems);

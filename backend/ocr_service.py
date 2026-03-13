@@ -12,7 +12,7 @@ import os
 import time
 
 # Tesseract path
-pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+pytesseract.pytesseract.tesseract_cmd = os.getenv('TESSERACT_CMD', r"C:\Program Files\Tesseract-OCR\tesseract.exe")
 
 def deskew_image(image):
     """
@@ -27,9 +27,12 @@ def deskew_image(image):
             gray = cv2.cvtColor(img_array, cv2.COLOR_RGB2GRAY)
         else:
             gray = img_array
+            
+        # Invert the image so text is white and background is black (Otsu's binarization)
+        _, binary = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
         
-        # Detect text orientation
-        coords = np.column_stack(np.where(gray > 0))
+        # Detect text orientation using the inverted mask
+        coords = np.column_stack(np.where(binary > 0))
         if len(coords) < 10:
             return image  # Not enough data to deskew
             

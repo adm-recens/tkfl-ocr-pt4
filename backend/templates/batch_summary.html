@@ -221,7 +221,7 @@
                         {% if voucher.supplier_name == 'UPLOAD FAILED' %}
                         <span class="text-gray-400 cursor-not-allowed">Cannot Edit</span>
                         {% else %}
-                        <a href="{{ url_for('main.review_voucher', voucher_id=voucher.id) }}"
+                        <a href="{{ url_for('main.review_voucher', voucher_id=voucher.id) }}?next={{ request.path|urlencode }}"
                             class="text-indigo-600 hover:text-indigo-900 mr-3">Edit / Review</a>
                         {% endif %}
                     </td>

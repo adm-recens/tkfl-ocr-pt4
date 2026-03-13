@@ -820,7 +820,12 @@
                 if (warnings.length > 0) {
                     document.getElementById('warnings-section').classList.remove('hidden');
                     const warningsList = document.getElementById('warnings-list');
-                    warningsList.innerHTML = warnings.map(w => `<li>• ${w}</li>`).join('');
+                    warningsList.innerHTML = '';
+                    warnings.forEach(w => {
+                        const li = document.createElement('li');
+                        li.textContent = `• ${w}`;
+                        warningsList.appendChild(li);
+                    });
                 } else {
                     document.getElementById('warnings-section').classList.add('hidden');
                 }
@@ -1148,42 +1153,70 @@
 
                 // Display Line Items
                 const items = ocrData.parsed_data.items || [];
+                const reviewItemsList = document.getElementById('review-items-list');
                 if (items.length > 0) {
                     document.getElementById('review-items-section').classList.remove('hidden');
-                    document.getElementById('review-items-list').innerHTML = items.map((item, idx) => {
+                    reviewItemsList.innerHTML = '';
+                    items.forEach((item, idx) => {
                         const desc = item.item_name || item.item_description || `Item ${idx + 1}`;
                         const price = item.unit_price !== undefined && item.unit_price !== null ? item.unit_price : (item.rate || 0);
-                        return `
-                <div class="p-2 bg-white rounded border border-slate-200">
-                    <div class="font-semibold text-slate-800">${desc}</div>
-                    <div class="text-slate-600 text-xs mt-1">
-                        Qty: ${item.quantity || 0} × ₹${price} = ₹${item.line_amount || 0}
-                    </div>
-                </div>
-            `}).join('');
+
+                        const div = document.createElement('div');
+                        div.className = "p-2 bg-white rounded border border-slate-200";
+
+                        const descDiv = document.createElement('div');
+                        descDiv.className = "font-semibold text-slate-800";
+                        descDiv.textContent = desc;
+                        div.appendChild(descDiv);
+
+                        const mathDiv = document.createElement('div');
+                        mathDiv.className = "text-slate-600 text-xs mt-1";
+                        mathDiv.textContent = `Qty: ${item.quantity || 0} × ₹${price} = ₹${item.line_amount || 0}`;
+                        div.appendChild(mathDiv);
+
+                        reviewItemsList.appendChild(div);
+                    });
                 } else {
                     document.getElementById('review-items-section').classList.add('hidden');
                 }
 
                 // Display Deductions
                 const deductions = ocrData.parsed_data.deductions || [];
+                const reviewDeductionsList = document.getElementById('review-deductions-list');
                 if (deductions.length > 0) {
                     document.getElementById('review-deductions-section').classList.remove('hidden');
-                    document.getElementById('review-deductions-list').innerHTML = deductions.map((ded, idx) => `
-                <div class="flex justify-between p-2 bg-white rounded border border-slate-200">
-                    <span class="font-medium text-slate-800">${ded.deduction_type || `Deduction ${idx + 1}`}</span>
-                    <span class="text-red-600 font-semibold">-₹${ded.amount || 0}</span>
-                </div>
-            `).join('');
+                    reviewDeductionsList.innerHTML = '';
+                    deductions.forEach((ded, idx) => {
+                        const div = document.createElement('div');
+                        div.className = "flex justify-between p-2 bg-white rounded border border-slate-200";
+
+                        const typeSpan = document.createElement('span');
+                        typeSpan.className = "font-medium text-slate-800";
+                        typeSpan.textContent = ded.deduction_type || `Deduction ${idx + 1}`;
+                        div.appendChild(typeSpan);
+
+                        const amtSpan = document.createElement('span');
+                        amtSpan.className = "text-red-600 font-semibold";
+                        amtSpan.textContent = `-₹${ded.amount || 0}`;
+                        div.appendChild(amtSpan);
+
+                        reviewDeductionsList.appendChild(div);
+                    });
                 } else {
                     document.getElementById('review-deductions-section').classList.add('hidden');
                 }
 
                 // Show warnings
                 const warnings = ocrData.parsed_data.metadata?.validation_warnings || [];
+                const reviewWarningsList = document.getElementById('review-warnings-list');
                 if (warnings.length > 0) {
                     document.getElementById('review-warnings-section').classList.remove('hidden');
-                    document.getElementById('review-warnings-list').innerHTML = warnings.map(w => `<li>• ${w}</li>`).join('');
+                    reviewWarningsList.innerHTML = '';
+                    warnings.forEach(w => {
+                        const li = document.createElement('li');
+                        li.textContent = `• ${w}`;
+                        reviewWarningsList.appendChild(li);
+                    });
                 } else {
                     document.getElementById('review-warnings-section').classList.add('hidden');
                 }
@@ -1314,19 +1347,23 @@
 
                     // Gather Items from DOM
                     const itemRows = document.querySelectorAll('.item-row');
-                    const items = Array.from(itemRows).map(row => ({
-                        item_description: row.querySelector('.item-desc').value,
-                        quantity: parseFloat(row.querySelector('.item-qty').value) || 0,
-                        rate: parseFloat(row.querySelector('.item-rate').value) || 0,
-                        line_amount: parseFloat(row.querySelector('.item-amount').value) || 0
-                    }));
+                    const items = Array.from(itemRows)
+                        .map(row => ({
+                            item_description: row.querySelector('.item-desc').value.trim(),
+                            quantity: parseFloat(row.querySelector('.item-qty').value) || 0,
+                            rate: parseFloat(row.querySelector('.item-rate').value) || 0,
+                            line_amount: parseFloat(row.querySelector('.item-amount').value) || 0
+                        }))
+                        .filter(item => item.item_description || item.line_amount > 0);
 
                     // Gather Deductions from DOM
                     const dedRows = document.querySelectorAll('.deduction-row');
-                    const deductions = Array.from(dedRows).map(row => ({
-                        deduction_type: row.querySelector('.ded-type').value,
-                        amount: parseFloat(row.querySelector('.ded-amount').value) || 0
-                    }));
+                    const deductions = Array.from(dedRows)
+                        .map(row => ({
+                            deduction_type: row.querySelector('.ded-type').value.trim(),
+                            amount: parseFloat(row.querySelector('.ded-amount').value) || 0
+                        }))
+                        .filter(ded => ded.deduction_type || ded.amount > 0);
 
                     const validated = {
                         master: Object.fromEntries(formData),

@@ -92,16 +92,21 @@ When developing on this application, strictly adhere to the following rules:
    Do *not* write Python code like `if "NARSIMA" in text: parse_date()`. 
    **Why:** We stripped all hardcoded supplier logic out. If a supplier has a weird layout, the user must correct it in the `validate.html` UI once, and the **Fuzzy Anchor Engine** will learn that layout organically. Do not bypass the ML engine with code hacks.
    
-2. **Maintain Separation of Concerns:**
+2. **Security & Concurrency Bans (CRITICAL):**
+   - **No `innerHTML`:** NEVER construct dynamic DOM elements using raw `innerHTML` string interpolation (e.g. ``.innerHTML = `<td>${data.supplier}</td>` ``). Tesseract parses raw receipt data completely unescaped. Always use `document.createElement()` and `element.textContent` or `element.value` to prevent severe stored XSS attacks.
+   - **No Raw Python Threads:** NEVER use raw Python `threading.Thread(...)` to spawn heavy background tasks (like batch OCR or ML training runs) inside Flask endpoints. Under a real WSGI runner like uWSGI/Gunicorn, these threads will be ungracefully killed or deeply throttled by the GIL. Design all future background jobs targeting a dedicated task queue (Celery, RQ, etc).
+
+3. **Maintain Separation of Concerns:**
    The Smart Crop algorithm and the Text Parsing algorithm must remain strictly separated. Do not merge their endpoints or UI training cycles. 
 
-3. **Frontend Rules:**
-   Use TailwindCSS exclusively. Achieve modern, clean designs (`rounded-xl`, soft shadows, vibrant indicators). Use Vanilla JS `fetch()` for API calls. Do not introduce React, Vue, jQuery, or custom CSS files unless absolute necessary for a complex animation.
+4. **Frontend Rules:**
+   - Use TailwindCSS exclusively. Achieve modern, clean designs (`rounded-xl`, soft shadows, vibrant indicators). Use Vanilla JS `fetch()` for API calls. Do not introduce React, Vue, jQuery, or custom CSS files unless absolute necessary for a complex animation.
+   - **Context-Aware Navigation:** Always pass URL state forward when moving between pages. Use `?next={{ request.path|urlencode }}` on action buttons (like Edit/View), carry it through query parameters, and embed it as `<input type="hidden" name="next_url">` on forms to allow backend routes to safely redirect users back to their original context (e.g., from a specific batch or supplier page back to that page after validation).
 
-4. **Database Rules:**
+5. **Database Rules:**
    Do not introduce heavy ORMs like SQLAlchemy unless requested. We are using raw SQL execution logic wrapped in service classes (e.g., `voucher_service.py`) leveraging `psycopg2` (or similar PostgreSQL adapters) for speed and simplicity. 
 
-5. **Testing & QA Context:**
+6. **Testing & QA Context:**
    Always run testing utility scripts from the `scripts/` or `tests/` directories using `python -m tests.test_parser` or similar module constructs. Ensure `verify_parser.py` passes immediately following any adjustment to `TKFLReceiptParserV2`.
 
 ### When to Modify `AI_CONTEXT.md`

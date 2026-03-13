@@ -49,14 +49,14 @@
                         Re-Extract & Parse
                     </button>
 
-                    <a href="{{ url_for('main.validate_voucher_page', voucher_id=voucher.id) }}"
+                    <a href="{{ url_for('main.validate_voucher_page', voucher_id=voucher.id) }}{% if request.args.get('next') %}?next={{ request.args.get('next') | urlencode }}{% endif %}"
                         class="block text-center w-full px-4 py-2 text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 shadow-sm transition">
                         Validate & Correct →
                     </a>
 
-                    <a href="{{ url_for('main.index') }}"
+                    <a href="{{ request.args.get('next') or url_for('main.index') }}"
                         class="block text-center text-sm text-indigo-600 hover:text-indigo-900 font-medium">
-                        ← Back to Dashboard
+                        ← Back
                     </a>
                 </div>
             </div>
@@ -191,15 +191,15 @@
         } else {
             items.forEach(item => {
                 // Try unit_price first, fallback to price, then rate field
-                const priceValue = item.unit_price !== null && item.unit_price !== undefined ? 
-                    item.unit_price : 
-                    (item.price !== null && item.price !== undefined ? item.price : 
-                     (item.rate !== null && item.rate !== undefined ? item.rate : null));
-                
+                const priceValue = item.unit_price !== null && item.unit_price !== undefined ?
+                    item.unit_price :
+                    (item.price !== null && item.price !== undefined ? item.price :
+                        (item.rate !== null && item.rate !== undefined ? item.rate : null));
+
                 const qty = item.quantity !== null && item.quantity !== undefined ? item.quantity : '-';
                 const price = priceValue !== null && priceValue !== undefined ? parseFloat(priceValue).toFixed(2) : '-';
                 const amount = item.line_amount !== null && item.line_amount !== undefined ? parseFloat(item.line_amount).toFixed(2) : '-';
-                
+
                 const row = `<tr>
                     <td class="px-3 py-2 text-gray-900">${item.item_name || 'Item'}</td>
                     <td class="px-3 py-2 text-gray-900 text-right">${qty}</td>

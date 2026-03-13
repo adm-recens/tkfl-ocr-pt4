@@ -168,12 +168,17 @@ def save_validated_data(voucher_id):
     """Handles the saving of manually validated and corrected data."""
     try:
         # Extract form data
+        next_url = request.form.get('next_url')
         supplier_name = request.form.get('vendor_name', '').strip()
         voucher_date = request.form.get('date', '').strip()
         voucher_number = request.form.get('voucher_no', '').strip()
         
         validated_items = json.loads(request.form.get('validated_items_json', '[]'))
         validated_deductions = json.loads(request.form.get('validated_deductions_json', '[]'))
+        
+        # Filter out purely empty frontend rows just in case
+        validated_items = [item for item in validated_items if str(item.get('item_name', '')).strip() or float(item.get('line_amount') or 0) > 0]
+        validated_deductions = [ded for ded in validated_deductions if str(ded.get('deduction_type', '')).strip() or float(ded.get('amount') or 0) > 0]
         
         # Calculate totals
         subtotal = sum(float(item.get('line_amount', 0) or 0) for item in validated_items)
@@ -232,11 +237,17 @@ def save_validated_data(voucher_id):
             current_app.logger.error(f"Failed to sync updated voucher {voucher_id}: {sync_err}")
         
         flash(f"Voucher #{voucher_id} saved successfully!", "success")
+        if next_url:
+            return redirect(next_url)
         return redirect(url_for('main.view_receipts'))
 
     except Exception as e:
         current_app.logger.error(f"Error saving validated data: {e}")
         flash(f"Error saving data: {e}", "error")
+        
+        next_url = request.form.get('next_url')
+        if next_url:
+            return redirect(url_for('main.validate_voucher_page', voucher_id=voucher_id, next=next_url))
         return redirect(url_for('main.validate_voucher_page', voucher_id=voucher_id))
 
 @api_bp.route("/delete_all", methods=["POST"])
@@ -269,8 +280,11 @@ def delete_all_data():
                     current_app.logger.warning(f"Failed to delete {file_path}: {e}")
         print("[RESET] Deleted all uploaded files")
 
-        # 3. Delete ML Models
-        models_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "ml_models")
+        # Ensure we target the ROOT ml data directories, not internal backend python modules
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(__file__)))
+        
+        # 3. Delete ML Models Datastore
+        models_dir = os.path.join(base_dir, "ml_models")
         if os.path.exists(models_dir):
             for filename in os.listdir(models_dir):
                 file_path = os.path.join(models_dir, filename)
@@ -283,7 +297,7 @@ def delete_all_data():
         print("[RESET] Deleted all ML models (OCR, Parsing, Smart Crop)")
 
         # 4. Delete ML Dataset (feedback, images, corrections)
-        dataset_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "ml_dataset")
+        dataset_dir = os.path.join(base_dir, "ml_dataset")
         if os.path.exists(dataset_dir):
             shutil.rmtree(dataset_dir)
             print("[RESET] Deleted entire ML dataset directory")
